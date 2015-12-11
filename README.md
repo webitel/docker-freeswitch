@@ -47,5 +47,5 @@ This image is officially supported on Docker version `1.9` and newest.
 ## User Feedback
 
 ### Issues
-If you have any problems with or questions about this image, please contact us through a [GitHub issue](https://github.com/webitel/freeswitch-master/issues).
+If you have any problems with or questions about this image, please contact us through a [GitHub issue](https://github.com/webitel/docker-freeswitch/issues).
 
