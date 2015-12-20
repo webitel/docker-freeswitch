@@ -1,6 +1,6 @@
 <include>
 
-  <X-PRE-PROCESS cmd="set" data="webitel_version=VER_SHORT"/>
+  <X-PRE-PROCESS cmd="set" data="webitel_version=WEBITEL_MAJOR"/>
 
   <X-PRE-PROCESS cmd="set" data="loglevel=LOGLEVEL"/>
   <X-PRE-PROCESS cmd="set" data="logstash=LOGSTASH_HOST"/>

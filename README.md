@@ -16,13 +16,9 @@ This environment variable used for HTTP server and port with XML configurations.
 
 This environment variable used for uploading call records.
 
-`EXT_SIP_IP`
+`SIPDOS`
 
-This optional environment variable is used in sip profile for SIP. Default is `auto-nat`.
-
-`EXT_RTP_IP`
-
-This optional environment variable is used in sip profile for RTP. Default is `auto-nat`.
+Enable iptables rules.
 
 `LOGLEVEL`
 
