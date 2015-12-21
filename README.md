@@ -1,5 +1,7 @@
 ## FreeSWITCH
 
+[![Build Status](https://dev.webitel.com/buildStatus/icon?job=build_FreeSWITCH_image)](https://dev.webitel.com/job/build_FreeSWITCH_image)
+
 [FreeSWITCH](http://www.freeswitch.org/) - FREE Multi-Protocol Soft Switch from git.
 
 Works only with [Webitel](http://webitel.ua/) [Advanced Call Router](https://github.com/webitel/acr)

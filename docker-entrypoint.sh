@@ -71,7 +71,7 @@ else
     sed -i 's/LOGSTASH_HOST/$${local_ip_v4}/g' /conf/vars.xml
 fi
 
-if [ "SIPDOS" ]; then
+if [ "$SIPDOS" ]; then
     if ! iptables -nL SIPDOS 2>&1 >/dev/null; then
         iptables -N SIPDOS
 
