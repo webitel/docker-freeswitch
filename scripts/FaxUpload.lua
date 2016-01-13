@@ -34,7 +34,7 @@ if (file_exists(fax_file..".tif") ) then
         d = "/bin/rm -rf "..fax_file..".tif";
         shell(d);
         r = api:executeString("http_put "..cdr_url.."/sys/formLoadFile?domain="..domain.."&id="..uuid.."&type=pdf&email="..emails.." "..fax_file..".pdf");
-        freeswitch.consoleLog("debug", "[RecordUpload.lua]: "..r);
+        freeswitch.consoleLog("debug", "[FaxUpload.lua]: "..r);
 	if (r:gsub("%s*$", "") == '+OK') then
 		del = "/bin/rm -rf "..fax_file..".pdf";
 		freeswitch.consoleLog("debug", "[FaxUpload.lua]: "..del.."\n");
