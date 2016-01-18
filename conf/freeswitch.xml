@@ -58,20 +58,20 @@
    <extension name="global" continue="true">
 
       <condition field="${rtp_has_crypto}" expression="^($${rtp_sdes_suites})$" break="never">
-    	<action application="set" data="rtp_secure_media=true"/>
+        <action application="set" data="rtp_secure_media=true"/>
       </condition>
 
       <condition field="${endpoint_disposition}" expression="^(DELAYED NEGOTIATION)"/>
       <condition field="${switch_r_sdp}" expression="(AES_CM_128_HMAC_SHA1_32|AES_CM_128_HMAC_SHA1_80)" break="never">
-    	<action application="set" data="rtp_secure_media=true"/>
+        <action application="set" data="rtp_secure_media=true"/>
       </condition>
 
       <condition>
-    	<action application="hash" data="insert/${domain_name}-spymap/${caller_id_number}/${uuid}"/>
+        <action application="hash" data="insert/${domain_name}-spymap/${caller_id_number}/${uuid}"/>
         <action application="hash" data="insert/${domain_name}-last_dial_ext/${destination_number}/${uuid}"/>
-    	<action application="hash" data="insert/${domain_name}-last_dial/${caller_id_number}/${destination_number}"/>
-    	<action application="hash" data="insert/${domain_name}-last_dial/global/${uuid}"/>
-    	<action application="export" data="RFC2822_DATE=${strftime(%a, %d %b %Y %T %z)}"/>
+        <action application="hash" data="insert/${domain_name}-last_dial/${caller_id_number}/${destination_number}"/>
+        <action application="hash" data="insert/${domain_name}-last_dial/global/${uuid}"/>
+        <action application="export" data="RFC2822_DATE=${strftime(%a, %d %b %Y %T %z)}"/>
         <action application="bind_meta_app" data="0 a s execute_extension::dx XML default"/>
       </condition>
     </extension>
