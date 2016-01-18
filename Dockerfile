@@ -4,6 +4,12 @@ RUN apt-get update && apt-get install -y --force-yes vlc-nox librabbitmq1 librab
 
 RUN git clone -b v1.6 https://freeswitch.org/stash/scm/fs/freeswitch.git /freeswitch.git
 RUN git clone https://github.com/xadhoom/mod_bcg729.git /mod_bcg729
+RUN git clone git://git.osmocom.org/libsmpp34 /libsmpp34
+
+RUN cd libsmpp34 \
+    && autoreconf -i\
+    && ./configure && make && make install \
+    && ldconfig && cd / && rm -rf /libsmpp34
 
 RUN cd /freeswitch.git && sh bootstrap.sh && rm modules.conf 
 
