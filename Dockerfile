@@ -23,4 +23,4 @@ RUN cd /mod_bcg729 \
    && sed -i 's/opt\/freeswitch\/mod/usr\/local\/freeswitch\/mod/g' Makefile \
    && make && make install && cd / && rm -rf /mod_bcg729
 
-RUN cd / && rm -rf /usr/local/freeswitch/mod/*.la && rm -rf /usr/local/freeswitch/conf && tar czvf fs.tgz /usr/local/freeswitch
+RUN cd / && rm -rf /usr/local/freeswitch/mod/*.la && rm -rf /usr/local/freeswitch/conf && tar czvf fs.tgz /usr/local/freeswitch /usr/local/lib/libsmpp34.so.0.0.1 /usr/local/lib/libsmpp34.so.0 /usr/local/lib/libsmpp34.so
