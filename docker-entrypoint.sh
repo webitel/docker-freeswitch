@@ -1,7 +1,6 @@
 #!/bin/bash
 set -e
 export PATH=$PATH:/usr/local/freeswitch/bin
-ldconfig -n /usr/local/lib
 
 echo 'Webitel '$VERSION
 sed -i 's/WEBITEL_MAJOR/'$WEBITEL_MAJOR'/g' /conf/vars.xml

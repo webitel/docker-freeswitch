@@ -4,7 +4,7 @@ RUN apt-get update && apt-get install -y --force-yes vlc-nox librabbitmq1 libsho
 
 ENV FS_MAJOR 1.6
 ENV FS_VERSION v.1.6.6
-ENV WEBITEL_MAJOR 3.1
+ENV WEBITEL_MAJOR 3.2
 ENV WEBITEL_REPO_BASE https://github.com/webitel
 
 ENV VERSION
@@ -14,6 +14,8 @@ COPY conf /conf
 COPY scripts /scripts
 COPY images /images
 COPY docker-entrypoint.sh /
+
+RUN ldconfig
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["freeswitch"]
