@@ -8,19 +8,19 @@ sed -i 's/WEBITEL_MAJOR/'$WEBITEL_MAJOR'/g' /conf/vars.xml
 if [ "$CDR_SERVER" ]; then
     sed -i 's/CDR_SERVER/'$CDR_SERVER'/g' /conf/vars.xml
 else
-    sed -i 's/CDR_SERVER/$${local_ip_v4}:10021/g' /conf/vars.xml
+    sed -i 's/CDR_SERVER/172.17.0.1:10021/g' /conf/vars.xml
 fi
 
 if [ "$CONF_SERVER" ]; then
     sed -i 's/CONF_SERVER/'$CONF_SERVER'/g' /conf/vars.xml
 else
-    sed -i 's/CONF_SERVER/$${local_ip_v4}:10024/g' /conf/vars.xml
+    sed -i 's/CONF_SERVER/172.17.0.1:10024/g' /conf/vars.xml
 fi
 
 if [ "$ACR_SERVER" ]; then
     sed -i 's/ACR_SERVER/'$ACR_SERVER'/g' /conf/vars.xml
 else
-    sed -i 's/ACR_SERVER/$${local_ip_v4}:10030/g' /conf/vars.xml
+    sed -i 's/ACR_SERVER/172.17.0.1:10030/g' /conf/vars.xml
 fi
 
 if [ "$SIP_NONREG_IP" ]; then
@@ -62,13 +62,7 @@ fi
 if [ "$LOGLEVEL" ]; then
     sed -i 's/LOGLEVEL/'$LOGLEVEL'/g' /conf/vars.xml
 else
-    sed -i 's/LOGLEVEL/notice/g' /conf/vars.xml
-fi
-
-if [ "$LOGSTASH_HOST" ]; then
-    sed -i 's/LOGSTASH_HOST/'$LOGSTASH_HOST'/g' /conf/vars.xml
-else
-    sed -i 's/LOGSTASH_HOST/$${local_ip_v4}/g' /conf/vars.xml
+    sed -i 's/LOGLEVEL/all/g' /conf/vars.xml
 fi
 
 if [ "$SIPDOS" ]; then
