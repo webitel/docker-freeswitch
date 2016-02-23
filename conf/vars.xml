@@ -21,6 +21,8 @@
   <X-PRE-PROCESS cmd="set" data="internal_ext_ip=internal_ext_ip_value"/>
   <X-PRE-PROCESS cmd="set" data="external_ip=external_ip_value"/>
   <X-PRE-PROCESS cmd="set" data="external_ext_ip=external_ext_ip_value"/>
+  <X-PRE-PROCESS cmd="set" data="verto_ip=verto_ext_ip_value"/>
+  <X-PRE-PROCESS cmd="set" data="verto_ext_ip=verto_ext_ip_value"/>
 
   <X-PRE-PROCESS cmd="set" data="rtp_sdes_suites=AEAD_AES_256_GCM_8|AEAD_AES_128_GCM_8|AES_CM_256_HMAC_SHA1_80|AES_CM_192_HMAC_SHA1_80|AES_CM_128_HMAC_SHA1_80|AES_CM_256_HMAC_SHA1_32|AES_CM_192_HMAC_SHA1_32|AES_CM_128_HMAC_SHA1_32|AES_CM_128_NULL_AUTH"/>
   <X-PRE-PROCESS cmd="set" data="zrtp_secure_media=true"/>

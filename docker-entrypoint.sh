@@ -59,6 +59,18 @@ else
     sed -i 's/internal_ext_ip_value/$${local_ip_v4}/g' /conf/vars.xml
 fi
 
+if [ "$VERTO_IP" ]; then
+    sed -i 's/verto_ip_value/'$VERTO_IP'/g' /conf/vars.xml
+else
+    sed -i 's/verto_ip_value/$${local_ip_v4}/g' /conf/vars.xml
+fi
+
+if [ "$VERTO_EXT_IP" ]; then
+    sed -i 's/verto_ext_ip_value/'$VERTO_EXT_IP'/g' /conf/vars.xml
+else
+    sed -i 's/verto_ext_ip_value/$${local_ip_v4}/g' /conf/vars.xml
+fi
+
 if [ "$LOGLEVEL" ]; then
     sed -i 's/LOGLEVEL/'$LOGLEVEL'/g' /conf/vars.xml
 else
