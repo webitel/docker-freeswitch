@@ -3,7 +3,7 @@
 ----
 
 api = freeswitch.API();
-p = io.popen('find /recordings/ -maxdepth 1 -type f')
+p = io.popen('find /recordings/ -maxdepth 1 -regextype sed -regex ".*/[a-f0-9\\-]\\{36\\}.*"')
 cdr_url = freeswitch.getGlobalVariable("cdr_url");
 pattern = "%x%x%x%x%x%x%x%x%-%x%x%x%x%-%x%x%x%x%-%x%x%x%x%-%x%x%x%x%x%x%x%x%x%x%x%x"
 
