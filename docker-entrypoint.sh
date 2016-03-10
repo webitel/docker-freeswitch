@@ -71,6 +71,12 @@ else
     sed -i 's/verto_ext_ip_value/$${local_ip_v4}/g' /conf/vars.xml
 fi
 
+if [ "$ES_IP" ]; then
+    sed -i 's/event_socket_ip_value/'$ES_IP'/g' /conf/vars.xml
+else
+    sed -i 's/event_socket_ip_value/172.17.0.1/g' /conf/vars.xml
+fi
+
 if [ "$LOGLEVEL" ]; then
     sed -i 's/LOGLEVEL/'$LOGLEVEL'/g' /conf/vars.xml
 else
