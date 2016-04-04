@@ -4,6 +4,7 @@
 
   <X-PRE-PROCESS cmd="set" data="loglevel=LOGLEVEL"/>
   <X-PRE-PROCESS cmd="set" data="console_loglevel=LOGLEVEL"/>
+  <X-PRE-PROCESS cmd="set" data="amqp_ip=AMQP_HOST"/>
   <X-PRE-PROCESS cmd="set" data="acr_srv=ACR_SERVER async full"/>
   <X-PRE-PROCESS cmd="set" data="cdr_url=http://CDR_SERVER"/>
   <X-PRE-PROCESS cmd="set" data="config_url=http://CONF_SERVER/"/>

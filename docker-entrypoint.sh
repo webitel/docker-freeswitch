@@ -5,6 +5,12 @@ export PATH=$PATH:/usr/local/freeswitch/bin
 echo 'Webitel '$VERSION
 sed -i 's/WEBITEL_MAJOR/'$WEBITEL_MAJOR'/g' /conf/vars.xml
 
+if [ "$AMQP_HOST" ]; then
+    sed -i 's/AMQP_HOST/'$AMQP_HOST'/g' /conf/vars.xml
+else
+    sed -i 's/AMQP_HOST/172.17.0.1/g' /conf/vars.xml
+fi
+
 if [ "$CDR_SERVER" ]; then
     sed -i 's/CDR_SERVER/'$CDR_SERVER'/g' /conf/vars.xml
 else
