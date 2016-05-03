@@ -17,6 +17,8 @@ COPY modules.conf /freeswitch.git/modules.conf
 
 RUN cd /freeswitch.git && ./configure -C --enable-zrtp --with-soundsdir=/sounds --with-recordingsdir=/recordings --with-certsdir=/certs --with-dbdir=/db --with-scriptdir=/scripts --with-logfiledir=/logs --with-storagedir=/recordings --with-cachedir=/tmp --with-imagesdir=/images && make && make install
 
+RUN rm /bin/sh && ln -s /bin/bash /bin/sh
+
 #Install mod_bcg729
 RUN cd /mod_bcg729 \
    && sed -i 's/opt\/freeswitch\/include/usr\/local\/freeswitch\/include\/freeswitch/g' Makefile \
