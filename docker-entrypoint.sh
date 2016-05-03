@@ -5,6 +5,18 @@ export PATH=$PATH:/usr/local/freeswitch/bin
 echo 'Webitel '$VERSION
 sed -i 's/WEBITEL_MAJOR/'$WEBITEL_MAJOR'/g' /conf/vars.xml
 
+if [ "$RTP_START_PORT" ]; then
+    sed -i 's/RTP_START_PORT/'$RTP_START_PORT'/g' /conf/freeswitch.xml
+else
+    sed -i 's/RTP_START_PORT/16384/g' /conf/freeswitch.xml
+fi
+
+if [ "$RTP_END_PORT" ]; then
+    sed -i 's/RTP_END_PORT/'$RTP_END_PORT'/g' /conf/freeswitch.xml
+else
+    sed -i 's/RTP_END_PORT/32768/g' /conf/freeswitch.xml
+fi
+
 if [ "$AMQP_HOST" ]; then
     sed -i 's/AMQP_HOST/'$AMQP_HOST'/g' /conf/vars.xml
 else

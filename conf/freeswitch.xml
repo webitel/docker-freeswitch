@@ -149,6 +149,8 @@
       <settings>
         <param name="switchname" value="webitel" />
         <param name="rtp-enable-zrtp" value="true"/>
+        <param name="rtp-start-port" value="RTP_START_PORT"/> 
+        <param name="rtp-end-port" value="RTP_END_PORT"/>
       </settings>
     </configuration>
 
