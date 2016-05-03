@@ -148,6 +148,7 @@
     <configuration name="switch.conf" description="Core Configuration">
       <settings>
         <param name="switchname" value="webitel" />
+        <param name="rtp-enable-zrtp" value="true"/>
       </settings>
     </configuration>
 
