@@ -1,2 +1,2 @@
 # docker-freeswitch
-Docker FreeSWITCH images for Webitel
+Docker FreeSWITCH 1.6.8 images for Webitel
