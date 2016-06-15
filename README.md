@@ -1,8 +1,9 @@
 ## FreeSWITCH
 
-[![Build Status](https://dev.webitel.com/buildStatus/icon?job=build_FreeSWITCH_image)](https://dev.webitel.com/job/build_FreeSWITCH_image)
+[![Build Status](https://travis-ci.org/webitel/docker-freeswitch.svg?branch=master)](https://travis-ci.org/webitel/docker-freeswitch) [![Documentation Status](https://readthedocs.org/projects/webitel/badge/?version=latest)](http://api.webitel.com/en/latest/?badge=latest) 
 
-[FreeSWITCH](http://www.freeswitch.org/) - FREE Multi-Protocol Soft Switch from git.
+
+[FreeSWITCH](http://www.freeswitch.org/) - FREE Multi-Protocol Soft Switch v1.6.9.
 
 Works only with [Webitel](http://webitel.ua/) [Advanced Call Router](https://github.com/webitel/acr)
 
@@ -40,7 +41,7 @@ Used in the `ACR` XML Dialplan extension:
 
 ## Supported Docker versions
 
-This image is officially supported on Docker version `1.9` and newest.
+This image is officially supported on Docker version `1.10` and newest.
 
 ## User Feedback
 

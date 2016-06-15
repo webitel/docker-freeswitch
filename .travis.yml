@@ -12,7 +12,7 @@ before_install:
     - docker login --email=$DOCKER_HUB_EMAIL --username=$DOCKER_HUB_USERNAME --password=$DOCKER_HUB_PASSWORD
 
 install:  
-  - docker build -t freeswitch-from-source src/Dockerfile
+  - docker build -t freeswitch-from-source src
   - docker run -d -v ${PWD}:/data -t freeswitch-from-source cp /fs.tgz /data/
   - ls -l ${PWD}
 
