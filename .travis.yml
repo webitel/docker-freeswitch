@@ -1,0 +1,22 @@
+sudo: required
+language: bash
+
+services: 
+  - docker
+
+env:
+  - DOCKER_IMAGE_NAME=webitel/freeswitch
+
+before_install:
+    - if [ ! -z "$TRAVIS_TAG" ]; then sed -i 's/ENV VERSION/ENV VERSION '${TRAVIS_TAG}'-sha1:'${TRAVIS_COMMIT:0:7}'/g' Dockerfile; else sed -i 's/ENV VERSION/ENV VERSION master sha1:'${TRAVIS_COMMIT:0:7}'/g' Dockerfile; fi
+    - docker login --email=$DOCKER_HUB_EMAIL --username=$DOCKER_HUB_USERNAME --password=$DOCKER_HUB_PASSWORD
+
+install:  
+  - docker build -t freeswitch-from-source src/Dockerfile
+  - docker run -d -v ${PWD}:/data -t freeswitch-from-source cp /fs.tgz /data/
+  - ls -l ${PWD}
+
+script:  
+  - docker build -t $DOCKER_IMAGE_NAME .
+  - if [ ! -z "$TRAVIS_TAG" ]; then docker tag $DOCKER_IMAGE_NAME:latest $DOCKER_IMAGE_NAME:$TRAVIS_TAG; fi && docker push $DOCKER_IMAGE_NAME
+
