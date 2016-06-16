@@ -32,11 +32,16 @@ function file_exists(name)
 end
 
 if (file_exists(rec_file.."."..format) ) then
-	r = api:executeString("http_put "..cdr_url.."/sys/formLoadFile?domain="..domain.."&id="..uuid.."&type="..format.."&email="..emails.."&name="..name.." "..rec_file.."."..format);
-	freeswitch.consoleLog("debug", "[RecordUpload.lua]: "..r);
-	if (r:gsub("%s*$", "") == '+OK') then
-		del = "/bin/rm -rf "..rec_file.."."..format;
-		freeswitch.consoleLog("debug", "[RecordUpload.lua]: "..del.."\n");
-		shell(del);
-	end
+    ::upload:: freeswitch.consoleLog("debug", "[RecordUpload.lua]: "..uuid.." - uploading file\n");
+    r = api:executeString("http_put "..cdr_url.."/sys/formLoadFile?domain="..domain.."&id="..uuid.."&type="..format.."&email="..emails.."&name="..name.." "..rec_file.."."..format);
+    freeswitch.consoleLog("debug", "[RecordUpload.lua]: "..r);
+    if (r:gsub("%s*$", "") == '+OK') then
+        del = "/bin/rm -rf "..rec_file.."."..format;
+        freeswitch.consoleLog("debug", "[RecordUpload.lua]: "..del.."\n");
+        shell(del);
+    else
+        freeswitch.consoleLog("debug", "[RecordUpload.lua]: "..uuid.." - retrying upload in 30 sec\n");
+        freeswitch.msleep(30000);
+        goto upload
+    end
 end
