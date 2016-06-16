@@ -151,6 +151,8 @@
         <param name="rtp-enable-zrtp" value="true"/>
         <param name="rtp-start-port" value="RTP_START_PORT"/> 
         <param name="rtp-end-port" value="RTP_END_PORT"/>
+        <param name="max-sessions" value="MAX_SESSIONS"/>
+        <param name="sessions-per-second" value="SESSIONS_PER_SECOND"/>
       </settings>
     </configuration>
 

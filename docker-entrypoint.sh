@@ -17,6 +17,18 @@ else
     sed -i 's/RTP_END_PORT/32768/g' /conf/freeswitch.xml
 fi
 
+if [ "$MAX_SESSIONS" ]; then
+    sed -i 's/MAX_SESSIONS/'$MAX_SESSIONS'/g' /conf/freeswitch.xml
+else
+    sed -i 's/MAX_SESSIONS/1000/g' /conf/freeswitch.xml
+fi
+
+if [ "$SESSIONS_PER_SECOND" ]; then
+    sed -i 's/SESSIONS_PER_SECOND/'$SESSIONS_PER_SECOND'/g' /conf/freeswitch.xml
+else
+    sed -i 's/SESSIONS_PER_SECOND/30/g' /conf/freeswitch.xml
+fi
+
 if [ "$AMQP_HOST" ]; then
     sed -i 's/AMQP_HOST/'$AMQP_HOST'/g' /conf/vars.xml
 else
