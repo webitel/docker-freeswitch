@@ -29,6 +29,7 @@ RUN cd /mod_bcg729 \
 
 #Install mod_amd
 RUN cd /mod_amd \
+   && sed -i 's/usr\/lib\/freeswitch\/mod/usr\/local\/freeswitch\/mod/g' Makefile \
    && export PKG_CONFIG_PATH=/usr/local/freeswitch/lib/pkgconfig/ \
    && make && make install && cd / && rm -rf /mod_amd
 
