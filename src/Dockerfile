@@ -1,6 +1,6 @@
 FROM webitel/freeswitch-base:latest
 
-RUN apt-get update && apt-get install -y --force-yes vlc-nox librabbitmq1 librabbitmq-dev && apt-get install -y --force-yes build-essential freeswitch-video-deps-most libshout3-dev
+RUN apt-get update && apt-get install -y --force-yes vlc-nox librabbitmq1 librabbitmq-dev && apt-get install -y --force-yes build-essential libshout3-dev && apt-get install -y --force-yes build-essential freeswitch-video-deps-most
 
 RUN git clone -b v1.6 https://freeswitch.org/stash/scm/fs/freeswitch.git /freeswitch.git
 RUN git clone https://github.com/xadhoom/mod_bcg729.git /mod_bcg729
