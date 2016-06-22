@@ -5,7 +5,8 @@ RUN apt-get update && apt-get install -y --force-yes vlc-nox librabbitmq1 librab
 RUN git clone -b v1.6 https://freeswitch.org/stash/scm/fs/freeswitch.git /freeswitch.git
 RUN git clone https://github.com/xadhoom/mod_bcg729.git /mod_bcg729
 RUN git clone git://git.osmocom.org/libsmpp34 /libsmpp34
-RUN git clone https://github.com/seanbright/mod_amd.git /mod_amd
+#RUN git clone https://github.com/seanbright/mod_amd.git /mod_amd
+RUN git clone https://github.com/areski/mod_amd.git /mod_amd
 
 RUN cd libsmpp34 \
     && autoreconf -i\
