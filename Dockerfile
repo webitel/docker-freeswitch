@@ -4,9 +4,9 @@ RUN apt-get update && apt-get install -y --force-yes --no-install-recommends vlc
 
 ENV FS_MAJOR 1.6
 ENV FS_VERSION v1.6.9
-ENV WEBITEL_MAJOR 3.3
 ENV WEBITEL_REPO_BASE https://github.com/webitel
 
+ENV WEBITEL_MAJOR
 ENV VERSION
 
 ADD fs.tgz /

@@ -9,6 +9,7 @@ env:
 
 before_install:
     - if [ ! -z "$TRAVIS_TAG" ]; then sed -i 's/ENV VERSION/ENV VERSION '${TRAVIS_TAG}'-sha1:'${TRAVIS_COMMIT:0:7}'/g' Dockerfile; else sed -i 's/ENV VERSION/ENV VERSION master sha1:'${TRAVIS_COMMIT:0:7}'/g' Dockerfile; fi
+    - if [ ! -z "$TRAVIS_TAG" ]; then sed -i 's/ENV WEBITEL_MAJOR/ENV WEBITEL_MAJOR '${TRAVIS_TAG}'/g' Dockerfile; else sed -i 's/ENV WEBITEL_MAJOR/ENV WEBITEL_MAJOR '${TRAVIS_COMMIT:0:7}'/g' Dockerfile; fi
     - docker login --email=$DOCKER_HUB_EMAIL --username=$DOCKER_HUB_USERNAME --password=$DOCKER_HUB_PASSWORD
 
 install:  
