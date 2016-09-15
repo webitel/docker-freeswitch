@@ -124,6 +124,7 @@ if [ "$SIPDOS" ]; then
         iptables -A INPUT -p udp -m udp --match multiport --dports 5060,5070,5080 -m string --string "User-Agent: sipcli" --algo bm --to 65535 -m comment --comment "deny sipcli" -j SIPDOS
         iptables -A INPUT -p udp -m udp --match multiport --dports 5060,5070,5080 -m string --string "iWar" --algo bm --to 65535 -m comment --comment "deny iWar" -j SIPDOS
         iptables -A INPUT -p udp -m udp --match multiport --dports 5060,5070,5080 -m string --string "sip-scan" --algo bm --to 65535 -m comment --comment "deny sip-scan" -j SIPDOS
+        iptables -A INPUT -p udp -m udp --match multiport --dports 5060,5070,5080 -m string --string "SIP Call" --algo bm --to 65535 -m comment --comment "deny sip-scan" -j SIPDOS
 
         iptables -A INPUT -p tcp -m tcp --match multiport --dports 5060,5070,5080 -m string --string "sundayddr" --algo bm --to 65535 -m comment --comment "deny sundayddr" -j SIPDOS
         iptables -A INPUT -p tcp -m tcp --match multiport --dports 5060,5070,5080 -m string --string "sipsak" --algo bm --to 65535 -m comment --comment "deny sipsak" -j SIPDOS
@@ -131,6 +132,7 @@ if [ "$SIPDOS" ]; then
         iptables -A INPUT -p tcp -m tcp --match multiport --dports 5060,5070,5080 -m string --string "friendly-scanner" --algo bm --to 65535 -m comment --comment "deny friendly-scanner" -j SIPDOS
         iptables -A INPUT -p tcp -m tcp --match multiport --dports 5060,5070,5080 -m string --string "iWar" --algo bm --to 65535 -m comment --comment "deny iWar" -j SIPDOS
         iptables -A INPUT -p tcp -m tcp --match multiport --dports 5060,5070,5080 -m string --string "sip-scan" --algo bm --to 65535 -m comment --comment "deny sip-scan" -j SIPDOS
+        iptables -A INPUT -p tcp -m tcp --match multiport --dports 5060,5070,5080 -m string --string "SIP Call" --algo bm --to 65535 -m comment --comment "deny sip-scan" -j SIPDOS
 
         iptables -A SIPDOS -j LOG --log-prefix "firewall-sipdos: " --log-level 6
         iptables -A SIPDOS -j DROP
