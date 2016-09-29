@@ -55,6 +55,13 @@
       </condition>
     </extension>
 
+    <extension name="screen_sharing">
+      <condition field="destination_number" expression="^(\d+)-screen$">
+        <action application="set" data="effective_caller_id_number=${caller_id_number}-screen"/>
+        <action application="transfer" data="$1 XML default"/>
+      </condition>
+    </extension>
+
    <extension name="global" continue="true">
 
       <condition field="${rtp_has_crypto}" expression="^($${rtp_sdes_suites})$" break="never">
