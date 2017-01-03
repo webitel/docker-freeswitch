@@ -25,7 +25,7 @@ Enable iptables rules.
 
 `LOGLEVEL`
 
-This optional environment variable for FreeSWITCH log level. Default is `err`.
+This optional environment variable for FreeSWITCH log level. Default is `warn`.
 
 `ACR_SERVER`
 
@@ -35,7 +35,7 @@ Used in the `ACR` XML Dialplan extension:
 
 	<extension name="ACR">
 		<condition>
-			<action application="socket" data="ACR_SERVER:10030 async full”/>
+			<action application="socket" data="ACR_SERVER:10030 async full"/>
 		</condition>
 	</extension>
 
