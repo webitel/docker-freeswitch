@@ -110,7 +110,7 @@ fi
 if [ "$LOGLEVEL" ]; then
     sed -i 's/LOGLEVEL/'$LOGLEVEL'/g' /conf/vars.xml
 else
-    sed -i 's/LOGLEVEL/all/g' /conf/vars.xml
+    sed -i 's/LOGLEVEL/err/g' /conf/vars.xml
 fi
 
 if [ "$SIPDOS" ]; then
