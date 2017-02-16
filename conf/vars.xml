@@ -11,9 +11,9 @@
   <X-PRE-PROCESS cmd="set" data="hold_music=local_stream://default"/>
   <X-PRE-PROCESS cmd="set" data="sound_prefix=$${sounds_dir}/en/us/callie"/>
 
+  <X-PRE-PROCESS cmd="set" data="CODECS_OUTBOUND_PREF"/>
+  <X-PRE-PROCESS cmd="set" data="CODECS_GLOBAL_PREF"/>
   <X-PRE-PROCESS cmd="set" data="media_mix_inbound_outbound_codecs=true"/>
-  <X-PRE-PROCESS cmd="set" data="outbound_codec_prefs=PCMA,PCMU,G729,GSM"/>
-  <X-PRE-PROCESS cmd="set" data="global_codec_prefs=OPUS,G722,PCMA,PCMU,GSM,G729,ilbc,VP8,VP9,H264,H263,H263-1998"/>
  
   <X-PRE-PROCESS cmd="set" data="bind_server_ip=auto"/>
   <X-PRE-PROCESS cmd="set" data="nonreg_ip=nonreg_ip_value"/>

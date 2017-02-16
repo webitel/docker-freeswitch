@@ -113,6 +113,18 @@ else
     sed -i 's/LOGLEVEL/err/g' /conf/vars.xml
 fi
 
+if [ "$CODECS_GLOBAL_PREF" ]; then
+    sed -i 's/CODECS_GLOBAL_PREF/'$CODECS_GLOBAL_PREF'/g' /conf/vars.xml
+else
+    sed -i 's/CODECS_GLOBAL_PREF/OPUS,G722,PCMA,PCMU,GSM,G729,ilbc,VP8,VP9,H264,H263,H263-1998/g' /conf/vars.xml
+fi
+
+if [ "$CODECS_OUTBOUND_PREF" ]; then
+    sed -i 's/CODECS_OUTBOUND_PREF/'$CODECS_OUTBOUND_PREF'/g' /conf/vars.xml
+else
+    sed -i 's/CODECS_OUTBOUND_PREF/PCMA,PCMU,G729,GSM/g' /conf/vars.xml
+fi
+
 if [ "$SIPDOS" ]; then
     if ! iptables -nL SIPDOS 2>&1 >/dev/null; then
         iptables -N SIPDOS
