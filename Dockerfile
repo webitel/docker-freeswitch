@@ -19,3 +19,4 @@ RUN ldconfig
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["freeswitch"]
+
