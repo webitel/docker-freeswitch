@@ -48,4 +48,3 @@ This image is officially supported on Docker version `1.12` and newest.
 ### Issues
 If you have any problems with or questions about this image, please contact us through a [Webitel JIRA](https://my.webitel.com/).
 
-
