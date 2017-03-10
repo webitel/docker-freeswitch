@@ -188,3 +188,4 @@ if [ "$1" = 'freeswitch' ]; then
 fi
 
 exec "$@"
+
