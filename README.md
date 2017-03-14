@@ -33,11 +33,11 @@ This environment variable used for connection to ACR with FreeSWITCH `socket` ap
 
 Used in the `ACR` XML Dialplan extension:
 
-	<extension name="ACR">
-		<condition>
-			<action application="socket" data="ACR_SERVER:10030 async full"/>
-		</condition>
-	</extension>
+    <extension name="ACR">
+        <condition>
+            <action application="socket" data="ACR_SERVER:10030 async full"/>
+        </condition>
+    </extension>
 
 ## Supported Docker versions
 
