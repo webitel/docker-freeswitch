@@ -41,7 +41,7 @@ Used in the `ACR` XML Dialplan extension:
 
 ## Supported Docker versions
 
-This image is officially supported on Docker version `1.12` and newest.
+This image is officially supported on Docker version `1.13` and newest.
 
 ## User Feedback
 
