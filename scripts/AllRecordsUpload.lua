@@ -24,7 +24,7 @@ for file in p:lines() do
 	if (file_exists(file) ) then
     	r = api:executeString("http_put "..cdr_url.."/sys/formLoadFile?id="..file:match(pattern).."&type=mp3 "..file);
     	freeswitch.consoleLog("debug", "[AllRecordsUpload.lua]: "..r);
-    	if (r:gsub("%s*$", "") == '+OK') then
+    	if (r:match("OK") == 'OK') then
         	del = "/bin/rm -rf "..file;
         	freeswitch.consoleLog("debug", "[AllRecordsUpload.lua]: "..del.."\n");
         	shell(del);

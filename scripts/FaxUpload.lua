@@ -38,7 +38,7 @@ if (file_exists(fax_file..".tif") ) then
     ::upload:: freeswitch.consoleLog("debug", "[FaxUpload.lua]: "..uuid.." - uploading file\n");
     r = api:executeString("http_put "..cdr_url.."/sys/formLoadFile?domain="..domain.."&id="..uuid.."&type=pdf&email="..emails.." "..fax_file..".pdf");
     freeswitch.consoleLog("debug", "[FaxUpload.lua]: "..r);
-    if (r:gsub("%s*$", "") == '+OK') then
+    if (r:match("OK") == 'OK') then
         del = "/bin/rm -rf "..fax_file..".pdf";
         freeswitch.consoleLog("debug", "[FaxUpload.lua]: "..del.."\n");
         shell(del);

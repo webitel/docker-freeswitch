@@ -35,7 +35,7 @@ if (file_exists(rec_file.."."..format) ) then
     ::upload:: freeswitch.consoleLog("debug", "[RecordUpload.lua]: "..uuid.." - uploading file\n");
     r = api:executeString("http_put "..cdr_url.."/sys/formLoadFile?domain="..domain.."&id="..uuid.."&type="..format.."&email="..emails.."&name="..name.." "..rec_file.."."..format);
     freeswitch.consoleLog("debug", "[RecordUpload.lua]: "..r);
-    if (r:gsub("%s*$", "") == '+OK') then
+    if (r:match("OK") == 'OK') then
         del = "/bin/rm -rf "..rec_file.."."..format;
         freeswitch.consoleLog("debug", "[RecordUpload.lua]: "..del.."\n");
         shell(del);
