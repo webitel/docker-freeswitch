@@ -154,6 +154,36 @@ fi
 
 test -d /logs || mkdir -p /logs /certs /sounds /db /recordings /scripts/lua
 
+if [ ! -d /sounds/music && "$MOH" ]; then
+SND_VERSION=1.0.52
+SND_NAME=music
+	cd /sounds \
+	&& wget -O - http://files-sync.freeswitch.org/releases/music/freeswitch-sounds-$SND_NAME-8000-$SND_VERSION.tar.gz | gzip -dc - | tar xf - \
+	&& wget -O - http://files-sync.freeswitch.org/releases/music/freeswitch-sounds-$SND_NAME-16000-$SND_VERSION.tar.gz | gzip -dc - | tar xf - \
+	&& wget -O - http://files-sync.freeswitch.org/releases/music/freeswitch-sounds-$SND_NAME-32000-$SND_VERSION.tar.gz | gzip -dc - | tar xf - \
+	&& wget -O - http://files-sync.freeswitch.org/releases/music/freeswitch-sounds-$SND_NAME-48000-$SND_VERSION.tar.gz | gzip -dc - | tar xf -
+fi
+
+if [ ! -d /sounds/en && "$SND_EN" ]; then
+SND_VERSION=1.0.51
+SND_NAME=en-us-callie
+	cd /sounds \
+	&& wget -O - http://files-sync.freeswitch.org/releases/sounds/freeswitch-sounds-$SND_NAME-8000-$SND_VERSION.tar.gz | gzip -dc - | tar xf - \
+	&& wget -O - http://files-sync.freeswitch.org/releases/sounds/freeswitch-sounds-$SND_NAME-16000-$SND_VERSION.tar.gz | gzip -dc - | tar xf - \
+	&& wget -O - http://files-sync.freeswitch.org/releases/sounds/freeswitch-sounds-$SND_NAME-32000-$SND_VERSION.tar.gz | gzip -dc - | tar xf - \
+	&& wget -O - http://files-sync.freeswitch.org/releases/sounds/freeswitch-sounds-$SND_NAME-48000-$SND_VERSION.tar.gz | gzip -dc - | tar xf -
+fi
+
+if [ ! -d /sounds/ru && "$SND_RU" ]; then
+SND_VERSION=1.0.51
+SND_NAME=ru-RU-elena
+	cd /sounds \
+	&& wget -O - http://files-sync.freeswitch.org/releases/sounds/freeswitch-sounds-$SND_NAME-8000-$SND_VERSION.tar.gz | gzip -dc - | tar xf - \
+	&& wget -O - http://files-sync.freeswitch.org/releases/sounds/freeswitch-sounds-$SND_NAME-16000-$SND_VERSION.tar.gz | gzip -dc - | tar xf - \
+	&& wget -O - http://files-sync.freeswitch.org/releases/sounds/freeswitch-sounds-$SND_NAME-32000-$SND_VERSION.tar.gz | gzip -dc - | tar xf - \
+	&& wget -O - http://files-sync.freeswitch.org/releases/sounds/freeswitch-sounds-$SND_NAME-48000-$SND_VERSION.tar.gz | gzip -dc - | tar xf -
+fi
+
 chown -R freeswitch:freeswitch /usr/local/freeswitch
 chown -R freeswitch:freeswitch /{logs,tmp,db,sounds,conf,certs,scripts,recordings,images}
 
