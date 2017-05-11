@@ -13,11 +13,11 @@ fi
 cd /sounds 
 
 if [ ! -d /sounds/music ] && [ "$MOH" ]; then
-	for i in ${SND_RATE[@]}; do
-		wget -O - http://files-sync.freeswitch.org/releases/sounds/freeswitch-sounds-music-${i}-$V_MOH.tar.gz | gzip -dc - | tar xf -
-	done
-	chown -R freeswitch:freeswitch /sounds/music
-	/usr/local/freeswitch/bin/fs_cli -H 172.17.0.1 -x 'reload mod_local_stream'
+    for i in ${SND_RATE[@]}; do
+        wget -O - http://files-sync.freeswitch.org/releases/sounds/freeswitch-sounds-music-${i}-$V_MOH.tar.gz | gzip -dc - | tar xf -
+    done
+    chown -R freeswitch:freeswitch /sounds/music
+    /usr/local/freeswitch/bin/fs_cli -H 172.17.0.1 -x 'reload mod_local_stream'
 fi
 
 if [ ! -d /sounds/en ] && [ "$SND_EN" ]; then
