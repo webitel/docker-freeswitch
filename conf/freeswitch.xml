@@ -160,7 +160,9 @@
         <param name="rtp-end-port" value="RTP_END_PORT"/>
         <param name="max-sessions" value="MAX_SESSIONS"/>
         <param name="sessions-per-second" value="SESSIONS_PER_SECOND"/>
-	<param name="loglevel" value="err"/>
+        <param name="loglevel" value="err"/>
+        <param name="sql-buffer-len" value="10m"/>
+        <param name="max-sql-buffer-len" value="20m"/>
       </settings>
     </configuration>
 
