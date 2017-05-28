@@ -1,7 +1,7 @@
 FROM webitel/freeswitch-base:latest
 
 RUN apt-get update
-RUN apt-get install -y --force-yes vlc-nox librabbitmq1 librabbitmq-dev build-essential libshout3-dev
+RUN apt-get install -y --force-yes vlc-nox librabbitmq1 librabbitmq-dev build-essential libshout3-dev libpq-dev
 RUN apt-get update
 RUN apt-get install -y --force-yes freeswitch-video-deps-most
 
@@ -19,7 +19,7 @@ RUN cd /freeswitch.git && sh bootstrap.sh && rm modules.conf
 
 COPY modules.conf /freeswitch.git/modules.conf
 
-RUN cd /freeswitch.git && ./configure -C --enable-zrtp --with-soundsdir=/sounds --with-recordingsdir=/recordings --with-certsdir=/certs --with-dbdir=/db --with-scriptdir=/scripts --with-logfiledir=/logs --with-storagedir=/recordings --with-cachedir=/tmp --with-imagesdir=/images && make && make install
+RUN cd /freeswitch.git && ./configure -C --enable-zrtp --enable-core-pgsql-support --with-soundsdir=/sounds --with-recordingsdir=/recordings --with-certsdir=/certs --with-dbdir=/db --with-scriptdir=/scripts --with-logfiledir=/logs --with-storagedir=/recordings --with-cachedir=/tmp --with-imagesdir=/images && make && make install
 
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 
