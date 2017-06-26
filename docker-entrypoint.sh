@@ -5,34 +5,34 @@ export PATH=$PATH:/usr/local/freeswitch/bin
 echo 'Webitel '$VERSION
 sed -i 's/WEBITEL_MAJOR/'$WEBITEL_MAJOR'/g' /conf/vars.xml
 
-if [ "$FS_CORE_DB" ]; then
-    sed -i 's/FS_CORE_DB/'$FS_CORE_DB'/g' /conf/freeswitch.xml
+if [ "$FS_CONF_FILE" ]; then
+    sed -i 's/FS_CONF_FILE/'$FS_CONF_FILE'/g' /conf/freeswitch.xml
 else
-    sed -i 's/FS_CORE_DB/\/dev\/shm\/core.db/g' /conf/freeswitch.xml
+    sed -i 's/FS_CONF_FILE/configuration.xml/g' /conf/freeswitch.xml
 fi
 
 if [ "$RTP_START_PORT" ]; then
-    sed -i 's/RTP_START_PORT/'$RTP_START_PORT'/g' /conf/freeswitch.xml
+    sed -i 's/RTP_START_PORT/'$RTP_START_PORT'/g' /conf/configur*.xml
 else
-    sed -i 's/RTP_START_PORT/16384/g' /conf/freeswitch.xml
+    sed -i 's/RTP_START_PORT/16384/g' /conf/configur*.xml
 fi
 
 if [ "$RTP_END_PORT" ]; then
-    sed -i 's/RTP_END_PORT/'$RTP_END_PORT'/g' /conf/freeswitch.xml
+    sed -i 's/RTP_END_PORT/'$RTP_END_PORT'/g' /conf/configur*.xml
 else
-    sed -i 's/RTP_END_PORT/32768/g' /conf/freeswitch.xml
+    sed -i 's/RTP_END_PORT/32768/g' /conf/configur*.xml
 fi
 
 if [ "$MAX_SESSIONS" ]; then
-    sed -i 's/MAX_SESSIONS/'$MAX_SESSIONS'/g' /conf/freeswitch.xml
+    sed -i 's/MAX_SESSIONS/'$MAX_SESSIONS'/g' /conf/configur*.xml
 else
-    sed -i 's/MAX_SESSIONS/1000/g' /conf/freeswitch.xml
+    sed -i 's/MAX_SESSIONS/1000/g' /conf/configur*.xml
 fi
 
 if [ "$SESSIONS_PER_SECOND" ]; then
-    sed -i 's/SESSIONS_PER_SECOND/'$SESSIONS_PER_SECOND'/g' /conf/freeswitch.xml
+    sed -i 's/SESSIONS_PER_SECOND/'$SESSIONS_PER_SECOND'/g' /conf/configur*.xml
 else
-    sed -i 's/SESSIONS_PER_SECOND/30/g' /conf/freeswitch.xml
+    sed -i 's/SESSIONS_PER_SECOND/30/g' /conf/configur*.xml
 fi
 
 if [ "$AMQP_HOST" ]; then
