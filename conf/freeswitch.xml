@@ -166,11 +166,13 @@
         <param name="rtp-enable-zrtp" value="true"/>
         <param name="rtp-start-port" value="RTP_START_PORT"/> 
         <param name="rtp-end-port" value="RTP_END_PORT"/>
+        <param name="rtp-port-usage-robustness" value="true"/>
         <param name="max-sessions" value="MAX_SESSIONS"/>
         <param name="sessions-per-second" value="SESSIONS_PER_SECOND"/>
         <param name="loglevel" value="err"/>
         <param name="sql-buffer-len" value="10m"/>
         <param name="max-sql-buffer-len" value="20m"/>
+        <param name="core-db-dsn" value="CORE_DB" />
       </settings>
     </configuration>
 

@@ -5,6 +5,12 @@ export PATH=$PATH:/usr/local/freeswitch/bin
 echo 'Webitel '$VERSION
 sed -i 's/WEBITEL_MAJOR/'$WEBITEL_MAJOR'/g' /conf/vars.xml
 
+if [ "$FS_CORE_DB" ]; then
+    sed -i 's/FS_CORE_DB/'$FS_CORE_DB'/g' /conf/freeswitch.xml
+else
+    sed -i 's/FS_CORE_DB/\/dev\/shm\/core.db/g' /conf/freeswitch.xml
+fi
+
 if [ "$RTP_START_PORT" ]; then
     sed -i 's/RTP_START_PORT/'$RTP_START_PORT'/g' /conf/freeswitch.xml
 else
