@@ -132,6 +132,14 @@
       </condition>
     </extension>
 
+    <extension name="public echo test">
+      <condition field="destination_number" expression="^(echo)$">
+        <action application="answer"/>
+        <action application="sched_hangup" data="+10 allotted_timeout"/> 
+        <action application="echo"/>
+      </condition>
+    </extension>
+
     <extension name="ACR">
       <condition>
          <action application="socket" data="$${acr_srv}"/>
