@@ -132,6 +132,12 @@
       </condition>
     </extension>
 
+    <extension name="public test">
+      <condition field="destination_number" expression="^(h)$">
+        <action application="hangup" data="INCOMING_CALL_BARRED"/> 
+      </condition>
+    </extension>
+
     <extension name="public echo test">
       <condition field="destination_number" expression="^(echo)$">
         <action application="answer"/>
