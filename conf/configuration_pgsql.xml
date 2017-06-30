@@ -19,7 +19,7 @@
         <param name="loglevel" value="err"/>
         <param name="sql-buffer-len" value="10m"/>
         <param name="max-sql-buffer-len" value="20m"/>
-        <param name="core-db-dsn" value="pgsql://hostaddr=10.10.10.200 dbname=webitel user=webitel password=webitel" />
+        <param name="core-db-dsn" value="pgsql://hostaddr=$${pgsql_ip} dbname=webitel user=webitel password=webitel options='-c client_min_messages=NOTICE' application_name='webitel'" />
       </settings>
     </configuration>
 

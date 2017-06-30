@@ -8,7 +8,7 @@ sed -i 's/WEBITEL_MAJOR/'$WEBITEL_MAJOR'/g' /conf/vars.xml
 if [ "$FS_CONF_FILE" ]; then
     sed -i 's/FS_CONF_FILE/'$FS_CONF_FILE'/g' /conf/freeswitch.xml
 else
-    sed -i 's/FS_CONF_FILE/configuration.xml/g' /conf/freeswitch.xml
+    sed -i 's/FS_CONF_FILE/configuration_pgsql.xml/g' /conf/freeswitch.xml
 fi
 
 if [ "$RTP_START_PORT" ]; then
@@ -39,6 +39,12 @@ if [ "$AMQP_HOST" ]; then
     sed -i 's/AMQP_HOST/'$AMQP_HOST'/g' /conf/vars.xml
 else
     sed -i 's/AMQP_HOST/172.17.0.1/g' /conf/vars.xml
+fi
+
+if [ "$PGSQL_HOST" ]; then
+    sed -i 's/PGSQL_HOST/'$PGSQL_HOST'/g' /conf/vars.xml
+else
+    sed -i 's/PGSQL_HOST/172.17.0.1/g' /conf/vars.xml
 fi
 
 if [ "$CDR_SERVER" ]; then
