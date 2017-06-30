@@ -129,6 +129,7 @@
       <condition>
         <action application="set" data="ringback=$${us-ring}"/>
         <action application="set" data="transfer_ringback=$${uk-ring}"/>
+        <action application="set" data="hangup_after_bridge=true"/>
       </condition>
     </extension>
 
