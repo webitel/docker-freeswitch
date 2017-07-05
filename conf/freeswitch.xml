@@ -118,8 +118,8 @@
 
     <extension name="outside_call" continue="true">
       <condition>
-        <action application="set" data="outside_call=true"/>
-        <action application="set" data="webitel_direction=inbound"/>
+        <action application="export" data="outside_call=true"/>
+        <action application="export" data="webitel_direction=inbound"/>
         <action application="export" data="RFC2822_DATE=${strftime(%a, %d %b %Y %T %z)}"/>
         <action application="bind_meta_app" data="0 b s execute_extension::dx XML default"/>
       </condition>
