@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.org/webitel/docker-freeswitch.svg?branch=master)](https://travis-ci.org/webitel/docker-freeswitch) [![Documentation Status](https://readthedocs.org/projects/webitel/badge/?version=latest)](http://api.webitel.com/en/latest/?badge=latest) 
 
 
-[FreeSWITCH](http://www.freeswitch.org/) - FREE Multi-Protocol Soft Switch v1.8
+[FreeSWITCH](http://www.freeswitch.org/) - FREE Multi-Protocol Soft Switch v1.6.19
 
 Works only with [Webitel](http://webitel.ua/) [Advanced Call Router](https://github.com/webitel/acr)
 
