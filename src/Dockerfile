@@ -15,12 +15,9 @@ RUN cd libsmpp34 \
     && ./configure && make && make install \
     && ldconfig && cd / && rm -rf /libsmpp34
 
-RUN cd /freeswitch.git
+COPY mod_commands-bgapi.diff /freeswitch.git/mod_commands-bgapi.diff
 
-COPY patch/mod_commands-bgapi.diff /freeswitch.git/mod_commands-bgapi.diff
-RUN git apply mod_commands-bgapi.diff
-
-RUN sh bootstrap.sh && rm modules.conf
+RUN cd /freeswitch.git && git apply mod_commands-bgapi.diff && sh bootstrap.sh && rm modules.conf
 
 COPY modules.conf /freeswitch.git/modules.conf
 
