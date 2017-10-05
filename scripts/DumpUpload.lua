@@ -29,16 +29,21 @@ c = "/scripts/tcpdump.sh "..dump_file.." "..duration.." '"..filters.."'";
 freeswitch.consoleLog("debug", "[DumpUpload.lua]: "..c);
 shell(c);
 
-::upload:: freeswitch.consoleLog("debug", "[DumpUpload.lua]: "..dump_file.." - uploading\n");
-r = api:executeString("http_put "..cdr_url.."/sys/formLoadFile?id="..uuid.."&type=pcap "..dump_file);
-freeswitch.consoleLog("debug", "[DumpUpload.lua]: "..r);
+if (file_exists(dump_file) ) then
 
-if (r:match("OK") == 'OK') then
-   del = "/bin/rm -rf "..dump_file;
-   freeswitch.consoleLog("debug", "[DumpUpload.lua]: "..del.."\n");
-   shell(del);
+    ::upload:: freeswitch.consoleLog("debug", "[DumpUpload.lua]: "..dump_file.." - uploading\n");
+    r = api:executeString("http_put "..cdr_url.."/sys/tcp_dump?id="..uuid.."&type=pcap "..dump_file);
+    freeswitch.consoleLog("debug", "[DumpUpload.lua]: "..r);
+
+    if (r:match("OK") == 'OK') then
+        del = "/bin/rm -rf "..dump_file;
+        freeswitch.consoleLog("debug", "[DumpUpload.lua]: "..del.."\n");
+        shell(del);
+    else
+        freeswitch.consoleLog("debug", "[DumpUpload.lua]: "..dump_file.." - retrying upload in 30 sec\n");
+        freeswitch.msleep(30000);
+        goto upload
+    end
 else
-   freeswitch.consoleLog("debug", "[DumpUpload.lua]: "..dump_file.." - retrying upload in 30 sec\n");
-   freeswitch.msleep(30000);
-   goto upload
+    freeswitch.consoleLog("debug", "[DumpUpload.lua]: "..dump_file.." does not exist\n");
 end
