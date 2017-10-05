@@ -9,7 +9,7 @@ if filters==nil then filters = "udp" end
 
 api = freeswitch.API();
 dump_file = "/recordings/"..uuid..".pcap";
-cdr_url = freeswitch.getGlobalVariable("cdr_url");
+cdr_url = freeswitch.getGlobalVariable("cdr_url").."/sys/tcp_dump";
 freeswitch.consoleLog("info", "[DumpUpload.lua]: Dump was started at file "..dump_file.."\n");
 
 function shell(c)
@@ -27,14 +27,15 @@ end
 
 c = "/scripts/tcpdump.sh "..dump_file.." "..duration.." '"..filters.."'";
 freeswitch.consoleLog("debug", "[DumpUpload.lua]: "..c);
-shell(c);
+rs=shell(c);
+if (rs:match("error") == 'error') then
+    cdr_url=cdr_url.."/"..uuid.."/error";
+end
 
 if (file_exists(dump_file) ) then
-
     ::upload:: freeswitch.consoleLog("debug", "[DumpUpload.lua]: "..dump_file.." - uploading\n");
-    r = api:executeString("http_put "..cdr_url.."/sys/tcp_dump?id="..uuid.."&type=pcap "..dump_file);
+    r = api:executeString("http_put "..cdr_url.."?id="..uuid.."&type=pcap "..dump_file);
     freeswitch.consoleLog("debug", "[DumpUpload.lua]: "..r);
-
     if (r:match("OK") == 'OK') then
         del = "/bin/rm -rf "..dump_file;
         freeswitch.consoleLog("debug", "[DumpUpload.lua]: "..del.."\n");
