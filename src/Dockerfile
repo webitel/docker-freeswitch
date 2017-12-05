@@ -17,7 +17,9 @@ RUN cd libsmpp34 \
 
 COPY mod_commands-bgapi.diff /mod_commands-bgapi.diff
 RUN cp /freeswitch.git/src/mod/applications/mod_callcenter/mod_callcenter.c /
-RUN cd /freeswitch.git && git checkout v1.6 && mv /mod_commands-bgapi.diff ./ && mv /mod_callcenter.c ./ && git apply mod_commands-bgapi.diff && sh bootstrap.sh && rm modules.conf
+RUN cd /freeswitch.git && git checkout v1.6 && mv /mod_commands-bgapi.diff ./ \
+    && mv /mod_callcenter.c /freeswitch.git/src/mod/applications/mod_callcenter/mod_callcenter.c \
+    && git apply mod_commands-bgapi.diff && sh bootstrap.sh && rm modules.conf
 
 COPY modules.conf /freeswitch.git/modules.conf
 
