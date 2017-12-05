@@ -21,7 +21,7 @@ RUN cd /freeswitch.git && git apply mod_commands-bgapi.diff && sh bootstrap.sh &
 
 COPY modules.conf /freeswitch.git/modules.conf
 
-RUN cd /freeswitch.git && ./configure -C --enable-zrtp --enable-core-pgsql-support --with-soundsdir=/sounds --with-recordingsdir=/recordings --with-certsdir=/certs --with-dbdir=/db --with-scriptdir=/scripts --with-logfiledir=/logs --with-storagedir=/recordings --with-cachedir=/tmp --with-imagesdir=/images && make && make install
+RUN cd /freeswitch.git && ./configure -C --enable-zrtp --enable-core-pgsql-support --with-soundsdir=/sounds --with-recordingsdir=/recordings --with-certsdir=/certs --with-dbdir=/db --with-scriptdir=/scripts --with-logfiledir=/logs --with-storagedir=/recordings --with-cachedir=/tmp --with-imagesdir=/images && make && make install && git checkout master && make mod_callcenter && make mod_callcenter-install && git checkout v1.6
 
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 
