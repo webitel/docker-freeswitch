@@ -10,6 +10,10 @@ emails = argv[4];
 if emails==nil then emails = "none" end
 name = argv[5];
 if name==nil then name = "none" end
+email_sbj = argv[6];
+if email_sbj==nil then email_sbj = "none" end
+email_msg = argv[7];
+if email_msg==nil then email_msg = "none" end
 
 api = freeswitch.API();
 freeswitch.msleep(2000);
@@ -33,7 +37,7 @@ end
 
 if (file_exists(rec_file.."."..format) ) then
     ::upload:: freeswitch.consoleLog("debug", "[RecordUpload.lua]: "..uuid.." - uploading file\n");
-    r = api:executeString("http_put "..cdr_url.."/sys/formLoadFile?domain="..domain.."&id="..uuid.."&type="..format.."&email="..emails.."&name="..name.." "..rec_file.."."..format);
+    r = api:executeString("http_put "..cdr_url.."/sys/formLoadFile?domain="..domain.."&id="..uuid.."&type="..format.."&email="..emails.."&name="..name.."&email_sbj="..email_sbj.."&email_msg="..email_msg.." "..rec_file.."."..format);
     freeswitch.consoleLog("debug", "[RecordUpload.lua]: "..r);
     if (r:match("OK") == 'OK') then
         del = "/bin/rm -rf "..rec_file.."."..format;
