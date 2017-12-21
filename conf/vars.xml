@@ -15,7 +15,6 @@
   <X-PRE-PROCESS cmd="set" data="global_codec_prefs=CODECS_GLOBAL_PREF"/>
   <X-PRE-PROCESS cmd="set" data="outbound_codec_prefs=CODECS_OUTBOUND_PREF"/>
   <X-PRE-PROCESS cmd="set" data="media_mix_inbound_outbound_codecs=true"/>
-  <X-PRE-PROCESS cmd="set" data="presence_data_cols=domain_name"/>
  
   <X-PRE-PROCESS cmd="set" data="bind_server_ip=auto"/>
   <X-PRE-PROCESS cmd="set" data="nonreg_ip=nonreg_ip_value"/>
