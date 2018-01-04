@@ -9,6 +9,7 @@ RUN git clone https://freeswitch.org/stash/scm/fs/freeswitch.git /freeswitch.git
 RUN git clone https://github.com/xadhoom/mod_bcg729.git /mod_bcg729
 RUN git clone git://git.osmocom.org/libsmpp34 /libsmpp34
 RUN git clone https://github.com/webitel/mod_amd.git /mod_amd
+RUN git clone https://github.com/webitel/mod_cdr_rabbitmq.git /mod_cdr_rabbitmq
 
 RUN cd libsmpp34 \
     && autoreconf -i\
@@ -39,6 +40,10 @@ RUN cd /mod_amd \
    && export PKG_CONFIG_PATH=/usr/local/freeswitch/lib/pkgconfig/ \
    && make && make install && cd / && rm -rf /mod_amd
 
-RUN cd / && rm -rf /usr/local/freeswitch/mod/*.la && rm -rf /usr/local/freeswitch/conf && tar czvf fs.tgz /usr/local/freeswitch /usr/local/lib/libsmpp34.so.0.0.1 /usr/local/lib/libsmpp34.so.0 /usr/local/lib/libsmpp34.so
+#Install mod_cdr_rabbitmq
+RUN cd /mod_cdr_rabbitmq \
+   && export PKG_CONFIG_PATH=/usr/local/freeswitch/lib/pkgconfig/ \
+   && make && make install && cd / && rm -rf /mod_cdr_rabbitmq
 
+RUN cd / && rm -rf /usr/local/freeswitch/mod/*.la && rm -rf /usr/local/freeswitch/conf && tar czvf fs.tgz /usr/local/freeswitch /usr/local/lib/libsmpp34.so.0.0.1 /usr/local/lib/libsmpp34.so.0 /usr/local/lib/libsmpp34.so
 
