@@ -4,9 +4,10 @@ RUN apt-get update
 RUN apt-get install -y --force-yes vlc-nox build-essential libshout3-dev libpq-dev
 RUN apt-get update
 RUN apt-get install -y --force-yes freeswitch-video-deps-most
-RUN dpkg --install - <(curl -o- http://ftp.de.debian.org/debian/pool/main/o/openssl/libssl1.1_1.1.0g-2_amd64.deb)
-RUN dpkg --install - <(curl -o- http://ftp.de.debian.org/debian/pool/main/libr/librabbitmq/librabbitmq4_0.8.0-1+b3_amd64.deb)
-RUN dpkg --install - <(curl -o- http://ftp.de.debian.org/debian/pool/main/libr/librabbitmq/librabbitmq-dev_0.8.0-1+b3_amd64.deb)
+RUN curl -o /tmp/libssl1.1_1.1.0g-2_amd64.deb http://ftp.de.debian.org/debian/pool/main/o/openssl/libssl1.1_1.1.0g-2_amd64.deb \
+    && curl -o /tmp/librabbitmq4_0.8.0-1+b3_amd64.deb http://ftp.de.debian.org/debian/pool/main/libr/librabbitmq/librabbitmq4_0.8.0-1+b3_amd64.deb \
+    && curl -o /tmp/librabbitmq-dev_0.8.0-1+b3_amd64.deb http://ftp.de.debian.org/debian/pool/main/libr/librabbitmq/librabbitmq-dev_0.8.0-1+b3_amd64.deb \
+    && dpkg -i /tmp/libssl1.1_1.1.0g-2_amd64.deb && dpkg -i /tmp/librabbitmq4_0.8.0-1+b3_amd64.deb && dpkg -i /tmp/librabbitmq-dev_0.8.0-1+b3_amd64.deb
 
 RUN git clone https://freeswitch.org/stash/scm/fs/freeswitch.git /freeswitch.git
 RUN git clone https://github.com/xadhoom/mod_bcg729.git /mod_bcg729
@@ -48,5 +49,5 @@ RUN cd /mod_cdr_rabbitmq \
    && export PKG_CONFIG_PATH=/usr/local/freeswitch/lib/pkgconfig/ \
    && make && make install && cd / && rm -rf /mod_cdr_rabbitmq
 
-RUN cd / && rm -rf /usr/local/freeswitch/mod/*.la && rm -rf /usr/local/freeswitch/conf && tar czvf fs.tgz /usr/local/freeswitch /usr/local/lib/libsmpp34.so.0.0.1 /usr/local/lib/libsmpp34.so.0 /usr/local/lib/libsmpp34.so
+RUN cd / && rm -rf /usr/local/freeswitch/mod/*.la && rm -rf /usr/local/freeswitch/conf && tar czvf fs.tgz /usr/local/freeswitch /usr/local/lib/libsmpp34.so.0.0.1 /usr/local/lib/libsmpp34.so.0 /usr/local/lib/libsmpp34.so /tmp/libssl1.1_1.1.0g-2_amd64.deb /tmp/librabbitmq4_0.8.0-1+b3_amd64.deb 
 
