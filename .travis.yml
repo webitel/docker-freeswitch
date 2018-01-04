@@ -13,13 +13,7 @@ before_install:
   Dockerfile; fi
 - docker login --username=$DOCKER_HUB_USERNAME --password=$DOCKER_HUB_PASSWORD
 install:
-- docker build --no-cache -t freeswitch-from-source src
-- docker run -d -v ${PWD}:/data -t freeswitch-from-source cp /fs.tgz /data/
-- ls -l ${PWD}
-script:
 - docker build --no-cache -t $DOCKER_IMAGE_NAME .
+script:
 - if [ ! -z "$TRAVIS_TAG" ]; then docker tag $DOCKER_IMAGE_NAME:latest $DOCKER_IMAGE_NAME:$TRAVIS_TAG;
   fi && docker push $DOCKER_IMAGE_NAME
-notifications:
-  slack:
-    secure: RYL0IJLkTCwKPJnlXu0BkDBdrbeDwpy84ZfMiuB1bOh3AOwPP1ef/4lBz1ADbyaQdSUKYQfFoXTS0pHg3w3RiKJDsJn1t7lUeazZv91ZxFbh94Ne8RMQiKLG3zEBq/QS1WdmexNngYHdwC+Mo3wHqLsfCpBRb17QZmUmlpy3W4Os2gYAA3ssBocZ9+LjwsH0u+EH+WaXzILxvf+IiOH3xUSOosLP4/d6zTuwOELc8TYJik5od/qJjapzgnysebnVH0g5vo9qjo05U5LCqORGMVOgRE0huM6xf1x9JXjNwdDq8/PBtP0/4o6BHO61rgwSrBYY9mzauucuzFSAibIhR3BwxAdW844BfQZ2Zj8iAWE4I7UbGuhpb5Irtff57ZUiA4qufsPO8KevdFqQTG6ekaUSIqDfUQiCL7aKLr5UKct4ecyjB3/Je4DPyAZird/haDJ2cIF/Q4aA8F9LOGgKLMte5Sg4elN95RWmC2sqIWQU+Nsjn455tlIf/Tm1EheBEjYQ0X/V4EbYZCVuGKXL29w9K9N3ZwvA7Z88x0lswdP4QaZS5HHbTkmzXYQQLF8D2mEBJm5F+uvNTLt7ZAE62KnJic2pq+CqUyX7q4bJwYwW7+TmMdao19RfIqvqQvn7izJ8QanMYomYY0bS/9wsIx3bl8EVGcHO69VX5k2Ed8w=
