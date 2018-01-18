@@ -26,7 +26,6 @@ if ( transfer_disposition=="recv_replace" ) then
 end
 
 api = freeswitch.API();
-freeswitch.msleep(1000);
 freeswitch.consoleLog("NOTICE", "[RecordUpload.lua]: transfer_disposition is " ..transfer_disposition.. "\n");
 
 function shell(c)
