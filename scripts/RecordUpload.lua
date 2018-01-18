@@ -15,11 +15,19 @@ if email_sbj==nil then email_sbj = "none" end
 email_msg = argv[7];
 if email_msg==nil then email_msg = "none" end
 
-api = freeswitch.API();
-freeswitch.msleep(2000);
-rec_file = "/recordings/"..uuid.."_"..name;
 cdr_url = freeswitch.getGlobalVariable("cdr_url");
-freeswitch.consoleLog("info", "[RecordUpload.lua]: Session record stopped at "..uuid.."\n");
+rec_file = "/recordings/"..session:getVariable("webitel_record_file_name");
+freeswitch.consoleLog("INFO", "[RecordUpload.lua]: Session record stopped at "..uuid.."\n");
+transfer_disposition = session:getVariable("transfer_disposition");
+if transfer_disposition==nil then transfer_disposition = "nope" end
+if ( transfer_disposition=="recv_replace" ) then
+    freeswitch.consoleLog("INFO", "[RecordUpload.lua]: transfer_disposition is " ..transfer_disposition.. ". Exit!\n");
+    return
+end
+
+api = freeswitch.API();
+freeswitch.msleep(1000);
+freeswitch.consoleLog("NOTICE", "[RecordUpload.lua]: transfer_disposition is " ..transfer_disposition.. "\n");
 
 function shell(c)
   local o, h
@@ -31,21 +39,23 @@ end
 
 function file_exists(name)
    local f=io.open(name,"r")
-   freeswitch.consoleLog("debug", "[RecordUpload.lua]: File exists "..name.."\n");
+   freeswitch.consoleLog("NOTICE", "[RecordUpload.lua]: File exists "..name.."\n");
    if f~=nil then io.close(f) return true else return false end
 end
 
-if (file_exists(rec_file.."."..format) ) then
-    ::upload:: freeswitch.consoleLog("debug", "[RecordUpload.lua]: "..uuid.." - uploading file\n");
-    r = api:executeString("http_put "..cdr_url.."/sys/formLoadFile?domain="..domain.."&id="..uuid.."&type="..format.."&email="..emails.."&name="..name.."&email_sbj="..email_sbj.."&email_msg="..email_msg.." "..rec_file.."."..format);
-    freeswitch.consoleLog("debug", "[RecordUpload.lua]: "..r);
+if (file_exists(rec_fil) ) then
+    ::upload:: freeswitch.consoleLog("INFO", "[RecordUpload.lua]: "..uuid.." - uploading file\n");
+    r = api:executeString("http_put "..cdr_url.."/sys/formLoadFile?domain="..domain.."&id="..uuid.."&type="..format.."&email="..emails.."&name="..name.."&email_sbj="..email_sbj.."&email_msg="..email_msg.." "..rec_file);
+    freeswitch.consoleLog("DEBUG", "[RecordUpload.lua]: "..r);
     if (r:match("OK") == 'OK') then
-        del = "/bin/rm -rf "..rec_file.."."..format;
-        freeswitch.consoleLog("debug", "[RecordUpload.lua]: "..del.."\n");
+        del = "/bin/rm -rf "..rec_file;
+        freeswitch.consoleLog("DEBUG", "[RecordUpload.lua]: "..del.."\n");
         shell(del);
     else
-        freeswitch.consoleLog("debug", "[RecordUpload.lua]: "..uuid.." - retrying upload in 30 sec\n");
+        freeswitch.consoleLog("NOTICE", "[RecordUpload.lua]: "..uuid.." - retrying upload in 30 sec\n");
         freeswitch.msleep(30000);
         goto upload
     end
+else
+    freeswitch.consoleLog("WARNING", "[RecordUpload.lua]: "..uuid.." File not found\n");
 end
