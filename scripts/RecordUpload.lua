@@ -43,7 +43,7 @@ function file_exists(name)
    if f~=nil then io.close(f) return true else return false end
 end
 
-if (file_exists(rec_fil) ) then
+if (file_exists(rec_file) ) then
     ::upload:: freeswitch.consoleLog("INFO", "[RecordUpload.lua]: "..uuid.." - uploading file\n");
     r = api:executeString("http_put "..cdr_url.."/sys/formLoadFile?domain="..domain.."&id="..uuid.."&type="..format.."&email="..emails.."&name="..name.."&email_sbj="..email_sbj.."&email_msg="..email_msg.." "..rec_file);
     freeswitch.consoleLog("DEBUG", "[RecordUpload.lua]: "..r);
