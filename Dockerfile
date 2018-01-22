@@ -13,8 +13,6 @@ RUN git clone https://freeswitch.org/stash/scm/fs/freeswitch.git /freeswitch.git
 RUN git clone https://github.com/xadhoom/mod_bcg729.git /mod_bcg729
 RUN git clone git://git.osmocom.org/libsmpp34 /libsmpp34
 RUN git clone https://github.com/webitel/mod_amd.git /mod_amd
-RUN rm -rf /freeswitch.git/src/mod/event_handlers/mod_amqp \
-    && git clone https://github.com/webitel/mod_amqp.git /freeswitch.git/src/mod/event_handlers/mod_amqp
 
 RUN cd libsmpp34 \
     && autoreconf -i\
