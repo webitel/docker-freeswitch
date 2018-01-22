@@ -25,7 +25,9 @@ COPY src/mod_commands-bgapi.diff /mod_commands-bgapi.diff
 RUN cp /freeswitch.git/src/mod/applications/mod_callcenter/mod_callcenter.c /
 RUN cd /freeswitch.git && git checkout v1.6 && mv /mod_commands-bgapi.diff ./ \
     && mv /mod_callcenter.c /freeswitch.git/src/mod/applications/mod_callcenter/mod_callcenter.c \
-    && git apply mod_commands-bgapi.diff && sh bootstrap.sh && rm modules.conf
+    && git apply mod_commands-bgapi.diff && rm -rf /freeswitch.git/src/mod/event_handlers/mod_amqp \
+    && git clone https://github.com/webitel/mod_amqp.git /freeswitch.git/src/mod/event_handlers/mod_amqp \
+    && sh bootstrap.sh && rm modules.conf
 
 COPY src/modules.conf /freeswitch.git/modules.conf
 
