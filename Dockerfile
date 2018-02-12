@@ -61,7 +61,7 @@ RUN apt-get update && apt-get install -y --force-yes --no-install-recommends vlc
 #    && dpkg -i /var/lib/apt/lists/libssl1.1_1.1.0g-2_amd64.deb && dpkg -i /var/lib/apt/lists/librabbitmq4_0.8.0-1+b3_amd64.deb 
 
 ENV FS_MAJOR 1.6
-ENV FS_VERSION v1.6.19
+ENV FS_VERSION v1.6.20
 ENV WEBITEL_REPO_BASE https://github.com/webitel
 
 ENV WEBITEL_MAJOR
