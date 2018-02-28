@@ -20,24 +20,6 @@
       </condition>
     </extension>
 
-    <extension name="global-intercept">
-      <condition field="destination_number" expression="^886$">
-        <action application="set" data="webitel_direction=intercept"/>
-        <action application="answer"/>
-        <action application="intercept" data="${hash(select/${domain_name}-last_dial/global)}"/>
-        <action application="sleep" data="2000"/>
-      </condition>
-    </extension>
-
-    <extension name="intercept-ext">
-      <condition field="destination_number" expression="^\*\*(\d+)$">
-        <action application="set" data="webitel_direction=intercept"/>
-        <action application="answer"/>
-        <action application="intercept" data="${hash(select/${domain_name}-last_dial_ext/$1)}"/>
-        <action application="sleep" data="2000"/>
-      </condition>
-   </extension>
-   
    <!-- In call Transfer for phones without a transfer button -->
     <extension name="dx">
       <condition field="destination_number" expression="^dx$">
@@ -74,9 +56,6 @@
       </condition>
 
       <condition>
-        <action application="hash" data="insert/${domain_name}-last_dial_ext/${destination_number}/${uuid}"/>
-        <action application="hash" data="insert/${domain_name}-last_dial/${caller_id_number}/${destination_number}"/>
-        <action application="hash" data="insert/${domain_name}-last_dial/global/${uuid}"/>
         <action application="export" data="RFC2822_DATE=${strftime(%a, %d %b %Y %T %z)}"/>
         <action application="bind_meta_app" data="0 a s execute_extension::dx XML default"/>
       </condition>
