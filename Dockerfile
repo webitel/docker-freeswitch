@@ -20,10 +20,11 @@ RUN cd libsmpp34 \
     && ldconfig && cd / && rm -rf /libsmpp34
 
 COPY src/mod_commands-bgapi.diff /mod_commands-bgapi.diff
+COPY src/switch_event.diff /switch_event.diff
 RUN cp /freeswitch.git/src/mod/applications/mod_callcenter/mod_callcenter.c /
-RUN cd /freeswitch.git && git checkout v1.6 && mv /mod_commands-bgapi.diff ./ \
+RUN cd /freeswitch.git && git checkout v1.6 && mv /mod_commands-bgapi.diff ./ && mv /switch_event.diff ./ \
     && mv /mod_callcenter.c /freeswitch.git/src/mod/applications/mod_callcenter/mod_callcenter.c \
-    && git apply mod_commands-bgapi.diff && rm -rf /freeswitch.git/src/mod/event_handlers/mod_amqp \
+    && git apply mod_commands-bgapi.diff && git apply switch_event.diff && rm -rf /freeswitch.git/src/mod/event_handlers/mod_amqp \
     && git clone https://github.com/webitel/mod_amqp.git /freeswitch.git/src/mod/event_handlers/mod_amqp \
     && sh bootstrap.sh && rm modules.conf
 
