@@ -4,10 +4,10 @@ RUN apt-get update
 RUN apt-get install -y --force-yes vlc-nox build-essential librabbitmq1 librabbitmq-dev libshout3-dev libpq-dev
 RUN apt-get update
 RUN apt-get install -y --force-yes freeswitch-video-deps-most
-RUN curl -o /tmp/libssl1.1_1.1.0g-2_amd64.deb http://ftp.de.debian.org/debian/pool/main/o/openssl/libssl1.1_1.1.0g-2_amd64.deb \
+RUN curl -o /tmp/libssl1.1_1.1.0f-3+deb9u1_amd64.deb http://ftp.de.debian.org/debian/pool/main/o/openssl/libssl1.1_1.1.0f-3+deb9u1_amd64.deb \
     && curl -o /tmp/librabbitmq4_0.8.0-1+b3_amd64.deb http://ftp.de.debian.org/debian/pool/main/libr/librabbitmq/librabbitmq4_0.8.0-1+b3_amd64.deb \
     && curl -o /tmp/librabbitmq-dev_0.8.0-1+b3_amd64.deb http://ftp.de.debian.org/debian/pool/main/libr/librabbitmq/librabbitmq-dev_0.8.0-1+b3_amd64.deb \
-    && dpkg -i /tmp/libssl1.1_1.1.0g-2_amd64.deb && dpkg -i /tmp/librabbitmq4_0.8.0-1+b3_amd64.deb && dpkg -i /tmp/librabbitmq-dev_0.8.0-1+b3_amd64.deb
+    && dpkg -i /tmp/libssl1.1_1.1.0f-3+deb9u1_amd64.deb && dpkg -i /tmp/librabbitmq4_0.8.0-1+b3_amd64.deb && dpkg -i /tmp/librabbitmq-dev_0.8.0-1+b3_amd64.deb
 
 RUN git clone https://freeswitch.org/stash/scm/fs/freeswitch.git /freeswitch.git
 RUN git clone https://github.com/xadhoom/mod_bcg729.git /mod_bcg729
@@ -51,14 +51,14 @@ RUN cd / && rm -rf /usr/local/freeswitch/mod/*.la && rm -rf /usr/local/freeswitc
 FROM webitel/freeswitch-base:latest
 LABEL maintainer="Vitaly Kovalyshyn"
 
-COPY --from=0 /tmp/libssl1.1_1.1.0g-2_amd64.deb /tmp/
+COPY --from=0 /tmp/libssl1.1_1.1.0f-3+deb9u1_amd64.deb /tmp/
 COPY --from=0 /tmp/librabbitmq4_0.8.0-1+b3_amd64.deb /tmp/
 
 RUN apt-get update && apt-get install -y --force-yes --no-install-recommends vlc-nox libpq-dev libshout3-dev \
     'libtool-bin|libtool' libodbc1 libvpx2 libyuv libopenal1 libjbig2dec0 libjbig0 libilbc1 libmpg123-0 libopencv-calib3d2.4 \
     libopencv-contrib2.4 libopencv-gpu2.4 libopencv-ocl2.4 libopencv-stitching2.4 libopencv-superres2.4 libopencv-ts2.4 \
     libopencv-videostab2.4 libx264-142 imagemagick libldns1 iptables tcpdump librabbitmq1 \
-    && ls /tmp/ && dpkg -i /tmp/libssl1.1_1.1.0g-2_amd64.deb && dpkg -i /tmp/librabbitmq4_0.8.0-1+b3_amd64.deb && rm -rf /tmp/* \
+    && ls /tmp/ && dpkg -i /tmp/libssl1.1_1.1.0f-3+deb9u1_amd64.deb && dpkg -i /tmp/librabbitmq4_0.8.0-1+b3_amd64.deb && rm -rf /tmp/* \
     && apt-get clean && chmod +s /usr/sbin/tcpdump && rm -rf /var/lib/apt/lists/*
 
 ENV FS_MAJOR 1.6
