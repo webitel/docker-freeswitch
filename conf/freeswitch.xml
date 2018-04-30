@@ -61,6 +61,13 @@
       </condition>
     </extension>
 
+    <extension name="inbound_hot_desk" continue="true">
+      <condition field="${direction}" expression="^inbound$"/>
+      <condition field="${sip-force-user}" expression=".+">
+         <action application="set_user" data="${sip-force-user}@${domain_name}"/>
+      </condition>
+    </extension>
+
     <extension name="Echo Test">
       <condition field="destination_number" expression="^(0)$">
         <action application="set" data="webitel_direction=internal"/>
