@@ -24,6 +24,7 @@
   <condition field="${direction}" expression="^inbound$"/>
   <condition field="${sip-force-user}" expression=".+">
     <action application="set_user" data="${sip-force-user}@${domain_name}" inline="true"/>
+    <action application="set" data="presence_id=${sip-force-user}@${domain_name}" inline="true"/>
     <action application="set_profile_var" data="caller_id_number=${sip-force-user}" inline="true"/>
     <action application="set_profile_var" data="caller_id_name=${user_data(${sip-force-user}@${domain_name} var effective_caller_id_name)}" inline="true"/>
   </condition>
