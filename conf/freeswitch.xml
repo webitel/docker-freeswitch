@@ -20,6 +20,15 @@
       </condition>
     </extension>
 
+<extension name="inbound_hot_desk" continue="true">
+  <condition field="${direction}" expression="^inbound$"/>
+  <condition field="${sip-force-user}" expression=".+">
+    <action application="set_user" data="${sip-force-user}@${domain_name}" inline="true"/>
+    <action application="set_profile_var" data="caller_id_number=${sip-force-user}" inline="true"/>
+    <action application="set_profile_var" data="caller_id_name=${user_data(${sip-force-user}@${domain_name} var effective_caller_id_name)}" inline="true"/>
+  </condition>
+</extension>
+
    <!-- In call Transfer for phones without a transfer button -->
     <extension name="dx">
       <condition field="destination_number" expression="^dx$">
@@ -58,13 +67,6 @@
       <condition>
         <action application="export" data="RFC2822_DATE=${strftime(%a, %d %b %Y %T %z)}"/>
         <action application="bind_meta_app" data="0 a s execute_extension::dx XML default"/>
-      </condition>
-    </extension>
-
-    <extension name="inbound_hot_desk" continue="true">
-      <condition field="${direction}" expression="^inbound$"/>
-      <condition field="${sip-force-user}" expression=".+">
-         <action application="set_user" data="${sip-force-user}@${domain_name}"/>
       </condition>
     </extension>
 
