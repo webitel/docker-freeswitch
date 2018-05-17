@@ -70,8 +70,8 @@ ENV VERSION
 
 WORKDIR /
 COPY --from=0 /usr/local/freeswitch /usr/local/freeswitch
-COPY --from=0 /usr/local/lib/libsmpp34.so.0.0.1 /usr/local/lib/libsmpp34.so.0.0.1
-COPY --from=0 /usr/local/lib/libsmpp34.so.0 /usr/local/lib/libsmpp34.so.0
+COPY --from=0 /usr/local/lib/libsmpp34.so.1.0.0 /usr/local/lib/libsmpp34.so.1.0.0
+COPY --from=0 /usr/local/lib/libsmpp34.so.1 /usr/local/lib/libsmpp34.so.1
 COPY --from=0 /usr/local/lib/libsmpp34.so /usr/local/lib/libsmpp34.so
 
 COPY conf /conf
