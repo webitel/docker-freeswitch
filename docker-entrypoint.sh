@@ -137,7 +137,11 @@ else
     sed -i 's/CODECS_OUTBOUND_PREF/PCMA,PCMU,G729,GSM/g' /conf/vars.xml
 fi
 
+iptables -F INPUT
+
 if [ -f /drop-sip-uac ]; then
+    iptables -F SIPUAC
+    iptables -X SIPUAC
     if ! iptables -nL SIPUAC 2>&1 >/dev/null; then
         iptables -N SIPUAC
         while read line
@@ -151,6 +155,8 @@ if [ -f /drop-sip-uac ]; then
 fi
 
 if [ -f /drop-from-ip ]; then
+    iptables -F DROPIP
+    iptables -X DROPIP
     if ! iptables -nL DROPIP 2>&1 >/dev/null; then
         iptables -N DROPIP
         while read line
