@@ -137,34 +137,28 @@ else
     sed -i 's/CODECS_OUTBOUND_PREF/PCMA,PCMU,G729,GSM/g' /conf/vars.xml
 fi
 
-if [ "$SIPDOS" ]; then
-    if ! iptables -nL SIPDOS 2>&1 >/dev/null; then
-        iptables -N SIPDOS
+if [ -f /drop-sip-uac ]; then
+    if ! iptables -nL SIPUAC 2>&1 >/dev/null; then
+        iptables -N SIPUAC
+        while read line
+        do
+            iptables -A INPUT -p udp -m udp --match multiport --dports 5060,5070,5080 -m string --string "$line" --algo bm --to 65535 -m comment --comment "deny $line" -j SIPUAC
+            iptables -A INPUT -p tcp -m tcp --match multiport --dports 5060,5070,5080 -m string --string "$line" --algo bm --to 65535 -m comment --comment "deny $line" -j SIPUAC
+        done < /drop-sip-uac
+        iptables -A SIPUAC -j LOG --log-prefix "webitel-sip-uac: " --log-level 6
+        iptables -A SIPUAC -j DROP
+    fi
+fi
 
-        iptables -A INPUT -p udp -m udp --match multiport --dports 5060,5070,5080 -m string --string "sundayddr" --algo bm --to 65535 -m comment --comment "deny sundayddr" -j SIPDOS
-        iptables -A INPUT -p udp -m udp --match multiport --dports 5060,5070,5080 -m string --string "sipsak" --algo bm --to 65535 -m comment --comment "deny sipsak" -j SIPDOS
-        iptables -A INPUT -p udp -m udp --match multiport --dports 5060,5070,5080 -m string --string "sipvicious" --algo bm --to 65535 -m comment --comment "deny sipvicious" -j SIPDOS
-        iptables -A INPUT -p udp -m udp --match multiport --dports 5060,5070,5080 -m string --string "friendly-scanner" --algo bm --to 65535 -m comment --comment "deny friendly-scanner" -j SIPDOS
-        iptables -A INPUT -p udp -m udp --match multiport --dports 5060,5070,5080 -m string --string "User-Agent: sipcli" --algo bm --to 65535 -m comment --comment "deny sipcli" -j SIPDOS
-        iptables -A INPUT -p udp -m udp --match multiport --dports 5060,5070,5080 -m string --string "iWar" --algo bm --to 65535 -m comment --comment "deny iWar" -j SIPDOS
-        iptables -A INPUT -p udp -m udp --match multiport --dports 5060,5070,5080 -m string --string "sip-scan" --algo bm --to 65535 -m comment --comment "deny sip-scan" -j SIPDOS
-        iptables -A INPUT -p udp -m udp --match multiport --dports 5060,5070,5080 -m string --string "User-Agent: SIP Call" --algo bm --to 65535 -m comment --comment "deny SIP Call" -j SIPDOS
-        iptables -A INPUT -p udp -m udp --match multiport --dports 5060,5070,5080 -m string --string "User-Agent: vpncall" --algo bm --to 65535 -m comment --comment "deny SIP Call" -j SIPDOS
-        iptables -A INPUT -p udp -m udp --match multiport --dports 5060,5070,5080 -m string --string "User-Agent: GSM" --algo bm --to 65535 -m comment --comment "deny SIP Call" -j SIPDOS
-
-        iptables -A INPUT -p tcp -m tcp --match multiport --dports 5060,5070,5080 -m string --string "sundayddr" --algo bm --to 65535 -m comment --comment "deny sundayddr" -j SIPDOS
-        iptables -A INPUT -p tcp -m tcp --match multiport --dports 5060,5070,5080 -m string --string "sipsak" --algo bm --to 65535 -m comment --comment "deny sipsak" -j SIPDOS
-        iptables -A INPUT -p tcp -m tcp --match multiport --dports 5060,5070,5080 -m string --string "sipvicious" --algo bm --to 65535 -m comment --comment "deny sipvicious" -j SIPDOS
-        iptables -A INPUT -p tcp -m tcp --match multiport --dports 5060,5070,5080 -m string --string "friendly-scanner" --algo bm --to 65535 -m comment --comment "deny friendly-scanner" -j SIPDOS
-        iptables -A INPUT -p tcp -m tcp --match multiport --dports 5060,5070,5080 -m string --string "User-Agent: sipcli" --algo bm --to 65535 -m comment --comment "deny sipcli" -j SIPDOS
-        iptables -A INPUT -p tcp -m tcp --match multiport --dports 5060,5070,5080 -m string --string "iWar" --algo bm --to 65535 -m comment --comment "deny iWar" -j SIPDOS
-        iptables -A INPUT -p tcp -m tcp --match multiport --dports 5060,5070,5080 -m string --string "sip-scan" --algo bm --to 65535 -m comment --comment "deny sip-scan" -j SIPDOS
-        iptables -A INPUT -p tcp -m tcp --match multiport --dports 5060,5070,5080 -m string --string "User-Agent: SIP Call" --algo bm --to 65535 -m comment --comment "deny SIP Call" -j SIPDOS
-        iptables -A INPUT -p tcp -m tcp --match multiport --dports 5060,5070,5080 -m string --string "User-Agent: vpncall" --algo bm --to 65535 -m comment --comment "deny SIP Call" -j SIPDOS
-        iptables -A INPUT -p tcp -m tcp --match multiport --dports 5060,5070,5080 -m string --string "User-Agent: GSM" --algo bm --to 65535 -m comment --comment "deny SIP Call" -j SIPDOS
-
-        iptables -A SIPDOS -j LOG --log-prefix "firewall-sipdos: " --log-level 6
-        iptables -A SIPDOS -j DROP
+if [ -f /drop-from-ip ]; then
+    if ! iptables -nL DROPIP 2>&1 >/dev/null; then
+        iptables -N DROPIP
+        while read line
+        do
+            iptables -A INPUT -s $line -m comment --comment "deny $line" -j DROPIP
+        done < /drop-from-ip
+        iptables -A DROPIP -j LOG --log-prefix "webitel-drop-ip: " --log-level 6
+        iptables -A DROPIP -j DROP
     fi
 fi
 
