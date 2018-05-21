@@ -1,6 +1,6 @@
 ## FreeSWITCH
 
-[![Build Status](https://travis-ci.org/webitel/docker-freeswitch.svg?branch=master)](https://travis-ci.org/webitel/docker-freeswitch) [![Documentation Status](https://readthedocs.org/projects/webitel/badge/?version=latest)](http://api.webitel.com/en/latest/?badge=latest) 
+[![Build Status](https://travis-ci.org/webitel/docker-freeswitch.svg?branch=master)](https://travis-ci.org/webitel/docker-freeswitch) [![Documentation Status](https://readthedocs.org/projects/webitel/badge/?version=latest)](http://api.webitel.com/en/latest/?badge=latest)
 
 
 [FreeSWITCH](http://www.freeswitch.org/) - FREE Multi-Protocol Soft Switch v1.6.20
@@ -29,7 +29,7 @@ This optional environment variable for FreeSWITCH log level. Default is `warn`.
 
 `ACR_SERVER`
 
-This environment variable used for connection to ACR with FreeSWITCH `socket` application. You must set IP:PORT. 
+This environment variable used for connection to ACR with FreeSWITCH `socket` application. You must set IP:PORT.
 
 Used in the `ACR` XML Dialplan extension:
 
