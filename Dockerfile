@@ -4,7 +4,7 @@ RUN apt-get update
 RUN apt-get install -y --force-yes vlc-nox build-essential librabbitmq1 librabbitmq-dev libshout3-dev libpq-dev
 RUN apt-get update
 RUN apt-get install -y --force-yes freeswitch-video-deps-most
-RUN curl -o /tmp/libssl1.1_1.1.0h-4_amd64.deb http://ftp.de.debian.org/debian/pool/main/o/openssl/libssl1.1_1.1.0f-3+deb9u1_amd64.deb \
+RUN curl -o /tmp/libssl1.1_1.1.0h-4_amd64.deb http://ftp.de.debian.org/debian/pool/main/o/openssl/libssl1.1_1.1.0h-4_amd64.deb \
     && curl -o /tmp/librabbitmq4_0.8.0-1+b3_amd64.deb http://ftp.de.debian.org/debian/pool/main/libr/librabbitmq/librabbitmq4_0.8.0-1+b3_amd64.deb \
     && curl -o /tmp/librabbitmq-dev_0.8.0-1+b3_amd64.deb http://ftp.de.debian.org/debian/pool/main/libr/librabbitmq/librabbitmq-dev_0.8.0-1+b3_amd64.deb \
     && dpkg -i /tmp/libssl1.1_1.1.0h-4_amd64.deb && dpkg -i /tmp/librabbitmq4_0.8.0-1+b3_amd64.deb && dpkg -i /tmp/librabbitmq-dev_0.8.0-1+b3_amd64.deb
