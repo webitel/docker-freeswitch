@@ -18,16 +18,10 @@ if [ -f /drop-sip-uac ]; then
 fi
 
 if [ -f /allow-from-ip ]; then
-    iptables -F ALLOWIP
-    iptables -X ALLOWIP
-    if ! iptables -nL ALLOWIP 2>&1 >/dev/null; then
-        iptables -N ALLOWIP
         while read line
         do
-            iptables -A INPUT -s $line -m comment --comment "allow $line" -j ALLOWIP
+            iptables -A INPUT -s $line -m comment --comment "allow $line" -j ACCEPT
         done < /allow-from-ip
-        iptables -A ALLOWIP -j ACCEPT
-    fi
 fi
 
 if [ -f /drop-from-ip ]; then
