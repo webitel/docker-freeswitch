@@ -30,7 +30,7 @@ RUN cd /freeswitch.git && git checkout v1.6 && mv /mod_commands-bgapi.diff ./ &&
 
 COPY src/modules.conf /freeswitch.git/modules.conf
 
-RUN cd /freeswitch.git && ./configure -C --enable-zrtp --enable-core-pgsql-support --with-soundsdir=/sounds --with-recordingsdir=/recordings --with-certsdir=/certs --with-dbdir=/db --with-scriptdir=/scripts --with-logfiledir=/logs --with-storagedir=/recordings --with-cachedir=/tmp --with-imagesdir=/images && make && make install
+RUN cd /freeswitch.git && ./configure -C --disable-zrtp --enable-core-pgsql-support --with-soundsdir=/sounds --with-recordingsdir=/recordings --with-certsdir=/certs --with-dbdir=/db --with-scriptdir=/scripts --with-logfiledir=/logs --with-storagedir=/recordings --with-cachedir=/tmp --with-imagesdir=/images && make && make install
 
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 
