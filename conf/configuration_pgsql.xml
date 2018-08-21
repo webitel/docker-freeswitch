@@ -10,8 +10,7 @@
     <configuration name="switch.conf" description="Core Configuration">
       <settings>
         <param name="switchname" value="webitel" />
-        <param name="rtp-enable-zrtp" value="true"/>
-        <param name="rtp-start-port" value="RTP_START_PORT"/> 
+        <param name="rtp-start-port" value="RTP_START_PORT"/>
         <param name="rtp-end-port" value="RTP_END_PORT"/>
         <param name="rtp-port-usage-robustness" value="true"/>
         <param name="max-sessions" value="MAX_SESSIONS"/>
@@ -33,7 +32,7 @@
     <map name="zap_zt.c"                    value="all"/>
     <map name="mod_openzap"                 value="all"/>
     <map name="sofia.c"                     value="notice"/>
-    <map name="switch_core_state_machine.c" value="all"/>      
+    <map name="switch_core_state_machine.c" value="all"/>
       </mappings>
       <settings>
         <param name="colorize" value="true" />
@@ -51,7 +50,7 @@
         </binding>
       </bindings>
 	</configuration>
-	
+
 <configuration name="timezones.conf" description="Timezones">
     <timezones>
 	<zone name="Africa/Abidjan" value="GMT0" />
