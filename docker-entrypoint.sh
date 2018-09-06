@@ -144,8 +144,8 @@ chown -R freeswitch:freeswitch /{logs,tmp,db,sounds,conf,certs,scripts,recording
 
 ln -s /dev/null /dev/raw1394
 
-/iptables-reload.sh &
-/sounds/get_sounds.sh &
+#/iptables-reload.sh &
+#/sounds/get_sounds.sh &
 
 if [ "$1" = 'freeswitch' ]; then
 
@@ -156,18 +156,6 @@ if [ "$1" = 'freeswitch' ]; then
     fi
 
     echo 'Starting FreeSWITCH '$FS_VERSION
-
-    ulimit -c unlimited
-    ulimit -d unlimited
-    ulimit -f unlimited
-    ulimit -i unlimited
-    ulimit -n 999999
-    ulimit -q unlimited
-    ulimit -u unlimited
-    ulimit -v unlimited
-    ulimit -x unlimited
-    ulimit -s 240
-    ulimit -l unlimited
 
     exec gosu freeswitch freeswitch -u freeswitch -g freeswitch -c \
         -sounds /sounds -recordings /recordings \
