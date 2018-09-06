@@ -9,7 +9,7 @@ RUN curl -o /tmp/libssl1.1_1.1.0h-4_amd64.deb http://ftp.de.debian.org/debian/po
     && curl -o /tmp/librabbitmq-dev_0.8.0-1+b3_amd64.deb http://ftp.de.debian.org/debian/pool/main/libr/librabbitmq/librabbitmq-dev_0.8.0-1+b3_amd64.deb \
     && dpkg -i /tmp/libssl1.1_1.1.0h-4_amd64.deb && dpkg -i /tmp/librabbitmq4_0.8.0-1+b3_amd64.deb && dpkg -i /tmp/librabbitmq-dev_0.8.0-1+b3_amd64.deb
 
-RUN git clone https://freeswitch.org/stash/scm/fs/freeswitch.git /freeswitch.git
+RUN git clone -b v1.6 https://freeswitch.org/stash/scm/fs/freeswitch.git /freeswitch.git
 RUN git clone https://github.com/xadhoom/mod_bcg729.git /mod_bcg729
 RUN git clone git://git.osmocom.org/libsmpp34 /libsmpp34
 RUN git clone https://github.com/webitel/mod_amd.git /mod_amd
@@ -21,8 +21,8 @@ RUN cd libsmpp34 \
 
 COPY src/mod_commands-bgapi.diff /mod_commands-bgapi.diff
 COPY src/switch_event.diff /switch_event.diff
-RUN cp /freeswitch.git/src/mod/applications/mod_callcenter/mod_callcenter.c /
-RUN cd /freeswitch.git && git checkout v1.6 && mv /mod_commands-bgapi.diff ./ && mv /switch_event.diff ./ \
+COPY src/mod_callcenter.c /mod_callcenter.c
+RUN cd /freeswitch.git && mv /mod_commands-bgapi.diff ./ && mv /switch_event.diff ./ \
     && mv /mod_callcenter.c /freeswitch.git/src/mod/applications/mod_callcenter/mod_callcenter.c \
     && git apply mod_commands-bgapi.diff && git apply switch_event.diff && rm -rf /freeswitch.git/src/mod/event_handlers/mod_amqp \
     && git clone https://github.com/webitel/mod_amqp.git /freeswitch.git/src/mod/event_handlers/mod_amqp \
