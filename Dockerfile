@@ -1,32 +1,37 @@
 FROM webitel/freeswitch-base:latest
 
-RUN apt-get update
-RUN apt-get install -y --force-yes vlc-nox build-essential librabbitmq1 librabbitmq-dev libshout3-dev libpq-dev
-RUN apt-get update
-RUN apt-get install -y --force-yes freeswitch-video-deps-most
-RUN curl -o /tmp/libssl1.1_1.1.0h-4_amd64.deb http://ftp.de.debian.org/debian/pool/main/o/openssl/libssl1.1_1.1.0h-4_amd64.deb \
-    && curl -o /tmp/librabbitmq4_0.8.0-1+b3_amd64.deb http://ftp.de.debian.org/debian/pool/main/libr/librabbitmq/librabbitmq4_0.8.0-1+b3_amd64.deb \
-    && curl -o /tmp/librabbitmq-dev_0.8.0-1+b3_amd64.deb http://ftp.de.debian.org/debian/pool/main/libr/librabbitmq/librabbitmq-dev_0.8.0-1+b3_amd64.deb \
-    && dpkg -i /tmp/libssl1.1_1.1.0h-4_amd64.deb && dpkg -i /tmp/librabbitmq4_0.8.0-1+b3_amd64.deb && dpkg -i /tmp/librabbitmq-dev_0.8.0-1+b3_amd64.deb
+RUN apt-get update && apt-get build-dep freeswitch
 
-RUN git clone -b v1.6 https://freeswitch.org/stash/scm/fs/freeswitch.git /freeswitch.git
+#RUN apt-get install -y --force-yes vlc-nox build-essential librabbitmq1 librabbitmq-dev libshout3-dev libpq-dev
+#RUN apt-get update
+#RUN apt-get install -y --force-yes freeswitch-video-deps-most
+#RUN curl -o /tmp/libssl1.1_1.1.0h-4_amd64.deb http://ftp.de.debian.org/debian/pool/main/o/openssl/libssl1.1_1.1.0h-4_amd64.deb \
+#    && curl -o /tmp/librabbitmq4_0.8.0-1+b3_amd64.deb http://ftp.de.debian.org/debian/pool/main/libr/librabbitmq/librabbitmq4_0.8.0-1+b3_amd64.deb \
+#    && curl -o /tmp/librabbitmq-dev_0.8.0-1+b3_amd64.deb http://ftp.de.debian.org/debian/pool/main/libr/librabbitmq/librabbitmq-dev_0.8.0-1+b3_amd64.deb \
+#    && dpkg -i /tmp/libssl1.1_1.1.0h-4_amd64.deb && dpkg -i /tmp/librabbitmq4_0.8.0-1+b3_amd64.deb && dpkg -i /tmp/librabbitmq-dev_0.8.0-1+b3_amd64.deb
+
+RUN git clone https://freeswitch.org/stash/scm/fs/freeswitch.git -bv1.8 /freeswitch.git
+#RUN git clone -b v1.6 https://freeswitch.org/stash/scm/fs/freeswitch.git /freeswitch.git
 RUN git clone https://github.com/xadhoom/mod_bcg729.git /mod_bcg729
-RUN git clone git://git.osmocom.org/libsmpp34 /libsmpp34
 RUN git clone https://github.com/webitel/mod_amd.git /mod_amd
+#RUN git clone git://git.osmocom.org/libsmpp34 /libsmpp34
 
-RUN cd libsmpp34 \
-    && autoreconf -i\
-    && ./configure && make && make install \
-    && ldconfig && cd / && rm -rf /libsmpp34
+#RUN cd libsmpp34 \
+#    && autoreconf -i\
+#    && ./configure && make && make install \
+#    && ldconfig && cd / && rm -rf /libsmpp34
 
-COPY src/mod_commands-bgapi.diff /mod_commands-bgapi.diff
-COPY src/switch_event.diff /switch_event.diff
-COPY src/mod_callcenter.c /mod_callcenter.c
-RUN cd /freeswitch.git && mv /mod_commands-bgapi.diff ./ && mv /switch_event.diff ./ \
-    && mv /mod_callcenter.c /freeswitch.git/src/mod/applications/mod_callcenter/mod_callcenter.c \
-    && git apply mod_commands-bgapi.diff && git apply switch_event.diff && rm -rf /freeswitch.git/src/mod/event_handlers/mod_amqp \
-    && git clone https://github.com/webitel/mod_amqp.git /freeswitch.git/src/mod/event_handlers/mod_amqp \
-    && sh bootstrap.sh && rm modules.conf
+#COPY src/mod_commands-bgapi.diff /mod_commands-bgapi.diff
+#COPY src/switch_event.diff /switch_event.diff
+#COPY src/mod_callcenter.c /mod_callcenter.c
+#RUN cd /freeswitch.git && mv /mod_commands-bgapi.diff ./ && mv /switch_event.diff ./ \
+#    && mv /mod_callcenter.c /freeswitch.git/src/mod/applications/mod_callcenter/mod_callcenter.c \
+#    && git apply mod_commands-bgapi.diff && git apply switch_event.diff && rm -rf /freeswitch.git/src/mod/event_handlers/mod_amqp \
+#    && git clone https://github.com/webitel/mod_amqp.git /freeswitch.git/src/mod/event_handlers/mod_amqp \
+#    && sh bootstrap.sh && rm modules.conf
+
+RUN cd /freeswitch.git && git config pull.rebase true \
+    && sh bootstrap.sh -j && rm modules.conf
 
 COPY src/modules.conf /freeswitch.git/modules.conf
 
@@ -51,28 +56,27 @@ RUN cd / && rm -rf /usr/local/freeswitch/mod/*.la && rm -rf /usr/local/freeswitc
 FROM webitel/freeswitch-base:latest
 LABEL maintainer="Vitaly Kovalyshyn"
 
-COPY --from=0 /tmp/libssl1.1_1.1.0h-4_amd64.deb /tmp/
-COPY --from=0 /tmp/librabbitmq4_0.8.0-1+b3_amd64.deb /tmp/
+#COPY --from=0 /tmp/libssl1.1_1.1.0h-4_amd64.deb /tmp/
+#COPY --from=0 /tmp/librabbitmq4_0.8.0-1+b3_amd64.deb /tmp/
 
-RUN apt-get update && apt-get install -y --force-yes --no-install-recommends vlc-nox libpq-dev libshout3-dev \
-    'libtool-bin|libtool' libodbc1 libvpx2 libyuv libopenal1 libjbig2dec0 libjbig0 libilbc1 libmpg123-0 libopencv-calib3d2.4 \
-    libopencv-contrib2.4 libopencv-gpu2.4 libopencv-ocl2.4 libopencv-stitching2.4 libopencv-superres2.4 libopencv-ts2.4 \
-    libopencv-videostab2.4 libx264-142 imagemagick libldns1 iptables tcpdump librabbitmq1 \
-    && ls /tmp/ && dpkg -i /tmp/libssl1.1_1.1.0h-4_amd64.deb && dpkg -i /tmp/librabbitmq4_0.8.0-1+b3_amd64.deb && rm -rf /tmp/* \
-    && apt-get clean && chmod +s /usr/sbin/tcpdump && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get build-dep freeswitch \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-ENV FS_MAJOR 1.6
-ENV FS_VERSION v1.6.20
-ENV WEBITEL_REPO_BASE https://github.com/webitel
+#RUN apt-get update && apt-get install -y --force-yes --no-install-recommends vlc-nox libpq-dev libshout3-dev \
+#    'libtool-bin|libtool' libodbc1 libvpx2 libyuv libopenal1 libjbig2dec0 libjbig0 libilbc1 libmpg123-0 libopencv-calib3d2.4 \
+#    libopencv-contrib2.4 libopencv-gpu2.4 libopencv-ocl2.4 libopencv-stitching2.4 libopencv-superres2.4 libopencv-ts2.4 \
+#    libopencv-videostab2.4 libx264-142 imagemagick libldns1 iptables tcpdump librabbitmq1 \
+#    && ls /tmp/ && dpkg -i /tmp/libssl1.1_1.1.0h-4_amd64.deb && dpkg -i /tmp/librabbitmq4_0.8.0-1+b3_amd64.deb && rm -rf /tmp/* \
+#    && apt-get clean && chmod +s /usr/sbin/tcpdump && rm -rf /var/lib/apt/lists/*
 
 ENV WEBITEL_MAJOR
 ENV VERSION
 
 WORKDIR /
 COPY --from=0 /usr/local/freeswitch /usr/local/freeswitch
-COPY --from=0 /usr/local/lib/libsmpp34.so.1.0.0 /usr/local/lib/libsmpp34.so.1.0.0
-COPY --from=0 /usr/local/lib/libsmpp34.so.1 /usr/local/lib/libsmpp34.so.1
-COPY --from=0 /usr/local/lib/libsmpp34.so /usr/local/lib/libsmpp34.so
+#COPY --from=0 /usr/local/lib/libsmpp34.so.1.0.0 /usr/local/lib/libsmpp34.so.1.0.0
+#COPY --from=0 /usr/local/lib/libsmpp34.so.1 /usr/local/lib/libsmpp34.so.1
+#COPY --from=0 /usr/local/lib/libsmpp34.so /usr/local/lib/libsmpp34.so
 
 COPY conf /conf
 COPY images /images
