@@ -1,6 +1,6 @@
 FROM webitel/freeswitch-base:latest
 
-RUN apt-get update && apt-get build-dep freeswitch
+RUN apt-get update && apt-get -y build-dep freeswitch
 
 #RUN apt-get install -y --force-yes vlc-nox build-essential librabbitmq1 librabbitmq-dev libshout3-dev libpq-dev
 #RUN apt-get update
