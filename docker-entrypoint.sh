@@ -144,8 +144,8 @@ chown -R freeswitch:freeswitch /{logs,tmp,db,sounds,conf,certs,scripts,recording
 
 ln -s /dev/null /dev/raw1394
 
-#/iptables-reload.sh &
-#/sounds/get_sounds.sh &
+/iptables-reload.sh &
+/sounds/get_sounds.sh &
 
 if [ "$1" = 'freeswitch' ]; then
 
@@ -157,7 +157,7 @@ if [ "$1" = 'freeswitch' ]; then
 
     echo 'Starting FreeSWITCH '$FS_VERSION
 
-    exec gosu freeswitch freeswitch -u freeswitch -g freeswitch -c \
+    exec freeswitch -u freeswitch -g freeswitch -c \
         -sounds /sounds -recordings /recordings \
         -certs /certs -conf /conf -db /db \
         -scripts /scripts -log /logs
