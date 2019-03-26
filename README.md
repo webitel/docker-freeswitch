@@ -43,4 +43,3 @@ Used in the `ACR` XML Dialplan extension:
 
 ### Issues
 If you have any problems with or questions about this image, please contact us through a [Webitel JIRA](https://my.webitel.com/).
-
