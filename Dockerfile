@@ -61,8 +61,8 @@ RUN apt-get update \
       | xargs apt-get install -y --no-install-recommends \
     && apt-get clean && chmod +s /usr/sbin/tcpdump && rm -rf /var/lib/apt/lists/*
 
-ENV WEBITEL_MAJOR
-ENV VERSION
+ENV WEBITEL_MAJOR 19.06
+ENV VERSION 1.8.5
 
 WORKDIR /
 COPY --from=0 /usr/local/freeswitch /usr/local/freeswitch
