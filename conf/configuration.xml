@@ -2,8 +2,7 @@
 
     <configuration name="modules.conf" description="Modules">
       <modules>
-        <load module="mod_console"/>
-        <load module="mod_xml_curl"/>
+    <load module="mod_console"/>
     <load module="mod_event_socket"/>
     <load module="mod_amd"/>
     <load module="mod_sofia"/>
@@ -66,17 +65,6 @@
         <param name="loglevel" value="$${console_loglevel}" />
       </settings>
     </configuration>
-
-    <configuration name="xml_curl.conf" description="cURL XML Gateway">
-      <bindings>
-        <binding name="Directory">
-          <param name="gateway-url" value="$${config_url}" bindings="directory" />
-        </binding>
-        <binding name="Configuration">
-          <param name="gateway-url" value="$${config_url}" bindings="configuration" />
-        </binding>
-      </bindings>
-	</configuration>
 
 
 <configuration name="acl.conf" description="Network Lists">
