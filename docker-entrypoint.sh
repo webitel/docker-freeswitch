@@ -59,76 +59,52 @@ else
     sed -i 's/ACR_SERVER/172.17.0.1:10030/g' /conf/vars.xml
 fi
 
-if [ "$SIP_NONREG_IP" ]; then
-    sed -i 's/nonreg_ip_value/'$SIP_NONREG_IP'/g' /conf/vars.xml
+if [ "$SIP_PORT" ]; then
+    sed -i 's/sofia_sip_port/'$SIP_PORT'/g' /conf/configuration.xml
 else
-    sed -i 's/nonreg_ip_value/$${local_ip_v4}/g' /conf/vars.xml
+    sed -i 's/sofia_sip_port/5062/g' /conf/configuration.xml
 fi
 
-if [ "$SIP_NONREG_EXT_IP" ]; then
-    sed -i 's/nonreg_ext_ip_value/'$SIP_NONREG_EXT_IP'/g' /conf/vars.xml
+if [ "$SIP_IP" ]; then
+    sed -i 's/sofia_sip_ip/'$SIP_IP'/g' /conf/configuration.xml
 else
-    sed -i 's/nonreg_ext_ip_value/auto-nat/g' /conf/vars.xml
+    sed -i 's/sofia_sip_ip/$${local_ip_v4}/g' /conf/configuration.xml
 fi
 
-if [ "$SIP_EXTERNAL_IP" ]; then
-    sed -i 's/external_ip_value/'$SIP_EXTERNAL_IP'/g' /conf/vars.xml
+if [ "$SIP_EXT_IP" ]; then
+    sed -i 's/sofia_ext_sip_ip/'$SIP_EXT_IP'/g' /conf/configuration.xml
 else
-    sed -i 's/external_ip_value/$${local_ip_v4}/g' /conf/vars.xml
+    sed -i 's/sofia_ext_sip_ip/auto-nat/g' /conf/configuration.xml
 fi
 
-if [ "$SIP_EXTERNAL_EXT_IP" ]; then
-    sed -i 's/external_ext_ip_value/'$SIP_EXTERNAL_EXT_IP'/g' /conf/vars.xml
+if [ "$RTP_EXT_IP" ]; then
+    sed -i 's/sofia_ext_rtp_ip/'$RTP_EXT_IP'/g' /conf/configuration.xml
 else
-    sed -i 's/external_ext_ip_value/auto-nat/g' /conf/vars.xml
+    sed -i 's/sofia_ext_rtp_ip/auto-nat/g' /conf/configuration.xml
 fi
 
-if [ "$SIP_INTERNAL_IP" ]; then
-    sed -i 's/internal_ip_value/'$SIP_INTERNAL_IP'/g' /conf/vars.xml
+if [ "$RTP_IP" ]; then
+    sed -i 's/sofia_rtp_ip/'$RTP_IP'/g' /conf/configuration.xml
 else
-    sed -i 's/internal_ip_value/$${local_ip_v4}/g' /conf/vars.xml
-fi
-
-if [ "$SIP_INTERNAL_EXT_IP" ]; then
-    sed -i 's/internal_ext_ip_value/'$SIP_INTERNAL_EXT_IP'/g' /conf/vars.xml
-else
-    sed -i 's/internal_ext_ip_value/$${local_ip_v4}/g' /conf/vars.xml
-fi
-
-if [ "$VERTO_IP" ]; then
-    sed -i 's/verto_ip_value/'$VERTO_IP'/g' /conf/vars.xml
-else
-    sed -i 's/verto_ip_value/$${local_ip_v4}/g' /conf/vars.xml
-fi
-
-if [ "$VERTO_EXT_IP" ]; then
-    sed -i 's/verto_ext_ip_value/'$VERTO_EXT_IP'/g' /conf/vars.xml
-else
-    sed -i 's/verto_ext_ip_value/$${local_ip_v4}/g' /conf/vars.xml
+    sed -i 's/sofia_rtp_ip/$${local_ip_v4}/g' /conf/configuration.xml
 fi
 
 if [ "$ES_IP" ]; then
-    sed -i 's/event_socket_ip_value/'$ES_IP'/g' /conf/vars.xml
+    sed -i 's/event_socket_ip/'$ES_IP'/g' /conf/configuration.xml
 else
-    sed -i 's/event_socket_ip_value/172.17.0.1/g' /conf/vars.xml
+    sed -i 's/event_socket_ip/172.17.0.1/g' /conf/configuration.xml
+fi
+
+if [ "$ES_PORT" ]; then
+    sed -i 's/event_socket_port/'$ES_PORT'/g' /conf/configuration.xml
+else
+    sed -i 's/event_socket_port/8021/g' /conf/configuration.xml
 fi
 
 if [ "$LOGLEVEL" ]; then
     sed -i 's/LOGLEVEL/'$LOGLEVEL'/g' /conf/vars.xml
 else
     sed -i 's/LOGLEVEL/err/g' /conf/vars.xml
-fi
-
-if [ "$CODECS_GLOBAL_PREF" ]; then
-    sed -i 's/CODECS_GLOBAL_PREF/'$CODECS_GLOBAL_PREF'/g' /conf/vars.xml
-else
-    sed -i 's/CODECS_GLOBAL_PREF/OPUS,G722,PCMA,PCMU,GSM,G729,ilbc,VP8,VP9,H264,H263,H263-1998/g' /conf/vars.xml
-fi
-
-if [ "$CODECS_OUTBOUND_PREF" ]; then
-    sed -i 's/CODECS_OUTBOUND_PREF/'$CODECS_OUTBOUND_PREF'/g' /conf/vars.xml
-else
-    sed -i 's/CODECS_OUTBOUND_PREF/PCMA,PCMU,G729,GSM/g' /conf/vars.xml
 fi
 
 test -d /logs || mkdir -p /logs /certs /sounds /db /recordings /scripts/lua
