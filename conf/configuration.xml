@@ -954,8 +954,8 @@
   <settings>
     <param name="nat-map" value="false"/>
     <param name="listen-ip" value="$${event_socket_ip}"/>
-    <param name="listen-port" value="8021"/>
-    <param name="password" value="ClueCon"/>
+    <param name="listen-port" value="9021"/>
+    <param name="password" value="webitel"/>
     <param name="apply-inbound-acl" value="all"/>
     <!-- <param name="apply-inbound-acl" value="rfc1918.auto"/> -->
     <!--<param name="stop-on-bind-error" value="true"/>-->
@@ -1238,7 +1238,7 @@
     <param name="rfc2833-pt" value="101"/>
     <!-- RFC 5626 : Send reg-id and sip.instance -->
     <!--<param name="enable-rfc-5626" value="true"/> -->
-    <param name="sip-port" value="5080"/>
+    <param name="sip-port" value="5062"/>
     <param name="dialplan" value="XML"/>
     <param name="context" value="default"/>
     <param name="dtmf-type" value="rfc2833"/>
