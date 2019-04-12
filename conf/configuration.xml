@@ -4,14 +4,40 @@
       <modules>
         <load module="mod_console"/>
         <load module="mod_xml_curl"/>
+    <load module="mod_event_socket"/>
+    <load module="mod_amd"/>
+    <load module="mod_sofia"/>
+    <load module="mod_commands"/>
+    <load module="mod_db"/>
+    <load module="mod_dptools"/>
+    <load module="mod_expr"/>
+    <load module="mod_hash"/>
+    <load module="mod_dialplan_xml"/>
+    <load module="mod_spandsp"/>
+    <load module="mod_imagick"/>
+    <load module="mod_png"/>
+    <load module="mod_av"/>
+    <load module="mod_opus"/>
+    <load module="mod_sndfile"/>
+    <load module="mod_native_file"/>
+    <load module="mod_shout"/>
+    <load module="mod_local_stream"/>
+    <load module="mod_tone_stream"/>
+    <load module="mod_lua"/>
+    <load module="mod_say_ru"/>
+    <load module="mod_say_en"/>
+    <load module="mod_conference"/>
+    <load module="mod_valet_parking"/>
+    <load module="mod_http_cache"/>
+    <load module="mod_spy"/>
+    <load module="mod_grpc"/>
+    <load module="mod_amqp"/>
       </modules>
     </configuration>
 
     <configuration name="switch.conf" description="Core Configuration">
       <settings>
-        <param name="switchname" value="webitel" />
-        <param name="rtp-enable-zrtp" value="true"/>
-        <param name="rtp-start-port" value="RTP_START_PORT"/> 
+        <param name="rtp-start-port" value="RTP_START_PORT"/>
         <param name="rtp-end-port" value="RTP_END_PORT"/>
         <param name="rtp-port-usage-robustness" value="true"/>
         <param name="max-sessions" value="MAX_SESSIONS"/>
@@ -19,6 +45,7 @@
         <param name="loglevel" value="err"/>
         <param name="sql-buffer-len" value="10m"/>
         <param name="max-sql-buffer-len" value="20m"/>
+        <param name="core-db-dsn" value="pgsql://host=$${pgsql_ip} dbname=webitel user=webitel password=webitel options='-c client_min_messages=NOTICE' application_name='webitel'" />
       </settings>
     </configuration>
 
@@ -32,7 +59,7 @@
     <map name="zap_zt.c"                    value="all"/>
     <map name="mod_openzap"                 value="all"/>
     <map name="sofia.c"                     value="notice"/>
-    <map name="switch_core_state_machine.c" value="all"/>      
+    <map name="switch_core_state_machine.c" value="all"/>
       </mappings>
       <settings>
         <param name="colorize" value="true" />
@@ -50,7 +77,1248 @@
         </binding>
       </bindings>
 	</configuration>
-	
+
+
+<configuration name="acl.conf" description="Network Lists">
+  <network-lists>
+    <list name="all" default="allow">
+        <node type="allow" cidr="0.0.0.0/0"/>
+    </list>
+  </network-lists>
+</configuration>
+
+<configuration name="amd.conf" description="mod_amd Configuration">
+  <settings>
+    <param name="silence_threshold" value="256"/>
+    <param name="maximum_word_length" value="5000"/>
+    <param name="maximum_number_of_words" value="3"/>
+    <param name="between_words_silence" value="50"/>
+    <param name="min_word_length" value="100"/>
+    <param name="total_analysis_time" value="5000"/>
+    <param name="after_greeting_silence" value="800"/>
+    <param name="greeting" value="1500"/>
+    <param name="initial_silence" value="2500"/>
+  </settings>
+</configuration>
+
+<configuration name="amqp.conf" description="mod_amqp">
+  <producers>
+    <profile name="default">
+<connections>
+<connection name="primary">
+  <param name="hostname" value="$${amqp_ip}"/>
+  <param name="virtualhost" value="/"/>
+  <param name="username" value="webitel"/>
+  <param name="password" value="webitel"/>
+  <param name="port" value="5672"/>
+  <param name="heartbeat" value="0"/>
+</connection>
+</connections>
+ <params>
+    <param name="exchange-name" value="TAP.Events"/>
+    <param name="exchange-type" value="topic"/>
+    <param name="circuit_breaker_ms" value="10000"/>
+    <param name="reconnect_interval_ms" value="1000"/>
+    <param name="send_queue_size" value="5000"/>
+    <param name="enable_fallback_format_fields" value="1"/>
+    <param name="format_fields" value="#FreeSWITCH-Hostname,Event-Name,Event-Subclass,Channel-Presence-ID,Channel-Presence-Data"/>
+    <param name="event_filter" value="SWITCH_EVENT_CHANNEL_CREATE,SWITCH_EVENT_CHANNEL_DESTROY,SWITCH_EVENT_CHANNEL_CALLSTATE,SWITCH_EVENT_CHANNEL_STATE,SWITCH_EVENT_CHANNEL_ANSWER,SWITCH_EVENT_CHANNEL_HANGUP_COMPLETE,SWITCH_EVENT_CHANNEL_HANGUP,SWITCH_EVENT_CHANNEL_HOLD,SWITCH_EVENT_CHANNEL_UNHOLD,SWITCH_EVENT_CHANNEL_BRIDGE,SWITCH_EVENT_CHANNEL_UNBRIDGE,SWITCH_EVENT_CHANNEL_UUID,SWITCH_EVENT_DTMF,BACKGROUND_JOB,HEARTBEAT"/>
+ </params>
+    </profile>
+    <profile name="callcenter">
+<connections>
+    <connection name="primary">
+        <param name="hostname" value="$${amqp_ip}"/>
+        <param name="virtualhost" value="/"/>
+        <param name="username" value="webitel"/>
+        <param name="password" value="webitel"/>
+        <param name="port" value="5672"/>
+        <param name="heartbeat" value="0"/>
+    </connection>
+</connections>
+      <params>
+        <param name="exchange-name" value="TAP.CC-Events"/>
+        <param name="exchange-type" value="topic"/>
+        <param name="circuit_breaker_ms" value="10000"/>
+        <param name="reconnect_interval_ms" value="1000"/>
+        <param name="send_queue_size" value="5000"/>
+        <param name="enable_fallback_format_fields" value="1"/>
+        <param name="format_fields" value="#FreeSWITCH-Hostname,Event-Subclass,CC-Action,CC-Queue,Unique-ID"/>
+        <param name="event_filter" value="SWITCH_EVENT_CUSTOM"/>
+      </params>
+    </profile>
+	<profile name="dev">
+		<connections>
+			<connection name="primary">
+				<param name="hostname" value="$${amqp_ip}"/>
+				<param name="virtualhost" value="/"/>
+				<param name="username" value="webitel"/>
+				<param name="password" value="webitel"/>
+				<param name="port" value="5672"/>
+			</connection>
+		</connections>
+		<params>
+			<param name="exchange-name" value="TAP.Events"/>
+			<param name="exchange-type" value="topic"/>
+			<param name="circuit_breaker_ms" value="10000"/>
+			<param name="reconnect_interval_ms" value="1000"/>
+			<param name="send_queue_size" value="5000"/>
+			<param name="enable_fallback_format_fields" value="0"/>
+			<param name="format_fields" value="#FreeSWITCH,FreeSWITCH-Hostname,Event-Name,Event-Subclass,Unique-ID"/>
+			<param name="event_filter" value="SWITCH_EVENT_ALL"/>
+		</params>
+	</profile>
+<profile name="callcenter2">
+            <connections>
+                <connection name="primary">
+                    <param name="hostname" value="$${amqp_ip}"/>
+                    <param name="virtualhost" value="/"/>
+                    <param name="username" value="webitel"/>
+                    <param name="password" value="webitel"/>
+                    <param name="port" value="5672"/>
+                    <param name="heartbeat" value="0"/>
+                </connection>
+            </connections>
+            <params>
+                <param name="exchange-name" value="TAP.CC2"/>
+                <param name="exchange-type" value="direct"/>
+                <param name="circuit_breaker_ms" value="10000"/>
+                <param name="reconnect_interval_ms" value="1000"/>
+                <param name="send_queue_size" value="5000"/>
+                <param name="enable_fallback_format_fields" value="1"/>
+                <param name="format_fields" value="#callcenter,variable_cc_node_id"/>
+                <param name="event_filter" value="SWITCH_EVENT_CHANNEL_CREATE,SWITCH_EVENT_CHANNEL_ANSWER,SWITCH_EVENT_CHANNEL_PARK,SWITCH_EVENT_CHANNEL_HANGUP_COMPLETE,SWITCH_EVENT_CHANNEL_BRIDGE,SWITCH_EVENT_CHANNEL_UNBRIDGE"/>
+            </params>
+        </profile>
+</producers>
+<commands>
+    <profile name="default">
+      <connections>
+        <connection name="primary">
+            <param name="hostname" value="$${amqp_ip}"/>
+            <param name="virtualhost" value="/"/>
+            <param name="username" value="webitel"/>
+            <param name="password" value="webitel"/>
+            <param name="port" value="5672"/>
+            <param name="heartbeat" value="0"/>
+        </connection>
+    </connections>
+    <params>
+        <param name="exchange-name" value="TAP.Commands"/>
+        <param name="binding_key" value="commandBindingKey"/>
+        <param name="reconnect_interval_ms" value="1000"/>
+      </params>
+    </profile>
+</commands>
+<cdr>
+        <profile name="default-cdr">
+            <connections>
+                <connection name="primary">
+                    <param name="hostname" value="$${amqp_ip}"/>
+                    <param name="virtualhost" value="/"/>
+                    <param name="username" value="webitel"/>
+                    <param name="password" value="webitel"/>
+                    <param name="port" value="5672"/>
+                    <param name="heartbeat" value="0"/>
+                </connection>
+            </connections>
+            <params>
+                <param name="exchange-name" value="TAP.CDR"/>
+                <param name="exchange-type" value="topic"/>
+                <param name="circuit_breaker_ms" value="10000"/>
+                <param name="reconnect_interval_ms" value="100"/>
+                <param name="delivery-mode" value="2"/>
+                <param name="send_queue_size" value="100"/>
+                <param name="enable_fallback_format_fields" value="1"/>
+                <param name="queue-name-leg-a" value="cdr-leg-a"/>
+                <param name="queue-name-leg-b" value="cdr-leg-b"/>
+                <param name="format_fields"
+                       value="#FreeSWITCH,FreeSWITCH-Hostname,Event-Name,Event-Subclass,Unique-ID"/>
+            </params>
+            <filters>
+                <variable name="loopback_leg" value="B"/>
+                <variable name="webitel_cdr" value="false"/>
+            </filters>
+        </profile>
+    </cdr>
+</configuration>
+
+<configuration name="conference.conf" description="Audio Conference">
+  <!-- Advertise certain presence on startup . -->
+  <advertise>
+    <room name="3000@webitel.com" status="Webitel"/>
+  </advertise>
+
+  <!-- These are the default keys that map when you do not specify a caller control group -->
+  <!-- Note: none and default are reserved names for group names.  Disabled if dist-dtmf member flag is set. -->
+  <caller-controls>
+    <group name="default">
+      <control action="mute" digits="0"/>
+      <control action="deaf mute" digits="*"/>
+      <control action="energy up" digits="9"/>
+      <control action="energy equ" digits="8"/>
+      <control action="energy dn" digits="7"/>
+      <control action="vol talk up" digits="3"/>
+      <control action="vol talk zero" digits="2"/>
+      <control action="vol talk dn" digits="1"/>
+      <control action="vol listen up" digits="6"/>
+      <control action="vol listen zero" digits="5"/>
+      <control action="vol listen dn" digits="4"/>
+      <control action="hangup" digits="#"/>
+    </group>
+  </caller-controls>
+
+  <!-- Profiles are collections of settings you can reference by name. -->
+  <profiles>
+    <!--If no profile is specified it will default to "default"-->
+    <profile name="default">
+      <!-- Directory to drop CDR's
+	   'auto' means $PREFIX/logs/conference_cdr/<confernece_uuid>.cdr.xml
+	   a non-absolute path means $PREFIX/logs/<value>/<confernece_uuid>.cdr.xml
+	   absolute path means <value>/<confernece_uuid>.cdr.xml
+      -->
+      <!-- <param name="cdr-log-dir" value="auto"/> -->
+
+      <!-- Domain (for presence) -->
+      <param name="domain" value="$${domain_name}"/>
+      <!-- Sample Rate-->
+      <param name="rate" value="8000"/>
+      <!-- Number of milliseconds per frame -->
+      <param name="interval" value="20"/>
+      <!-- Energy level required for audio to be sent to the other users -->
+      <param name="energy-level" value="300"/>
+
+      <!--Can be | delim of waste|mute|deaf|dist-dtmf waste will always transmit data to each channel
+          even during silence.  dist-dtmf propagates dtmfs to all other members, but channel controls
+	  via dtmf will be disabled. -->
+      <!-- <param name="member-flags" value="waste"/> -->
+
+      <!-- Name of the caller control group to use for this profile -->
+      <!-- <param name="caller-controls" value="some name"/> -->
+      <!-- Name of the caller control group to use for the moderator in this profile -->
+      <!-- <param name="moderator-controls" value="some name"/> -->
+      <!-- TTS Engine to use -->
+      <!-- <param name="tts-engine" value="cepstral"/> -->
+      <!-- TTS Voice to use -->
+      <!-- <param name="tts-voice" value="david"/> -->
+
+      <!-- If TTS is enabled all audio-file params beginning with -->
+      <!-- 'say:' will be considered text to say with TTS -->
+      <!-- Override the default path here, after which you use relative paths in the other sound params -->
+      <!-- Note: The default path is the conference's first caller's sound_prefix -->
+      <!-- <param name="sound-prefix" value="$${sounds_dir}/en/us/callie"/> -->
+      <!-- File to play to acknowledge succees -->
+      <!-- <param name="ack-sound" value="beep.wav"/> -->
+      <!-- File to play to acknowledge failure -->
+      <!-- <param name="nack-sound" value="beeperr.wav"/> -->
+      <!-- File to play to acknowledge muted -->
+      <param name="muted-sound" value="conference/conf-muted.wav"/>
+      <!-- File to play to acknowledge unmuted -->
+      <param name="unmuted-sound" value="conference/conf-unmuted.wav"/>
+      <!-- File to play if you are alone in the conference -->
+      <param name="alone-sound" value="conference/conf-alone.wav"/>
+      <!-- File to play endlessly (nobody will ever be able to talk) -->
+      <!-- <param name="perpetual-sound" value="perpetual.wav"/> -->
+      <!-- File to play when you're alone (music on hold)-->
+      <param name="moh-sound" value="$${hold_music}"/>
+      <!-- File to play when you join the conference -->
+      <param name="enter-sound" value="tone_stream://%(200,0,500,600,700)"/>
+      <!-- File to play when you leave the conference -->
+      <param name="exit-sound" value="tone_stream://%(500,0,300,200,100,50,25)"/>
+      <!-- File to play when you are ejected from the conference -->
+      <param name="kicked-sound" value="conference/conf-kicked.wav"/>
+      <!-- File to play when the conference is locked -->
+      <param name="locked-sound" value="conference/conf-locked.wav"/>
+      <!-- File to play when the conference is locked during the call-->
+      <param name="is-locked-sound" value="conference/conf-is-locked.wav"/>
+      <!-- File to play when the conference is unlocked during the call-->
+      <param name="is-unlocked-sound" value="conference/conf-is-unlocked.wav"/>
+      <!-- File to play to prompt for a pin -->
+      <param name="pin-sound" value="conference/conf-pin.wav"/>
+      <!-- File to play to when the pin is invalid -->
+      <param name="bad-pin-sound" value="conference/conf-bad-pin.wav"/>
+      <!-- Conference pin -->
+      <!-- <param name="pin" value="12345"/> -->
+      <!-- <param name="moderator-pin" value="54321"/> -->
+      <!-- Max number of times the user can be prompted for PIN -->
+      <!-- <param name="pin-retries" value="3"/> -->
+      <!-- Default Caller ID Name for outbound calls -->
+      <param name="caller-id-name" value="$${outbound_caller_name}"/>
+      <!-- Default Caller ID Number for outbound calls -->
+      <param name="caller-id-number" value="$${outbound_caller_id}"/>
+      <!-- Suppress start and stop talking events -->
+      <!-- <param name="suppress-events" value="start-talking,stop-talking"/> -->
+      <!-- enable comfort noise generation -->
+      <param name="comfort-noise" value="true"/>
+      <!-- Uncomment auto-record to toggle recording every conference call. -->
+      <!-- Another valid value is   shout://user:pass@server.com/live.mp3   -->
+      <!--
+      <param name="auto-record" value="$${recordings_dir}/${conference_name}_${strftime(%Y-%m-%d-%H-%M-%S)}.wav"/>
+      -->
+
+      <!-- IVR digit machine timeouts -->
+      <!-- How much to wait between DTMF digits to match caller-controls -->
+      <!-- <param name="ivr-dtmf-timeout" value="500"/> -->
+      <!-- How much to wait for the first DTMF, 0 forever -->
+      <!-- <param name="ivr-input-timeout" value="0" /> -->
+      <!-- Delay before a conference is asked to be terminated -->
+      <!-- <param name="endconf-grace-time" value="120" /> -->
+      <!-- Can be | delim of wait-mod|audio-always|video-bridge|video-floor-only
+           wait_mod will wait until the moderator in,
+           audio-always will always mix audio from all members regardless they are talking or not -->
+      <!-- <param name="conference-flags" value="audio-always"/> -->
+      <!-- Allow live array sync for Verto -->
+      <!-- <param name="conference-flags" value="livearray-sync"/> -->
+    </profile>
+
+    <profile name="wideband">
+      <param name="domain" value="$${domain}"/>
+      <param name="rate" value="16000"/>
+      <param name="interval" value="20"/>
+      <param name="energy-level" value="300"/>
+      <!-- <param name="sound-prefix" value="$${sounds_dir}/en/us/callie"/> -->
+      <param name="muted-sound" value="conference/conf-muted.wav"/>
+      <param name="unmuted-sound" value="conference/conf-unmuted.wav"/>
+      <param name="alone-sound" value="conference/conf-alone.wav"/>
+      <param name="moh-sound" value="$${hold_music}"/>
+      <param name="enter-sound" value="tone_stream://%(200,0,500,600,700)"/>
+      <param name="exit-sound" value="tone_stream://%(500,0,300,200,100,50,25)"/>
+      <param name="kicked-sound" value="conference/conf-kicked.wav"/>
+      <param name="locked-sound" value="conference/conf-locked.wav"/>
+      <param name="is-locked-sound" value="conference/conf-is-locked.wav"/>
+      <param name="is-unlocked-sound" value="conference/conf-is-unlocked.wav"/>
+      <param name="pin-sound" value="conference/conf-pin.wav"/>
+      <param name="bad-pin-sound" value="conference/conf-bad-pin.wav"/>
+      <param name="caller-id-name" value="$${outbound_caller_name}"/>
+      <param name="caller-id-number" value="$${outbound_caller_id}"/>
+      <param name="comfort-noise" value="true"/>
+      <!-- <param name="tts-engine" value="flite"/> -->
+      <!-- <param name="tts-voice" value="kal16"/> -->
+    </profile>
+
+    <profile name="ultrawideband">
+      <param name="domain" value="$${domain}"/>
+      <param name="rate" value="32000"/>
+      <param name="interval" value="20"/>
+      <param name="energy-level" value="300"/>
+      <!-- <param name="sound-prefix" value="$${sounds_dir}/en/us/callie"/> -->
+      <param name="muted-sound" value="conference/conf-muted.wav"/>
+      <param name="unmuted-sound" value="conference/conf-unmuted.wav"/>
+      <param name="alone-sound" value="conference/conf-alone.wav"/>
+      <param name="moh-sound" value="$${hold_music}"/>
+      <param name="enter-sound" value="tone_stream://%(200,0,500,600,700)"/>
+      <param name="exit-sound" value="tone_stream://%(500,0,300,200,100,50,25)"/>
+      <param name="kicked-sound" value="conference/conf-kicked.wav"/>
+      <param name="locked-sound" value="conference/conf-locked.wav"/>
+      <param name="is-locked-sound" value="conference/conf-is-locked.wav"/>
+      <param name="is-unlocked-sound" value="conference/conf-is-unlocked.wav"/>
+      <param name="pin-sound" value="conference/conf-pin.wav"/>
+      <param name="bad-pin-sound" value="conference/conf-bad-pin.wav"/>
+      <param name="caller-id-name" value="$${outbound_caller_name}"/>
+      <param name="caller-id-number" value="$${outbound_caller_id}"/>
+      <param name="comfort-noise" value="true"/>
+
+      <!-- <param name="conference-flags" value="video-floor-only|rfc-4579|livearray-sync|auto-3d-position|transcode-video|minimize-video-encoding"/> -->
+
+      <!-- <param name="video-mode" value="mux"/> -->
+      <!-- <param name="video-layout-name" value="3x3"/> -->
+      <!-- <param name="video-layout-name" value="group:grid"/> -->
+      <!-- <param name="video-canvas-size" value="1280x720"/> -->
+      <!-- <param name="video-canvas-bgcolor" value="#333333"/> -->
+      <!-- <param name="video-layout-bgcolor" value="#000000"/> -->
+      <!-- <param name="video-codec-bandwidth" value="2mb"/> -->
+      <!-- <param name="video-fps" value="15"/> -->
+      <!-- <param name="video-auto-floor-msec" value="100"/> -->
+
+
+      <!-- <param name="tts-engine" value="flite"/> -->
+      <!-- <param name="tts-voice" value="kal16"/> -->
+    </profile>
+
+    <profile name="cdquality">
+      <param name="domain" value="$${domain}"/>
+      <param name="rate" value="48000"/>
+      <param name="interval" value="20"/>
+      <param name="energy-level" value="300"/>
+      <!-- <param name="sound-prefix" value="$${sounds_dir}/en/us/callie"/> -->
+      <param name="muted-sound" value="conference/conf-muted.wav"/>
+      <param name="unmuted-sound" value="conference/conf-unmuted.wav"/>
+      <param name="alone-sound" value="conference/conf-alone.wav"/>
+      <param name="moh-sound" value="$${hold_music}"/>
+      <param name="enter-sound" value="tone_stream://%(200,0,500,600,700)"/>
+      <param name="exit-sound" value="tone_stream://%(500,0,300,200,100,50,25)"/>
+      <param name="kicked-sound" value="conference/conf-kicked.wav"/>
+      <param name="locked-sound" value="conference/conf-locked.wav"/>
+      <param name="is-locked-sound" value="conference/conf-is-locked.wav"/>
+      <param name="is-unlocked-sound" value="conference/conf-is-unlocked.wav"/>
+      <param name="pin-sound" value="conference/conf-pin.wav"/>
+      <param name="bad-pin-sound" value="conference/conf-bad-pin.wav"/>
+      <param name="caller-id-name" value="$${outbound_caller_name}"/>
+      <param name="caller-id-number" value="$${outbound_caller_id}"/>
+      <param name="comfort-noise" value="true"/>
+
+      <!-- <param name="conference-flags" value="video-floor-only|rfc-4579|livearray-sync|auto-3d-position|minimize-video-encoding"/> -->
+
+      <!-- <param name="video-mode" value="mux"/> -->
+      <!-- <param name="video-layout-name" value="3x3"/> -->
+      <!-- <param name="video-layout-name" value="group:grid"/> -->
+      <!-- <param name="video-canvas-size" value="1920x1080"/> -->
+      <!-- <param name="video-canvas-bgcolor" value="#333333"/> -->
+      <!-- <param name="video-layout-bgcolor" value="#000000"/> -->
+      <!-- <param name="video-codec-bandwidth" value="2mb"/> -->
+      <!-- <param name="video-fps" value="15"/> -->
+
+    </profile>
+
+     <profile name="video-mcu-stereo">
+      <param name="domain" value="$${domain}"/>
+      <param name="rate" value="48000"/>
+      <param name="channels" value="2"/>
+      <param name="interval" value="20"/>
+      <param name="energy-level" value="200"/>
+      <!-- <param name="tts-engine" value="flite"/> -->
+      <!-- <param name="tts-voice" value="kal16"/> -->
+      <param name="muted-sound" value="conference/conf-muted.wav"/>
+      <param name="unmuted-sound" value="conference/conf-unmuted.wav"/>
+      <param name="alone-sound" value="conference/conf-alone.wav"/>
+      <param name="moh-sound" value="local_stream://video"/>
+      <param name="enter-sound" value="tone_stream://%(200,0,500,600,700)"/>
+      <param name="exit-sound" value="tone_stream://%(500,0,300,200,100,50,25)"/>
+      <param name="kicked-sound" value="conference/conf-kicked.wav"/>
+      <param name="locked-sound" value="conference/conf-locked.wav"/>
+      <param name="is-locked-sound" value="conference/conf-is-locked.wav"/>
+      <param name="is-unlocked-sound" value="conference/conf-is-unlocked.wav"/>
+      <param name="pin-sound" value="conference/conf-pin.wav"/>
+      <param name="bad-pin-sound" value="conference/conf-bad-pin.wav"/>
+      <param name="caller-id-name" value="$${outbound_caller_name}"/>
+      <param name="caller-id-number" value="$${outbound_caller_id}"/>
+      <param name="comfort-noise" value="false"/>
+      <param name="conference-flags" value="video-floor-only|rfc-4579|livearray-sync|livearray-json-status|minimize-video-encoding"/>
+      <param name="video-mode" value="mux"/>
+      <param name="video-layout-name" value="3x3"/>
+      <param name="video-layout-name" value="group:grid"/>
+      <param name="video-canvas-size" value="1920x1080"/>
+      <param name="video-canvas-bgcolor" value="#333333"/>
+      <param name="video-layout-bgcolor" value="#000000"/>
+      <param name="video-codec-bandwidth" value="3mb"/>
+      <param name="video-fps" value="15"/>
+    </profile>
+
+    <profile name="video-mcu-stereo-chime">
+      <param name="domain" value="$${domain}"/>
+      <param name="rate" value="48000"/>
+      <param name="channels" value="2"/>
+      <param name="interval" value="20"/>
+      <param name="energy-level" value="200"/>
+      <param name="muted-sound" value="conference/conf-muted.wav"/>
+      <param name="unmuted-sound" value="conference/conf-unmuted.wav"/>
+      <param name="alone-sound" value="conference/conf-alone.wav"/>
+      <param name="moh-sound" value="local_stream://video_chime"/>
+      <param name="enter-sound" value="tone_stream://%(200,0,500,600,700)"/>
+      <param name="exit-sound" value="tone_stream://%(500,0,300,200,100,50,25)"/>
+      <param name="kicked-sound" value="conference/conf-kicked.wav"/>
+      <param name="locked-sound" value="conference/conf-locked.wav"/>
+      <param name="is-locked-sound" value="conference/conf-is-locked.wav"/>
+      <param name="is-unlocked-sound" value="conference/conf-is-unlocked.wav"/>
+      <param name="pin-sound" value="conference/conf-pin.wav"/>
+      <param name="bad-pin-sound" value="conference/conf-bad-pin.wav"/>
+      <param name="caller-id-name" value="$${outbound_caller_name}"/>
+      <param name="caller-id-number" value="$${outbound_caller_id}"/>
+      <param name="comfort-noise" value="false"/>
+      <param name="conference-flags" value="video-floor-only|rfc-4579|livearray-sync|livearray-json-status|minimize-video-encoding"/>
+      <param name="video-mode" value="mux"/>
+      <param name="video-layout-name" value="3x3"/>
+      <param name="video-layout-name" value="group:grid"/>
+      <param name="video-canvas-size" value="1920x1080"/>
+      <param name="video-canvas-bgcolor" value="#333333"/>
+      <param name="video-layout-bgcolor" value="#000000"/>
+      <param name="video-codec-bandwidth" value="3mb"/>
+      <param name="video-fps" value="15"/>
+    </profile>
+
+    <profile name="sla">
+      <param name="domain" value="$${domain}"/>
+      <param name="rate" value="16000"/>
+      <param name="interval" value="20"/>
+      <param name="caller-controls" value="none"/>
+      <param name="energy-level" value="200"/>
+      <param name="moh-sound" value="silence"/>
+      <param name="comfort-noise" value="true"/>
+    </profile>
+
+  </profiles>
+</configuration>
+
+<configuration name="conference_layouts.conf" description="Audio Conference">
+  <layout-settings>
+    <layouts>
+      <layout name="1x1">
+	<image x="0" y="0" scale="360" floor="true"/>
+      </layout>
+      <layout name="1x2" auto-3d-position="true">
+	<image x="90" y="0" scale="180"/>
+	<image x="90" y="180" scale="180"/>
+      </layout>
+      <layout name="2x1" auto-3d-position="true">
+	<image x="0" y="90" scale="180"/>
+	<image x="180" y="90" scale="180"/>
+      </layout>
+
+      <layout name="2x1-zoom" auto-3d-position="true">
+	<image x="0" y="0" scale="180" hscale="360" zoom="true"/>
+	<image x="180" y="0" scale="180" hscale="360" zoom="true"/>
+      </layout>
+      <layout name="3x1-zoom" auto-3d-position="true">
+	<image x="0" y="0" scale="120" hscale="360" zoom="true"/>
+	<image x="120" y="0" scale="120" hscale="360" zoom="true"/>
+	<image x="240" y="0" scale="120" hscale="360" zoom="true"/>
+      </layout>
+      <layout name="5-grid-zoom" auto-3d-position="true">
+	<image x="0" y="0" scale="180"/>
+	<image x="180" y="0" scale="180"/>
+	<image x="0" y="180" scale="120" hscale="180" zoom="true"/>
+	<image x="120" y="180" scale="120" hscale="180" zoom="true"/>
+	<image x="240" y="180" scale="120" hscale="180" zoom="true"/>
+      </layout>
+      <layout name="3x2-zoom" auto-3d-position="true">
+	<image x="0" y="0" scale="120" hscale="180" zoom="true"/>
+	<image x="120" y="0" scale="120" hscale="180" zoom="true"/>
+	<image x="240" y="0" scale="120" hscale="180" zoom="true"/>
+	<image x="0" y="180" scale="120" hscale="180" zoom="true"/>
+	<image x="120" y="180" scale="120" hscale="180" zoom="true"/>
+	<image x="240" y="180" scale="120" hscale="180" zoom="true"/>
+      </layout>
+      <layout name="7-grid-zoom" auto-3d-position="true">
+	<image x="0" y="0" scale="120" hscale="180" zoom="true"/>
+	<image x="120" y="0" scale="120" hscale="180" zoom="true"/>
+	<image x="240" y="0" scale="120" hscale="180" zoom="true"/>
+	<image x="0" y="180" scale="90" hscale="180" zoom="true"/>
+	<image x="90" y="180" scale="90" hscale="180" zoom="true"/>
+	<image x="180" y="180" scale="90" hscale="180" zoom="true"/>
+	<image x="270" y="180" scale="90" hscale="180" zoom="true"/>
+      </layout>
+      <layout name="4x2-zoom" auto-3d-position="true">
+	<image x="0" y="0" scale="90" hscale="180" zoom="true"/>
+	<image x="90" y="0" scale="90" hscale="180" zoom="true"/>
+	<image x="180" y="0" scale="90" hscale="180" zoom="true"/>
+	<image x="270" y="0" scale="90" hscale="180" zoom="true"/>
+	<image x="0" y="180" scale="90" hscale="180" zoom="true"/>
+	<image x="90" y="180" scale="90" hscale="180" zoom="true"/>
+	<image x="180" y="180" scale="90" hscale="180" zoom="true"/>
+	<image x="270" y="180" scale="90" hscale="180" zoom="true"/>
+      </layout>
+      <layout name="1x1+2x1" auto-3d-position="true">
+	<image x="90" y="0" scale="180"/>
+	<image x="0" y="180" scale="180"/>
+	<image x="180" y="180" scale="180"/>
+      </layout>
+      <layout name="2x2" auto-3d-position="true">
+	<image x="0" y="0" scale="180"/>
+	<image x="180" y="0" scale="180"/>
+	<image x="0" y="180" scale="180"/>
+	<image x="180" y="180" scale="180"/>
+      </layout>
+      <layout name="3x3" auto-3d-position="true">
+	<image x="0" y="0" scale="120"/>
+	<image x="120" y="0" scale="120"/>
+	<image x="240" y="0" scale="120"/>
+	<image x="0" y="120" scale="120"/>
+	<image x="120" y="120" scale="120"/>
+	<image x="240" y="120" scale="120"/>
+	<image x="0" y="240" scale="120"/>
+	<image x="120" y="240" scale="120"/>
+	<image x="240" y="240" scale="120"/>
+      </layout>
+      <layout name="4x4" auto-3d-position="true">
+	<image x="0" y="0" scale="90"/>
+	<image x="90" y="0" scale="90"/>
+	<image x="180" y="0" scale="90"/>
+	<image x="270" y="0" scale="90"/>
+	<image x="0" y="90" scale="90"/>
+	<image x="90" y="90" scale="90"/>
+	<image x="180" y="90" scale="90"/>
+	<image x="270" y="90" scale="90"/>
+	<image x="0" y="180" scale="90"/>
+	<image x="90" y="180" scale="90"/>
+	<image x="180" y="180" scale="90"/>
+	<image x="270" y="180" scale="90"/>
+	<image x="0" y="270" scale="90"/>
+	<image x="90" y="270" scale="90"/>
+	<image x="180" y="270" scale="90"/>
+	<image x="270" y="270" scale="90"/>
+      </layout>
+      <layout name="5x5" auto-3d-position="true">
+	<image x="0" y="0" scale="72"/>
+	<image x="72" y="0" scale="72"/>
+	<image x="144" y="0" scale="72"/>
+	<image x="216" y="0" scale="72"/>
+	<image x="288" y="0" scale="72"/>
+	<image x="0" y="72" scale="72"/>
+	<image x="72" y="72" scale="72"/>
+	<image x="144" y="72" scale="72"/>
+	<image x="216" y="72" scale="72"/>
+	<image x="288" y="72" scale="72"/>
+	<image x="0" y="144" scale="72"/>
+	<image x="72" y="144" scale="72"/>
+	<image x="144" y="144" scale="72"/>
+	<image x="216" y="144" scale="72"/>
+	<image x="288" y="144" scale="72"/>
+	<image x="0" y="216" scale="72"/>
+	<image x="72" y="216" scale="72"/>
+	<image x="144" y="216" scale="72"/>
+	<image x="216" y="216" scale="72"/>
+	<image x="288" y="216" scale="72"/>
+	<image x="0" y="288" scale="72"/>
+	<image x="72" y="288" scale="72"/>
+	<image x="144" y="288" scale="72"/>
+	<image x="216" y="288" scale="72"/>
+	<image x="288" y="288" scale="72"/>
+      </layout>
+      <layout name="6x6" auto-3d-position="true">
+	<image x="0" y="0" scale="60"/>
+	<image x="60" y="0" scale="60"/>
+	<image x="120" y="0" scale="60"/>
+	<image x="180" y="0" scale="60"/>
+	<image x="240" y="0" scale="60"/>
+	<image x="300" y="0" scale="60"/>
+	<image x="0" y="60" scale="60"/>
+	<image x="60" y="60" scale="60"/>
+	<image x="120" y="60" scale="60"/>
+	<image x="180" y="60" scale="60"/>
+	<image x="240" y="60" scale="60"/>
+	<image x="300" y="60" scale="60"/>
+	<image x="0" y="120" scale="60"/>
+	<image x="60" y="120" scale="60"/>
+	<image x="120" y="120" scale="60"/>
+	<image x="180" y="120" scale="60"/>
+	<image x="240" y="120" scale="60"/>
+	<image x="300" y="120" scale="60"/>
+	<image x="0" y="180" scale="60"/>
+	<image x="60" y="180" scale="60"/>
+	<image x="120" y="180" scale="60"/>
+	<image x="180" y="180" scale="60"/>
+	<image x="240" y="180" scale="60"/>
+	<image x="300" y="180" scale="60"/>
+	<image x="0" y="240" scale="60"/>
+	<image x="60" y="240" scale="60"/>
+	<image x="120" y="240" scale="60"/>
+	<image x="180" y="240" scale="60"/>
+	<image x="240" y="240" scale="60"/>
+	<image x="300" y="240" scale="60"/>
+	<image x="0" y="300" scale="60"/>
+	<image x="60" y="300" scale="60"/>
+	<image x="120" y="300" scale="60"/>
+	<image x="180" y="300" scale="60"/>
+	<image x="240" y="300" scale="60"/>
+	<image x="300" y="300" scale="60"/>
+      </layout>
+      <layout name="8x8" auto-3d-position="true">
+	<image x="0" y="0" scale="45"/>
+	<image x="45" y="0" scale="45"/>
+	<image x="90" y="0" scale="45"/>
+	<image x="135" y="0" scale="45"/>
+	<image x="180" y="0" scale="45"/>
+	<image x="225" y="0" scale="45"/>
+	<image x="270" y="0" scale="45"/>
+	<image x="315" y="0" scale="45"/>
+	<image x="0" y="45" scale="45"/>
+	<image x="45" y="45" scale="45"/>
+	<image x="90" y="45" scale="45"/>
+	<image x="135" y="45" scale="45"/>
+	<image x="180" y="45" scale="45"/>
+	<image x="225" y="45" scale="45"/>
+	<image x="270" y="45" scale="45"/>
+	<image x="315" y="45" scale="45"/>
+	<image x="0" y="90" scale="45"/>
+	<image x="45" y="90" scale="45"/>
+	<image x="90" y="90" scale="45"/>
+	<image x="135" y="90" scale="45"/>
+	<image x="180" y="90" scale="45"/>
+	<image x="225" y="90" scale="45"/>
+	<image x="270" y="90" scale="45"/>
+	<image x="315" y="90" scale="45"/>
+	<image x="0" y="135" scale="45"/>
+	<image x="45" y="135" scale="45"/>
+	<image x="90" y="135" scale="45"/>
+	<image x="135" y="135" scale="45"/>
+	<image x="180" y="135" scale="45"/>
+	<image x="225" y="135" scale="45"/>
+	<image x="270" y="135" scale="45"/>
+	<image x="315" y="135" scale="45"/>
+	<image x="0" y="180" scale="45"/>
+	<image x="45" y="180" scale="45"/>
+	<image x="90" y="180" scale="45"/>
+	<image x="135" y="180" scale="45"/>
+	<image x="180" y="180" scale="45"/>
+	<image x="225" y="180" scale="45"/>
+	<image x="270" y="180" scale="45"/>
+	<image x="315" y="180" scale="45"/>
+	<image x="0" y="225" scale="45"/>
+	<image x="45" y="225" scale="45"/>
+	<image x="90" y="225" scale="45"/>
+	<image x="135" y="225" scale="45"/>
+	<image x="180" y="225" scale="45"/>
+	<image x="225" y="225" scale="45"/>
+	<image x="270" y="225" scale="45"/>
+	<image x="315" y="225" scale="45"/>
+	<image x="0" y="270" scale="45"/>
+	<image x="45" y="270" scale="45"/>
+	<image x="90" y="270" scale="45"/>
+	<image x="135" y="270" scale="45"/>
+	<image x="180" y="270" scale="45"/>
+	<image x="225" y="270" scale="45"/>
+	<image x="270" y="270" scale="45"/>
+	<image x="315" y="270" scale="45"/>
+	<image x="0" y="315" scale="45"/>
+	<image x="45" y="315" scale="45"/>
+	<image x="90" y="315" scale="45"/>
+	<image x="135" y="315" scale="45"/>
+	<image x="180" y="315" scale="45"/>
+	<image x="225" y="315" scale="45"/>
+	<image x="270" y="315" scale="45"/>
+	<image x="315" y="315" scale="45"/>
+      </layout>
+      <layout name="1up_top_left+5" auto-3d-position="true">
+	<image x="0" y="0" scale="240" floor="true"/>
+	<image x="240" y="0" scale="120"/>
+	<image x="240" y="120" scale="120"/>
+	<image x="0" y="240" scale="120"/>
+	<image x="120" y="240" scale="120"/>
+	<image x="240" y="240" scale="120"/>
+      </layout>
+      <layout name="1up_top_left+7" auto-3d-position="true">
+	<image x="0" y="0" scale="270" floor="true"/>
+	<image x="270" y="0" scale="90"/>
+	<image x="270" y="90" scale="90"/>
+	<image x="270" y="180" scale="90"/>
+	<image x="0" y="270" scale="90"/>
+	<image x="90" y="270" scale="90"/>
+	<image x="180" y="270" scale="90"/>
+	<image x="270" y="270" scale="90"/>
+      </layout>
+      <layout name="1up_top_left+9" auto-3d-position="true">
+	<image x="0" y="0" scale="288" floor="true"/>
+	<image x="288" y="0" scale="72"/>
+	<image x="288" y="72" scale="72"/>
+	<image x="288" y="144" scale="72"/>
+	<image x="288" y="216" scale="72"/>
+	<image x="0" y="288" scale="72"/>
+	<image x="72" y="288" scale="72"/>
+	<image x="144" y="288" scale="72"/>
+	<image x="216" y="288" scale="72"/>
+	<image x="288" y="288" scale="72"/>
+      </layout>
+      <layout name="2up_top+8" auto-3d-position="true">
+	<image x="0" y="0" scale="180" floor="true"/>
+	<image x="180" y="0" scale="180" reservation_id="secondary"/>
+	<image x="0" y="180" scale="90"/>
+	<image x="90" y="180" scale="90"/>
+	<image x="180" y="180" scale="90"/>
+	<image x="270" y="180" scale="90"/>
+	<image x="0" y="270" scale="90"/>
+	<image x="90" y="270" scale="90"/>
+	<image x="180" y="270" scale="90"/>
+	<image x="270" y="270" scale="90"/>
+      </layout>
+      <layout name="2up_middle+8" auto-3d-position="true">
+	<image x="0" y="90" scale="180" floor="true"/>
+	<image x="180" y="90" scale="180" reservation_id="secondary"/>
+	<image x="0" y="0" scale="90"/>
+	<image x="90" y="0" scale="90"/>
+	<image x="180" y="0" scale="90"/>
+	<image x="270" y="0" scale="90"/>
+	<image x="0" y="270" scale="90"/>
+	<image x="90" y="270" scale="90"/>
+	<image x="180" y="270" scale="90"/>
+	<image x="270" y="270" scale="90"/>
+      </layout>
+      <layout name="2up_bottom+8" auto-3d-position="true">
+	<image x="0" y="180" scale="180" floor="true"/>
+	<image x="180" y="180" scale="180" reservation_id="secondary"/>
+	<image x="0" y="0" scale="90"/>
+	<image x="90" y="0" scale="90"/>
+	<image x="180" y="0" scale="90"/>
+	<image x="270" y="0" scale="90"/>
+	<image x="0" y="90" scale="90"/>
+	<image x="90" y="90" scale="90"/>
+	<image x="180" y="90" scale="90"/>
+	<image x="270" y="90" scale="90"/>
+      </layout>
+      <layout name="3up+4" auto-3d-position="true">
+	<image x="0" y="0" scale="180" floor="true"/>
+	<image x="180" y="0" scale="180" reservation_id="secondary"/>
+	<image x="0" y="180" scale="180" reservation_id="third"/>
+	<image x="180" y="180" scale="90"/>
+	<image x="270" y="180" scale="90"/>
+	<image x="180" y="270" scale="90"/>
+	<image x="270" y="270" scale="90"/>
+      </layout>
+      <layout name="3up+9" auto-3d-position="true">
+	<image x="0" y="0" scale="180" floor="true"/>
+	<image x="180" y="0" scale="180" reservation_id="secondary"/>
+	<image x="0" y="180" scale="180" reservation_id="third"/>
+	<image x="180" y="180" scale="60"/>
+	<image x="240" y="180" scale="60"/>
+	<image x="300" y="180" scale="60"/>
+	<image x="180" y="240" scale="60"/>
+	<image x="240" y="240" scale="60"/>
+	<image x="300" y="240" scale="60"/>
+	<image x="180" y="300" scale="60"/>
+	<image x="240" y="300" scale="60"/>
+	<image x="300" y="300" scale="60"/>
+      </layout>
+      <layout name="2x1-presenter-zoom" auto-3d-position="true">
+	<image x="0" y="0" scale="180" hscale="360" zoom="true" floor="true"/>
+	<image x="180" y="0" scale="180" hscale="360" zoom="true" reservation_id="presenter"/>
+      </layout>
+      <layout name="presenter-dual-vertical">
+	<image x="90" y="0" scale="180" floor-only="true"/>
+	<image x="90" y="180" scale="180" reservation_id="presenter"/>
+      </layout>
+      <layout name="presenter-dual-horizontal">
+	<image x="0" y="90" scale="180" floor-only="true"/>
+	<image x="180" y="90" scale="180" reservation_id="presenter"/>
+      </layout>
+      <layout name="presenter-overlap-small-top-right">
+	<image x="0" y="0" scale="360" floor-only="true"/>
+	<image x="300" y="0" scale="60" overlap="true" reservation_id="presenter"/>
+      </layout>
+      <layout name="presenter-overlap-small-bot-right">
+	<image x="0" y="0" scale="360" floor-only="true"/>
+	<image x="300" y="300" scale="60" overlap="true" reservation_id="presenter"/>
+      </layout>
+      <layout name="presenter-overlap-large-top-right">
+	<image x="0" y="0" scale="360" floor-only="true"/>
+	<image x="180" y="0" scale="180" overlap="true" reservation_id="presenter"/>
+      </layout>
+      <layout name="presenter-overlap-large-bot-right">
+	<image x="0" y="0" scale="360" floor-only="true"/>
+	<image x="180" y="180" scale="180" overlap="true" reservation_id="presenter"/>
+      </layout>
+      <layout name="overlaps" auto-3d-position="true">
+	<image x="0" y="0" scale="360" floor-only="true"/>
+	<image x="300" y="300" scale="60" overlap="true"/>
+	<image x="240" y="300" scale="60" overlap="true"/>
+	<image x="180" y="300" scale="60" overlap="true"/>
+	<image x="120" y="300" scale="60" overlap="true"/>
+	<image x="60" y="300" scale="60" overlap="true"/>
+	<image x="0" y="300" scale="60" overlap="true"/>
+      </layout>
+
+
+    </layouts>
+    <groups>
+      <group name="grid">
+	<layout>1x1</layout>
+	<layout>2x1</layout>
+	<layout>1x1+2x1</layout>
+	<layout>2x2</layout>
+	<layout>3x3</layout>
+	<layout>4x4</layout>
+	<layout>5x5</layout>
+	<layout>6x6</layout>
+	<layout>8x8</layout>
+      </group>
+      <group name="grid-zoom">
+	<layout>1x1</layout>
+	<layout>2x1-zoom</layout>
+	<layout>3x1-zoom</layout>
+	<layout>2x2</layout>
+	<layout>5-grid-zoom</layout>
+	<layout>3x2-zoom</layout>
+	<layout>7-grid-zoom</layout>
+	<layout>4x2-zoom</layout>
+	<layout>3x3</layout>
+      </group>
+      <group name="1up_top_left_plus">
+	<layout>1up_top_left+5</layout>
+	<layout>1up_top_left+7</layout>
+	<layout>1up_top_left+9</layout>
+      </group>
+      <group name="3up_plus">
+	<layout>3up+4</layout>
+	<layout>3up+9</layout>
+      </group>
+    </groups>
+  </layout-settings>
+</configuration>
+
+<configuration name="db.conf" description="LIMIT DB Configuration">
+  <settings>
+    <param name="odbc-dsn" value="pgsql://hostaddr=$${pgsql_ip} dbname=webitel user=webitel password=webitel options='-c client_min_messages=NOTICE' application_name='webitel'"/>
+    <!--<param name="odbc-dsn" value="dsn:user:pass"/>-->
+  </settings>
+</configuration>
+
+<configuration name="event_socket.conf" description="Socket Client">
+  <settings>
+    <param name="nat-map" value="false"/>
+    <param name="listen-ip" value="$${event_socket_ip}"/>
+    <param name="listen-port" value="8021"/>
+    <param name="password" value="ClueCon"/>
+    <param name="apply-inbound-acl" value="all"/>
+    <!-- <param name="apply-inbound-acl" value="rfc1918.auto"/> -->
+    <!--<param name="stop-on-bind-error" value="true"/>-->
+  </settings>
+</configuration>
+
+<configuration name="fax.conf" description="FAX application configuration">
+    <settings>
+	<param name="use-ecm"		value="true"/>
+	<param name="verbose"		value="false"/>
+	<param name="disable-v17"	value="false"/>
+	<param name="ident"		value="Webitel Fax Server"/>
+	<param name="header"		value="Webitel"/>
+
+	<param name="spool-dir"		value="$${temp_dir}"/>
+	<param name="file-prefix"	value="faxrx"/>
+    </settings>
+</configuration>
+
+<configuration name="http_cache.conf" description="HTTP GET cache">
+  <settings>
+    <!-- set to true if you want to enable http:// and https:// formats.  Do not use if mod_httapi is also loaded -->
+    <param name="enable-file-formats" value="false"/>
+    <param name="max-urls" value="10000"/>
+    <param name="location" value="$${cache_dir}"/>
+    <param name="default-max-age" value="86400"/>
+    <param name="prefetch-thread-count" value="8"/>
+    <param name="prefetch-queue-size" value="100"/>
+    <!-- absolute path to CA bundle file -->
+    <param name="ssl-cacert" value="$${certs_dir}/cacert.pem"/>
+    <!-- verify certificates -->
+    <param name="ssl-verifypeer" value="true"/>
+    <!-- verify host name matches certificate -->
+    <param name="ssl-verifyhost" value="true"/>
+  </settings>
+</configuration>
+
+<configuration name="local_stream.conf" description="stream files from local dir">
+  <!-- fallback to default if requested moh class isn't found -->
+  <directory name="default" path="$${sounds_dir}/music/8000">
+    <param name="rate" value="8000"/>
+    <param name="shuffle" value="true"/>
+    <param name="channels" value="1"/>
+    <param name="interval" value="20"/>
+    <param name="timer-name" value="soft"/>
+    <!-- list of short files to break in with every so often -->
+    <!--<param name="chime-list" value="file1.wav,file2.wav"/>-->
+    <!-- frequency of break-in (seconds)-->
+    <!--<param name="chime-freq" value="30"/>-->
+    <!-- limit to how many seconds the file will play -->
+    <!--<param name="chime-max" value="500"/>-->
+  </directory>
+
+  <directory name="moh/8000" path="$${sounds_dir}/music/8000">
+    <param name="rate" value="8000"/>
+    <param name="shuffle" value="true"/>
+    <param name="channels" value="1"/>
+    <param name="interval" value="20"/>
+    <param name="timer-name" value="soft"/>
+  </directory>
+
+  <directory name="moh/16000" path="$${sounds_dir}/music/16000">
+    <param name="rate" value="16000"/>
+    <param name="shuffle" value="true"/>
+    <param name="channels" value="1"/>
+    <param name="interval" value="20"/>
+    <param name="timer-name" value="soft"/>
+  </directory>
+
+  <directory name="moh/32000" path="$${sounds_dir}/music/32000">
+    <param name="rate" value="32000"/>
+    <param name="shuffle" value="true"/>
+    <param name="channels" value="1"/>
+    <param name="interval" value="20"/>
+    <param name="timer-name" value="soft"/>
+  </directory>
+
+  <directory name="moh/48000" path="$${sounds_dir}/music/48000">
+    <param name="rate" value="48000"/>
+    <param name="shuffle" value="true"/>
+    <param name="channels" value="1"/>
+    <param name="interval" value="10"/>
+    <param name="timer-name" value="soft"/>
+  </directory>
+
+  <directory name="video" path="$${sounds_dir}/music/video">
+    <param name="rate" value="48000"/>
+    <param name="shuffle" value="true"/>
+    <param name="channels" value="2"/>
+    <param name="interval" value="10"/>
+    <param name="timer-name" value="soft"/>
+  </directory>
+
+  <directory name="video_chime" path="$${sounds_dir}/music/video">
+    <param name="rate" value="48000"/>
+    <param name="shuffle" value="true"/>
+    <param name="channels" value="2"/>
+    <param name="interval" value="10"/>
+    <param name="timer-name" value="soft"/>
+    <param name="chime-list" value="$${sounds_dir}/music/chimes/01.mp4,$${sounds_dir}/music/chimes/02.mp4,$${sounds_dir}/music/chimes/03.mp4,$${sounds_dir}/music/chimes/04.mp4,$${sounds_dir}/music/chimes/05.mp4,$${sounds_dir}/music/chimes/06.mp4,$${sounds_dir}/music/chimes/07.mp4"/>
+    <param name="chime-freq" value="20"/>
+    <param name="chime-max" value="15"/>
+  </directory>
+</configuration>
+
+<configuration name="lua.conf" description="LUA Configuration">
+  <settings>
+  </settings>
+</configuration>
+
+<configuration name="opus.conf">
+    <settings>
+        <param name="use-vbr" value="1"/>
+        <param name="use-dtx" value="1"/>
+        <param name="complexity" value="10"/>
+        <param name="packet-loss-percent" value="15"/>
+        <param name="keep-fec-enabled" value="1"/>
+        <param name="use-jb-lookahead" value="1"/>
+        <param name="maxaveragebitrate" value="64000"/>
+        <param name="maxplaybackrate" value="48000"/>
+        <param name="sprop-maxcapturerate" value="48000"/>
+        <param name="adjust-bitrate" value="1"/>
+    </settings>
+</configuration>
+
+<configuration name="shout.conf" description="mod shout config">
+  <settings>
+    <!-- Don't change these unless you are insane -->
+    <!--<param name="decoder" value="i586"/>-->
+    <!--<param name="volume" value=".1"/>-->
+    <!--<param name="outscale" value="8192"/>-->
+  </settings>
+</configuration>
+
+<configuration name="spandsp.conf" description="SpanDSP config">
+    <modem-settings>
+<!--
+    total-modems set to N will create that many soft-modems.
+    If you use them with Hylafax you need the following for each one numbered 0..N:
+
+    1) A line like this in /etc/inittab:
+
+      f0:2345:respawn:/usr/lib/fax/faxgetty /dev/FS0
+
+    2) copy conf/config.FS0 to /var/spool/hylafax/etc (or wherver the appropriate dir is on your system)
+
+    Subsequent modem configs would incrment the 0 to 1 and so on.
+
+-->
+      <param name="total-modems" value="0"/>
+      <!-- Change the directory of the devices created from /dev. Needed if FS runs as non-root -->
+      <!-- <param name="directory" value="/dev/FS"/> -->
+
+      <!-- Default context and dialplan to use on inbound calls from the modems -->
+      <param name="context" value="default"/>
+      <param name="dialplan" value="XML"/>
+
+      <!-- Extra tracing for debugging -->
+      <param name="verbose" value="false"/>
+    </modem-settings>
+
+    <fax-settings>
+	<param name="use-ecm"		value="true"/>
+	<param name="verbose"		value="false"/>
+	<param name="disable-v17"	value="false"/>
+	<param name="ident"		value="Webitel Fax Server"/>
+	<param name="header"		value="Webitel"/>
+
+	<param name="spool-dir"		value="$${temp_dir}"/>
+	<param name="file-prefix"	value="faxrx"/>
+	<!-- How many packets to process before sending the re-invite on tx/rx -->
+	<!-- <param name="t38-rx-reinvite-packet-count" value="50"/> -->
+	<!-- <param name="t38-tx-reinvite-packet-count" value="100"/> -->
+    </fax-settings>
+
+    <descriptors>
+
+     <!-- These tones are defined in Annex to ITU Operational Bulletin No. 781 - 1.II.2003 -->
+     <!-- Various Tones Used in National Networks (According to ITU-T Recommendation E.180)(03/1998) -->
+
+     <!-- North America -->
+     <descriptor name="1">
+       <tone name="CED_TONE">
+         <element freq1="2100" freq2="0" min="700" max="0"/>
+       </tone>
+       <tone name="SIT">
+         <element freq1="950" freq2="0" min="256" max="400"/>
+         <element freq1="1400" freq2="0" min="256" max="400"/>
+         <element freq1="1800" freq2="0" min="256" max="400"/>
+       </tone>
+       <tone name="RING_TONE" description="North America ring">
+         <element freq1="440" freq2="480" min="1200" max="0"/>
+       </tone>
+       <tone name="REORDER_TONE">
+         <element freq1="480" freq2="620" min="224" max="316"/>
+         <element freq1="0" freq2="0" min="168" max="352"/>
+         <element freq1="480" freq2="620" min="224" max="316"/>
+       </tone>
+       <tone name="BUSY_TONE">
+         <element freq1="480" freq2="620" min="464" max="536"/>
+         <element freq1="0" freq2="0" min="464" max="572"/>
+         <element freq1="480" freq2="620" min="464" max="536"/>
+       </tone>
+     </descriptor>
+
+     <!-- United Kingdom -->
+     <descriptor name="44">
+       <tone name="CED_TONE">
+         <element freq1="2100" freq2="0" min="500" max="0"/>
+       </tone>
+       <tone name="SIT">
+         <element freq1="950" freq2="0" min="256" max="400"/>
+         <element freq1="1400" freq2="0" min="256" max="400"/>
+         <element freq1="1800" freq2="0" min="256" max="400"/>
+       </tone>
+       <tone name="REORDER_TONE">
+         <element freq1="400" freq2="0" min="368" max="416"/>
+         <element freq1="0" freq2="0" min="336" max="368"/>
+         <element freq1="400" freq2="0" min="256" max="288"/>
+         <element freq1="0" freq2="0" min="512" max="544"/>
+       </tone>
+       <tone name="BUSY_TONE">
+         <element freq1="400" freq2="0" min="352" max="384"/>
+         <element freq1="0" freq2="0" min="352" max="384"/>
+         <element freq1="400" freq2="0" min="352" max="384"/>
+         <element freq1="0" freq2="0" min="352" max="384"/>
+       </tone>
+     </descriptor>
+
+     <!-- Germany -->
+     <descriptor name="49">
+       <tone name="CED_TONE">
+         <element freq1="2100" freq2="0" min="500" max="0"/>
+       </tone>
+       <tone name="SIT">
+         <element freq1="900" freq2="0" min="256" max="400"/>
+         <element freq1="1400" freq2="0" min="256" max="400"/>
+         <element freq1="1800" freq2="0" min="256" max="400"/>
+       </tone>
+       <tone name="REORDER_TONE">
+         <element freq1="425" freq2="0" min="224" max="272"/>
+         <element freq1="0" freq2="0" min="224" max="272"/>
+       </tone>
+       <tone name="BUSY_TONE">
+         <element freq1="425" freq2="0" min="464" max="516"/>
+         <element freq1="0" freq2="0" min="464" max="516"/>
+       </tone>
+     </descriptor>
+   </descriptors>
+
+</configuration>
+
+<configuration name="sofia.conf" description="sofia Endpoint">
+
+  <global_settings>
+    <param name="log-level" value="0"/>
+    <!-- <param name="auto-restart" value="false"/> -->
+    <param name="debug-presence" value="0"/>
+        <!-- webitel -->
+    <param name="odbc-dsn" value="pgsql://hostaddr=$${pgsql_ip} dbname=webitel user=webitel password=webitel options='-c client_min_messages=NOTICE' application_name='webitel'"/>
+    <!-- <param name="capture-server" value="udp:homer.domain.com:5060"/> -->
+    <!-- Allow to force-expire SIP contact (using: mod_desking) -->
+    <param name="reg-deny-binding-fetch-and-no-lookup" value="true"/>
+  </global_settings>
+
+<profiles>
+<profile name="sip">
+  <aliases>
+  </aliases>
+  <domains>
+    <domain name="all" alias="false" parse="true"/>
+  </domains>
+
+  <settings>
+    <param name="debug" value="0"/>
+    <!-- If you want FreeSWITCH to shutdown if this profile fails to load, uncomment the next line. -->
+    <!-- <param name="shutdown-on-fail" value="true"/> -->
+    <param name="sip-trace" value="no"/>
+    <param name="sip-capture" value="no"/>
+    <param name="rfc2833-pt" value="101"/>
+    <!-- RFC 5626 : Send reg-id and sip.instance -->
+    <!--<param name="enable-rfc-5626" value="true"/> -->
+    <param name="sip-port" value="5080"/>
+    <param name="dialplan" value="XML"/>
+    <param name="context" value="default"/>
+    <param name="dtmf-type" value="rfc2833"/>
+    <param name="dtmf-duration" value="2000"/>
+    <param name="inbound-codec-prefs" value="OPUS,PCMA,PCMU"/>
+    <param name="outbound-codec-prefs" value="OPUS,PCMA,PCMU"/>
+    <param name="hold-music" value="$${hold_music}"/>
+    <param name="rtp-timer-name" value="soft"/>
+    <!--<param name="enable-100rel" value="true"/>-->
+    <!--<param name="disable-srv503" value="true"/>-->
+    <!-- This could be set to "passive" -->
+    <param name="local-network-acl" value="localnet.auto"/>
+    <param name="manage-presence" value="false"/>
+
+    <!-- used to share presence info across sofia profiles
+         manage-presence needs to be set to passive on this profile
+         if you want it to behave as if it were the internal profile
+         for presence.
+    -->
+    <!-- Name of the db to use for this profile -->
+    <!--<param name="dbname" value="share_presence"/>-->
+    <!--<param name="presence-hosts" value="$${domain}"/>-->
+    <!--<param name="force-register-domain" value="$${domain}"/>-->
+    <!--all inbound reg will stored in the db using this domain -->
+    <!--<param name="force-register-db-domain" value="$${domain}"/>-->
+    <!-- ************************************************* -->
+
+    <!--<param name="aggressive-nat-detection" value="true"/>-->
+    <param name="inbound-codec-negotiation" value="generous"/>
+    <param name="nonce-ttl" value="60"/>
+    <param name="auth-calls" value="false"/>
+    <param name="inbound-late-negotiation" value="false"/>
+    <param name="inbound-zrtp-passthru" value="false"/> <!-- (also enables late negotiation) -->
+    <!--
+        DO NOT USE HOSTNAMES, ONLY IP ADDRESSES IN THESE SETTINGS!
+    -->
+    <param name="rtp-ip" value="$${nonreg_ip}"/>
+    <param name="sip-ip" value="$${nonreg_ip}"/>
+    <param name="rtp-timeout-sec" value="300"/>
+    <param name="rtp-hold-timeout-sec" value="1800"/>
+
+    <param name="ext-rtp-ip" value="$${nonreg_ext_ip}"/>
+    <param name="ext-sip-ip" value="$${nonreg_ext_ip}"/>
+
+    <param name="allow-update" value="true"/>
+    <param name="send-display-update" value="true"/>
+
+    <!-- TLS: disabled by default, set to "true" to enable -->
+    <param name="tls" value="false"/>
+    <!-- Set to true to not bind on the normal sip-port but only on the TLS port -->
+    <param name="tls-only" value="false"/>
+    <!-- additional bind parameters for TLS -->
+    <param name="tls-bind-params" value="transport=tls"/>
+    <!-- Port to listen on for TLS requests. (5081 will be used if unspecified) -->
+    <param name="tls-sip-port" value="5061"/>
+    <!-- Location of the agent.pem and cafile.pem ssl certificates (needed for TLS server) -->
+    <!--<param name="tls-cert-dir" value=""/>-->
+    <!-- Optionally set the passphrase password used by openSSL to encrypt/decrypt TLS private key files -->
+    <param name="tls-passphrase" value=""/>
+    <!-- Verify the date on TLS certificates -->
+    <param name="tls-verify-date" value="true"/>
+    <!-- TLS verify policy, when registering/inviting gateways with other servers (outbound) or handling inbound registration/invite requests how should we verify their certificate -->
+    <!-- set to 'in' to only verify incoming connections, 'out' to only verify outgoing connections, 'all' to verify all connections, also 'in_subjects', 'out_subjects' and 'all_subjects' for subject validation. Multiple policies can be split with a '|' pipe -->
+    <param name="tls-verify-policy" value="none"/>
+    <!-- Certificate max verify depth to use for validating peer TLS certificates when the verify policy is not none -->
+    <param name="tls-verify-depth" value="2"/>
+    <!-- If the tls-verify-policy is set to subjects_all or subjects_in this sets which subjects are allowed, multiple subjects can be split with a '|' pipe -->
+    <param name="tls-verify-in-subjects" value=""/>
+    <!-- TLS version ("sslv23" (default), "tlsv1"). NOTE: Phones may not work with TLSv1 -->
+    <param name="tls-version" value="$${sip_tls_version}"/>
+    <!-- webitel -->
+    <param name="odbc-dsn" value="pgsql://hostaddr=$${pgsql_ip} dbname=webitel user=webitel password=webitel options='-c client_min_messages=NOTICE' application_name='webitel'"/>
+    <param name="user-agent-string" value="Webitel-$${webitel_version}"/>
+    <param name="username" value="webitel"/>
+  </settings>
+	</profile>
+</profiles>
+
+</configuration>
+
 <configuration name="timezones.conf" description="Timezones">
     <timezones>
 	<zone name="Africa/Abidjan" value="GMT0" />
@@ -1900,14 +3168,3 @@
     </timezones>
     </configuration>
 </include>
-<!--
-For Emacs:
-Local Variables:
-mode:xml
-indent-tabs-mode:nil
-tab-width:2
-c-basic-offset:2
-End:
-For VIM:
-vim:set softtabstop=2 shiftwidth=2 tabstop=2 expandtab:
--->

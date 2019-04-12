@@ -5,22 +5,16 @@ export PATH=$PATH:/usr/local/freeswitch/bin
 echo 'Webitel '$VERSION
 sed -i 's/WEBITEL_MAJOR/'$WEBITEL_MAJOR'/g' /conf/vars.xml
 
-if [ "$FS_CONF_FILE" ]; then
-    sed -i 's/FS_CONF_FILE/'$FS_CONF_FILE'/g' /conf/freeswitch.xml
-else
-    sed -i 's/FS_CONF_FILE/configuration_pgsql.xml/g' /conf/freeswitch.xml
-fi
-
 if [ "$RTP_START_PORT" ]; then
     sed -i 's/RTP_START_PORT/'$RTP_START_PORT'/g' /conf/configur*.xml
 else
-    sed -i 's/RTP_START_PORT/16384/g' /conf/configur*.xml
+    sed -i 's/RTP_START_PORT/20000/g' /conf/configur*.xml
 fi
 
 if [ "$RTP_END_PORT" ]; then
     sed -i 's/RTP_END_PORT/'$RTP_END_PORT'/g' /conf/configur*.xml
 else
-    sed -i 's/RTP_END_PORT/32768/g' /conf/configur*.xml
+    sed -i 's/RTP_END_PORT/29999/g' /conf/configur*.xml
 fi
 
 if [ "$MAX_SESSIONS" ]; then
@@ -144,7 +138,7 @@ chown -R freeswitch:freeswitch /{logs,tmp,db,sounds,conf,certs,scripts,recording
 
 ln -s /dev/null /dev/raw1394
 
-/iptables-reload.sh &
+#/iptables-reload.sh &
 /sounds/get_sounds.sh &
 
 if [ "$1" = 'freeswitch' ]; then

@@ -3,7 +3,6 @@ FROM webitel/freeswitch-base:latest
 RUN apt-get update && apt-get -y build-dep freeswitch
 
 RUN git clone https://freeswitch.org/stash/scm/fs/freeswitch.git -bv1.8 /freeswitch.git
-RUN git clone https://github.com/xadhoom/mod_bcg729.git /mod_bcg729
 
 RUN cd /freeswitch.git && git config pull.rebase true \
     && rm -rf /freeswitch.git/src/mod/event_handlers/mod_amqp \
@@ -25,20 +24,13 @@ RUN git clone https://github.com/webitel/mod_grpc.git /mod_grpc \
 
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 
-#Install mod_bcg729
-RUN cd /mod_bcg729 \
-   && sed -i 's/usr\/include\/freeswitch/usr\/local\/freeswitch\/include\/freeswitch/g' Makefile \
-   && sed -i 's/usr\/lib\/freeswitch\/mod/usr\/local\/freeswitch\/mod/g' Makefile \
-   && head -n 6 Makefile \
-   && make && make install && cd / && rm -rf /mod_bcg729
-
 RUN cd / && rm -rf /usr/local/freeswitch/mod/*.la && rm -rf /usr/local/freeswitch/conf
 
 FROM webitel/freeswitch-base
 LABEL maintainer="Vitaly Kovalyshyn"
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends librabbitmq4 imagemagick iptables tcpdump \
+    && apt-get install -y --no-install-recommends librabbitmq4 imagemagick \
     && apt-get install -s freeswitch \
       | sed -n \
         -e "/^Inst freeswitch /d" \
@@ -61,7 +53,7 @@ RUN apt-get update \
       | xargs apt-get install -y --no-install-recommends \
     && apt-get clean && chmod +s /usr/sbin/tcpdump && rm -rf /var/lib/apt/lists/*
 
-ENV WEBITEL_MAJOR 19.06
+ENV WEBITEL_MAJOR 19.08
 ENV VERSION 1.8.5
 
 WORKDIR /

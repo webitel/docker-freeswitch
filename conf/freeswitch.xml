@@ -13,47 +13,6 @@
            <action application="deflect" data="${destination_number}"/>
       </condition>
     </extension>
-
-   <extension name="domain_name" continue="true">
-      <condition field="${user_exists(id ${caller_id_number} ${w_domain})}" expression="true">
-        <action inline="true" application="set" data="domain_name=${w_domain}" />
-      </condition>
-    </extension>
-
-<extension name="inbound_hot_desk" continue="true">
-  <condition field="${direction}" expression="^inbound$"/>
-  <condition field="${sip-force-user}" expression=".+">
-    <action application="set_user" data="${sip-force-user}@${domain_name}" inline="true"/>
-    <action application="set" data="presence_id=${sip-force-user}@${domain_name}" inline="true"/>
-    <action application="set_profile_var" data="caller_id_number=${sip-force-user}" inline="true"/>
-    <action application="set_profile_var" data="caller_id_name=${user_data(${sip-force-user}@${domain_name} var effective_caller_id_name)}" inline="true"/>
-  </condition>
-</extension>
-
-   <!-- In call Transfer for phones without a transfer button -->
-    <extension name="dx">
-      <condition field="destination_number" expression="^dx$">
-        <action application="answer"/>
-        <action application="read" data="11 11 'tone_stream://%(10000,0,350,440)' digits 5000 #"/>
-        <action application="execute_extension" data="is_transfer XML default"/>
-      </condition>
-    </extension>
-
-    <extension name="is_transfer">
-      <condition field="destination_number" expression="^is_transfer$"/>
-      <condition field="${digits}" expression="^(\d+)$">
-        <action application="transfer" data="-bleg ${digits} XML default"/>
-        <anti-action application="eval" data="cancel transfer"/>
-      </condition>
-    </extension>
-
-    <extension name="screen_sharing">
-      <condition field="destination_number" expression="^(\d+)-screen$">
-        <action application="set" data="effective_caller_id_number=${caller_id_number}-screen"/>
-        <action application="transfer" data="$1 XML default"/>
-      </condition>
-    </extension>
-
    <extension name="global" continue="true">
 
       <condition field="${rtp_has_crypto}" expression="^($${rtp_sdes_suites})$" break="never">
@@ -65,10 +24,6 @@
         <action application="set" data="rtp_secure_media=true"/>
       </condition>
 
-      <condition>
-        <action application="export" data="RFC2822_DATE=${strftime(%a, %d %b %Y %T %z)}"/>
-        <action application="bind_meta_app" data="0 a s execute_extension::dx XML default"/>
-      </condition>
     </extension>
 
     <extension name="Echo Test">
@@ -96,105 +51,11 @@
 
   </context>
 
-  <context name="public">
-
-    <extension name="unloop">
-      <condition field="${unroll_loops}" expression="^true$"/>
-      <condition field="${sip_looped_call}" expression="^true$">
-        <action application="deflect" data="${destination_number}"/>
-      </condition>
-    </extension>
-
-    <extension name="outside_call" continue="true">
-      <condition>
-        <action application="export" data="outside_call=true"/>
-        <action application="export" data="webitel_direction=inbound"/>
-        <action application="export" data="RFC2822_DATE=${strftime(%a, %d %b %Y %T %z)}"/>
-        <action application="bind_meta_app" data="0 b s execute_extension::dx XML default"/>
-      </condition>
-    </extension>
-    
-    <extension name="set_default_variables" continue="true">
-      <condition>
-        <action application="set" data="ringback=$${us-ring}"/>
-        <action application="set" data="transfer_ringback=$${uk-ring}"/>
-        <action application="set" data="hangup_after_bridge=true"/>
-      </condition>
-    </extension>
-
-    <extension name="public test">
-      <condition field="destination_number" expression="^(h)$">
-        <action application="hangup" data="USER_BUSY"/> 
-      </condition>
-    </extension>
-
-    <extension name="public echo test">
-      <condition field="destination_number" expression="^(echo)$">
-        <action application="answer"/>
-        <action application="sched_hangup" data="+10 allotted_timeout"/> 
-        <action application="echo"/>
-      </condition>
-    </extension>
-
-    <extension name="ACR">
-      <condition>
-         <action application="socket" data="$${acr_srv}"/>
-      </condition>
-    </extension>
-
-  </context>
-
- <context name="dialer">
-
-    <extension name="unloop">
-      <condition field="${unroll_loops}" expression="^true$"/>
-      <condition field="${sip_looped_call}" expression="^true$">
-        <action application="deflect" data="${destination_number}"/>
-      </condition>
-    </extension>
-
-    <extension name="call" continue="true">
-      <condition>
-        <action application="export" data="RFC2822_DATE=${strftime(%a, %d %b %Y %T %z)}"/>
-      </condition>
-    </extension>
-    
-    <extension name="ACR">
-      <condition>
-         <action application="socket" data="$${acr_srv}"/>
-      </condition>
-    </extension>
-
-  </context>
-
- <context name="private">
-
-    <extension name="unloop">
-      <condition field="${unroll_loops}" expression="^true$"/>
-      <condition field="${sip_looped_call}" expression="^true$">
-        <action application="deflect" data="${destination_number}"/>
-      </condition>
-    </extension>
-
-    <extension name="call" continue="true">
-      <condition>
-        <action application="export" data="RFC2822_DATE=${strftime(%a, %d %b %Y %T %z)}"/>
-      </condition>
-    </extension>
-    
-    <extension name="ACR">
-      <condition>
-         <action application="socket" data="$${acr_srv}"/>
-      </condition>
-    </extension>
-
-  </context>
-
  </section>
 
  <!-- CONFIGURATIONS -->
 <section name="configuration" description="Webitel FreeSWITCH Configurations">
-  <X-PRE-PROCESS cmd="include" data="FS_CONF_FILE" />
+  <X-PRE-PROCESS cmd="include" data="configuration.xml" />
 </section>
 
   <section name="languages" description="Language Management">
