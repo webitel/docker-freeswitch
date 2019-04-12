@@ -51,7 +51,7 @@ RUN apt-get update \
         -e "/^Inst freeswitch-mod-lua /d" \
         -e 's/^Inst \([^ ]\+\) .*$/\1/p' \
       | xargs apt-get install -y --no-install-recommends \
-    && apt-get clean && chmod +s /usr/sbin/tcpdump && rm -rf /var/lib/apt/lists/*
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 ENV WEBITEL_MAJOR 19.08
 ENV VERSION 1.8.5
@@ -63,7 +63,6 @@ COPY conf /conf
 COPY images /images
 COPY sounds /sounds
 COPY scripts /scripts
-COPY iptables-reload.sh /
 COPY docker-entrypoint.sh /
 
 RUN ldconfig
