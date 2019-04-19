@@ -1238,7 +1238,7 @@
     <!--<param name="enable-100rel" value="true"/>-->
     <!--<param name="disable-srv503" value="true"/>-->
     <!-- This could be set to "passive" -->
-    <param name="local-network-acl" value="localnet.auto"/>
+    <param name="local-network-acl" value="passive"/>
     <param name="manage-presence" value="false"/>
 
     <!-- used to share presence info across sofia profiles
