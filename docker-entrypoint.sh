@@ -35,6 +35,12 @@ else
     sed -i 's/AMQP_HOST/172.17.0.1/g' /conf/vars.xml
 fi
 
+if [ "$GRPC_BIND" ]; then
+    sed -i 's/GRPC_BIND/'$GRPC_BIND'/g' /conf/vars.xml
+else
+    sed -i 's/GRPC_BIND/172.17.0.1:50051/g' /conf/vars.xml
+fi
+
 if [ "$PGSQL_HOST" ]; then
     sed -i 's/PGSQL_HOST/'$PGSQL_HOST'/g' /conf/vars.xml
 else
