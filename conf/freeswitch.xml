@@ -27,7 +27,7 @@
     </extension>
 
     <extension name="Gateway Outbound">
-      <condition field="sip_h_P-hint" expression="^(outbound)$">
+        <condition field="${sip_h_P-hint}" expression="^(outbound)$">
           <action application="bridge" data="sofia/gateway/${sip_h_X-Webitel-Gateway}/${destination_number}" />
       </condition>
     </extension>
