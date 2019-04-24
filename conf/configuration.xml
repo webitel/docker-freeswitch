@@ -44,7 +44,7 @@
         <param name="loglevel" value="err"/>
         <param name="sql-buffer-len" value="10m"/>
         <param name="max-sql-buffer-len" value="20m"/>
-        <param name="core-db-dsn" value="pgsql://host=$${pgsql_ip} dbname=webitel user=webitel password=webitel options='-c client_min_messages=NOTICE' application_name='webitel'" />
+        <param name="core-db-dsn" value="pgsql://host=$${pgsql_ip} dbname=webitel user=webitel password=webitel options='-c client_min_messages=NOTICE' application_name='freeswitch'" />
       </settings>
     </configuration>
 
@@ -65,7 +65,6 @@
         <param name="loglevel" value="$${console_loglevel}" />
       </settings>
     </configuration>
-
 
 <configuration name="acl.conf" description="Network Lists">
   <network-lists>
@@ -136,6 +135,7 @@
         <param name="exchange-name" value="TAP.Commands"/>
         <param name="binding_key" value="commandBindingKey"/>
         <param name="reconnect_interval_ms" value="1000"/>
+        <param name="send_queue_size" value="1000"/>
       </params>
     </profile>
 </commands>
@@ -157,7 +157,7 @@
                 <param name="circuit_breaker_ms" value="10000"/>
                 <param name="reconnect_interval_ms" value="100"/>
                 <param name="delivery-mode" value="2"/>
-                <param name="send_queue_size" value="100"/>
+                <param name="send_queue_size" value="1000"/>
                 <param name="enable_fallback_format_fields" value="1"/>
                 <param name="queue-name-leg-a" value="cdr-leg-a"/>
                 <param name="queue-name-leg-b" value="cdr-leg-b"/>
@@ -201,13 +201,6 @@
   <profiles>
     <!--If no profile is specified it will default to "default"-->
     <profile name="default">
-      <!-- Directory to drop CDR's
-	   'auto' means $PREFIX/logs/conference_cdr/<confernece_uuid>.cdr.xml
-	   a non-absolute path means $PREFIX/logs/<value>/<confernece_uuid>.cdr.xml
-	   absolute path means <value>/<confernece_uuid>.cdr.xml
-      -->
-      <!-- <param name="cdr-log-dir" value="auto"/> -->
-
       <!-- Domain (for presence) -->
       <param name="domain" value="$${domain_name}"/>
       <!-- Sample Rate-->
@@ -217,30 +210,6 @@
       <!-- Energy level required for audio to be sent to the other users -->
       <param name="energy-level" value="300"/>
 
-      <!--Can be | delim of waste|mute|deaf|dist-dtmf waste will always transmit data to each channel
-          even during silence.  dist-dtmf propagates dtmfs to all other members, but channel controls
-	  via dtmf will be disabled. -->
-      <!-- <param name="member-flags" value="waste"/> -->
-
-      <!-- Name of the caller control group to use for this profile -->
-      <!-- <param name="caller-controls" value="some name"/> -->
-      <!-- Name of the caller control group to use for the moderator in this profile -->
-      <!-- <param name="moderator-controls" value="some name"/> -->
-      <!-- TTS Engine to use -->
-      <!-- <param name="tts-engine" value="cepstral"/> -->
-      <!-- TTS Voice to use -->
-      <!-- <param name="tts-voice" value="david"/> -->
-
-      <!-- If TTS is enabled all audio-file params beginning with -->
-      <!-- 'say:' will be considered text to say with TTS -->
-      <!-- Override the default path here, after which you use relative paths in the other sound params -->
-      <!-- Note: The default path is the conference's first caller's sound_prefix -->
-      <!-- <param name="sound-prefix" value="$${sounds_dir}/en/us/callie"/> -->
-      <!-- File to play to acknowledge succees -->
-      <!-- <param name="ack-sound" value="beep.wav"/> -->
-      <!-- File to play to acknowledge failure -->
-      <!-- <param name="nack-sound" value="beeperr.wav"/> -->
-      <!-- File to play to acknowledge muted -->
       <param name="muted-sound" value="conference/conf-muted.wav"/>
       <!-- File to play to acknowledge unmuted -->
       <param name="unmuted-sound" value="conference/conf-unmuted.wav"/>
@@ -1021,28 +990,9 @@
 
 <configuration name="spandsp.conf" description="SpanDSP config">
     <modem-settings>
-<!--
-    total-modems set to N will create that many soft-modems.
-    If you use them with Hylafax you need the following for each one numbered 0..N:
-
-    1) A line like this in /etc/inittab:
-
-      f0:2345:respawn:/usr/lib/fax/faxgetty /dev/FS0
-
-    2) copy conf/config.FS0 to /var/spool/hylafax/etc (or wherver the appropriate dir is on your system)
-
-    Subsequent modem configs would incrment the 0 to 1 and so on.
-
--->
       <param name="total-modems" value="0"/>
-      <!-- Change the directory of the devices created from /dev. Needed if FS runs as non-root -->
-      <!-- <param name="directory" value="/dev/FS"/> -->
-
-      <!-- Default context and dialplan to use on inbound calls from the modems -->
       <param name="context" value="default"/>
       <param name="dialplan" value="XML"/>
-
-      <!-- Extra tracing for debugging -->
       <param name="verbose" value="false"/>
     </modem-settings>
 
@@ -1144,7 +1094,7 @@
     <!-- <param name="auto-restart" value="false"/> -->
     <param name="debug-presence" value="0"/>
         <!-- webitel -->
-    <param name="odbc-dsn" value="pgsql://hostaddr=$${pgsql_ip} dbname=webitel user=webitel password=webitel options='-c client_min_messages=NOTICE' application_name='webitel'"/>
+    <param name="odbc-dsn" value="pgsql://hostaddr=$${pgsql_ip} dbname=webitel user=webitel password=webitel options='-c client_min_messages=NOTICE' application_name='sip-sofia'"/>
     <!-- <param name="capture-server" value="udp:homer.domain.com:5060"/> -->
     <!-- Allow to force-expire SIP contact (using: mod_desking) -->
     <param name="reg-deny-binding-fetch-and-no-lookup" value="true"/>
@@ -1157,71 +1107,38 @@
   <domains>
     <domain name="all" alias="false" parse="true"/>
   </domains>
-
   <settings>
     <param name="debug" value="0"/>
-    <!-- If you want FreeSWITCH to shutdown if this profile fails to load, uncomment the next line. -->
-    <!-- <param name="shutdown-on-fail" value="true"/> -->
     <param name="sip-trace" value="no"/>
     <param name="sip-capture" value="no"/>
     <param name="rfc2833-pt" value="101"/>
-    <!-- RFC 5626 : Send reg-id and sip.instance -->
-    <!--<param name="enable-rfc-5626" value="true"/> -->
     <param name="sip-port" value="sofia_sip_port"/>
     <param name="dialplan" value="XML"/>
-    <param name="context" value="default"/>
+    <param name="context" value="public"/>
     <param name="dtmf-type" value="rfc2833"/>
     <param name="dtmf-duration" value="2000"/>
-    <param name="inbound-codec-prefs" value="OPUS,PCMA,PCMU"/>
-    <param name="outbound-codec-prefs" value="OPUS,PCMA,PCMU"/>
+    <param name="inbound-codec-prefs" value="PCMA,PCMU,G722"/>
+    <param name="outbound-codec-prefs" value="PCMA,PCMU,G722"/>
     <param name="hold-music" value="$${hold_music}"/>
     <param name="rtp-timer-name" value="soft"/>
-    <!--<param name="enable-100rel" value="true"/>-->
-    <!--<param name="disable-srv503" value="true"/>-->
-    <!-- This could be set to "passive" -->
     <param name="local-network-acl" value="passive"/>
     <param name="manage-presence" value="false"/>
-
-    <!-- used to share presence info across sofia profiles
-         manage-presence needs to be set to passive on this profile
-         if you want it to behave as if it were the internal profile
-         for presence.
-    -->
-    <!-- Name of the db to use for this profile -->
-    <!--<param name="dbname" value="share_presence"/>-->
-    <!--<param name="presence-hosts" value="$${domain}"/>-->
-    <!--<param name="force-register-domain" value="$${domain}"/>-->
-    <!--all inbound reg will stored in the db using this domain -->
-    <!--<param name="force-register-db-domain" value="$${domain}"/>-->
-    <!-- ************************************************* -->
-
-    <!--<param name="aggressive-nat-detection" value="true"/>-->
     <param name="inbound-codec-negotiation" value="generous"/>
     <param name="nonce-ttl" value="60"/>
     <param name="auth-calls" value="false"/>
     <param name="inbound-late-negotiation" value="false"/>
     <param name="inbound-zrtp-passthru" value="false"/> <!-- (also enables late negotiation) -->
-    <!--
-        DO NOT USE HOSTNAMES, ONLY IP ADDRESSES IN THESE SETTINGS!
-    -->
-    <param name="rtp-ip" value="sofia_rtp_ip"/>
     <param name="sip-ip" value="sofia_sip_ip"/>
+    <param name="rtp-ip" value="sofia_rtp_ip"/>
+    <param name="ext-sip-ip" value="sofia_ext_sip_ip"/>
+    <param name="ext-rtp-ip" value="sofia_ext_rtp_ip"/>
     <param name="rtp-timeout-sec" value="300"/>
     <param name="rtp-hold-timeout-sec" value="1800"/>
-
-    <param name="ext-rtp-ip" value="sofia_ext_rtp_ip"/>
-    <param name="ext-sip-ip" value="sofia_ext_sip_ip"/>
-
     <param name="allow-update" value="true"/>
     <param name="send-display-update" value="true"/>
-
-    <!-- TLS: disabled by default, set to "true" to enable -->
     <param name="tls" value="false"/>
-    <!-- Set to true to not bind on the normal sip-port but only on the TLS port -->
     <param name="tls-only" value="false"/>
-    <!-- additional bind parameters for TLS -->
     <param name="tls-bind-params" value="transport=tls"/>
-    <!-- Port to listen on for TLS requests. (5081 will be used if unspecified) -->
     <param name="tls-sip-port" value="5061"/>
     <!-- Location of the agent.pem and cafile.pem ssl certificates (needed for TLS server) -->
     <!--<param name="tls-cert-dir" value=""/>-->
@@ -1230,18 +1147,14 @@
     <!-- Verify the date on TLS certificates -->
     <param name="tls-verify-date" value="true"/>
     <!-- TLS verify policy, when registering/inviting gateways with other servers (outbound) or handling inbound registration/invite requests how should we verify their certificate -->
-    <!-- set to 'in' to only verify incoming connections, 'out' to only verify outgoing connections, 'all' to verify all connections, also 'in_subjects', 'out_subjects' and 'all_subjects' for subject validation. Multiple policies can be split with a '|' pipe -->
     <param name="tls-verify-policy" value="none"/>
-    <!-- Certificate max verify depth to use for validating peer TLS certificates when the verify policy is not none -->
     <param name="tls-verify-depth" value="2"/>
-    <!-- If the tls-verify-policy is set to subjects_all or subjects_in this sets which subjects are allowed, multiple subjects can be split with a '|' pipe -->
     <param name="tls-verify-in-subjects" value=""/>
-    <!-- TLS version ("sslv23" (default), "tlsv1"). NOTE: Phones may not work with TLSv1 -->
     <param name="tls-version" value="$${sip_tls_version}"/>
     <!-- webitel -->
-    <param name="odbc-dsn" value="pgsql://hostaddr=$${pgsql_ip} dbname=webitel user=webitel password=webitel options='-c client_min_messages=NOTICE' application_name='webitel'"/>
-    <param name="user-agent-string" value="Webitel-$${webitel_version}"/>
-    <param name="username" value="webitel"/>
+    <param name="odbc-dsn" value="pgsql://hostaddr=$${pgsql_ip} dbname=webitel user=webitel password=webitel options='-c client_min_messages=NOTICE' application_name='sip-sofia'"/>
+    <param name="user-agent-string" value="Webitel"/>
+    <param name="username" value="Webitel"/>
   </settings>
 	</profile>
 </profiles>

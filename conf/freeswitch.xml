@@ -5,7 +5,7 @@
   <!-- DIALPLAN -->
   <section name="dialplan" description="Regex/XML Dialplan">
 
-<context name="default">
+<context name="public">
 
     <extension name="unloop">
       <condition field="${unroll_loops}" expression="^true$"/>
@@ -26,20 +26,9 @@
 
     </extension>
 
-    <extension name="Echo Test">
-      <condition field="destination_number" expression="^(0)$">
-        <action application="set" data="webitel_direction=internal"/>
-        <action application="answer"/>
-        <action application="sleep" data="1500" />
-        <action application="echo"/>
-      </condition>
-    </extension>
-
-    <extension name="cdquality_conferences">
-      <condition field="destination_number" expression="^(00)$">
-         <action application="set" data="webitel_direction=conference"/>
-         <action application="answer"/>
-         <action application="conference" data="${domain_name}@default"/>
+    <extension name="Gateway Outbound">
+      <condition field="sip_h_P-hint" expression="^(outbound)$">
+          <action application="bridge" data="sofia/gateway/${sip_h_X-Webitel-Gateway}/${destination_number}" />
       </condition>
     </extension>
 

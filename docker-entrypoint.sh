@@ -3,7 +3,6 @@ set -e
 export PATH=$PATH:/usr/local/freeswitch/bin
 
 echo 'Webitel '$VERSION
-sed -i 's/WEBITEL_MAJOR/'$WEBITEL_MAJOR'/g' /conf/vars.xml
 
 if [ "$RTP_START_PORT" ]; then
     sed -i 's/RTP_START_PORT/'$RTP_START_PORT'/g' /conf/configur*.xml
