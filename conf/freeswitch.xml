@@ -25,10 +25,6 @@
         <action application="set" data="rtp_secure_media=true"/>
       </condition>
 
-      <condition field="${sip_h_X-Webitel-Context}" expression="^$">
-         <action application="set" data="sip_h_X-Webitel-Context=public"/>
-      </condition>
-
     </extension>
 
     <extension name="Gateway Outbound">
