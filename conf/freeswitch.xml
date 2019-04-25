@@ -27,6 +27,12 @@
 
     </extension>
 
+   <extension name="From Gateway" continue="true">
+      <condition field="${sip_h_X-Webitel-Context}" expression="()">
+        <action application="set" data="sip_h_X-Webitel-Context=public"/>
+      </condition>
+    </extension>
+
     <extension name="Gateway Outbound">
         <condition field="${sip_h_P-hint}" expression="^(outbound)$">
           <action application="bridge" data="sofia/gateway/${sip_h_X-Webitel-Gateway}/${destination_number}" />
