@@ -27,14 +27,20 @@
 
     </extension>
 
-   <extension name="From Gateway" continue="true">
+   <extension name="Gateway Inbound">
       <condition field="${sip_h_X-Webitel-Context}" expression="()">
-        <action application="set" data="sip_h_X-Webitel-Context=public"/>
+        <action application="set" data="webitel_cdr=false"/>
+        <action application="set" data="bypass_media=true"/>
+        <action application="export" data="sip_h_X-Webitel-Direction=inbound"/>
+        <action application="export" data="sip_h_X-Webitel-Domain=${webitel_domain}"/>
+        <action application="bridge" data="sofia/sip/sip:${destination_number}@$${outbound_sip_proxy}" />
       </condition>
     </extension>
 
     <extension name="Gateway Outbound">
         <condition field="${sip_h_P-hint}" expression="^(outbound)$">
+          <action application="set" data="webitel_cdr=false"/>
+          <action application="set" data="bypass_media=true"/>
           <action application="bridge" data="sofia/gateway/${sip_h_X-Webitel-Gateway}/${destination_number}" />
       </condition>
     </extension>

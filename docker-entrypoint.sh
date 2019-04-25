@@ -106,6 +106,10 @@ else
     sed -i 's/event_socket_port/8021/g' /conf/configuration.xml
 fi
 
+if [ "$SIP_PROXY" ]; then
+    sed -i 's/SIP_PROXY/'$SIP_PROXY'/g' /conf/vars.xml
+fi
+
 if [ "$LOGLEVEL" ]; then
     sed -i 's/LOGLEVEL/'$LOGLEVEL'/g' /conf/vars.xml
 else
