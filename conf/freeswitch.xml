@@ -28,7 +28,7 @@
     </extension>
 
    <extension name="Gateway Inbound">
-      <condition field="${webitel_domain}" expression="(.*)">
+      <condition field="${webitel_direction}" expression="^(inbound)$">
         <action application="set" data="webitel_cdr=false"/>
         <action application="set" data="bypass_media=true"/>
         <action application="export" data="sip_h_X-Webitel-Direction=inbound"/>
