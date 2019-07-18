@@ -90,7 +90,7 @@
 
 <configuration name="grpc.conf" description="mod_grpc">
     <settings>
-        <param name="grpc_host" value="GRPC_IPV4"/>
+        <param name="grpc_host" value="PRIVATE_IPV4"/>
         <param name="grpc_port" value="50051"/>
         <param name="consul_address" value="http://CONSUL_HOST:8500"/>
     </settings>
@@ -874,7 +874,7 @@
 <configuration name="event_socket.conf" description="Socket Client">
   <settings>
     <param name="nat-map" value="false"/>
-    <param name="listen-ip" value="::"/>
+    <param name="listen-ip" value="PRIVATE_IPV4"/>
     <param name="listen-port" value="8021"/>
     <param name="password" value="ClueCon"/>
   </settings>

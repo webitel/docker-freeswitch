@@ -34,9 +34,9 @@ if [ "$SBC" ]; then
 fi
 
 if [ "$PRIVATE_IPV4" ]; then
-    sed -i 's/GRPC_IPV4/'$PRIVATE_IPV4'/g' /conf/configuration.xml
+    sed -i 's/PRIVATE_IPV4/'$PRIVATE_IPV4'/g' /conf/configuration.xml
 else
-    sed -i '/GRPC_IPV4/d' /conf/configuration.xml
+    sed -i '/PRIVATE_IPV4/d' /conf/configuration.xml
 fi
 
 if [ "$CONSUL" ]; then
