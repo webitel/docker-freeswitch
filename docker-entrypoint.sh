@@ -1,9 +1,14 @@
 #!/bin/bash
 set -e
 export PATH=/usr/local/freeswitch/bin:$PATH
-export PRIVATE_IPV4="${PRIVATE_IPV4:-$(ip addr show eth1 | grep 'inet ' | awk '{print $2}' | cut -d/ -f1)}"
 
 echo 'Webitel '$VERSION
+
+if [ "$DEV" ]; then
+    export PRIVATE_IPV4="${PRIVATE_IPV4:-$(ip addr show eth0 | grep 'inet ' | awk '{print $2}' | cut -d/ -f1)}"
+else
+    export PRIVATE_IPV4="${PRIVATE_IPV4:-$(ip addr show eth1 | grep 'inet ' | awk '{print $2}' | cut -d/ -f1)}"
+fi
 
 if [ "$SBC" ]; then
     sed -i '/GRPC_IPV4/d' /conf/configuration.xml
