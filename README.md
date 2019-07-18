@@ -3,33 +3,13 @@
 [![Build Status](https://travis-ci.org/webitel/docker-freeswitch.svg?branch=master)](https://travis-ci.org/webitel/docker-freeswitch) [![Documentation Status](https://readthedocs.org/projects/webitel/badge/?version=latest)](http://api.webitel.com/en/latest/?badge=latest)
 
 
-[FreeSWITCH](http://www.freeswitch.org/) - FREE Multi-Protocol Soft Switch v1.8.5
+[FreeSWITCH](http://www.freeswitch.org/) - FREE Multi-Protocol Soft Switch v1.8.7
 
 Works only with [Webitel](http://webitel.ua/) [Advanced Call Router](https://github.com/webitel/acr)
 
 ## Environment Variables
 
 The FreeSWITCH `latest` image for [Webitel](http://webitel.ua/) uses several environment variables
-
-`CONF_SERVER`
-
-This environment variable used for HTTP server and port with XML configurations.
-
-`CDR_SERVER`
-
-This environment variable used for uploading call records.
-
-`SIPDOS`
-
-Enable iptables rules.
-
-`LOGLEVEL`
-
-This optional environment variable for FreeSWITCH log level. Default is `warn`.
-
-`ACR_SERVER`
-
-This environment variable used for connection to ACR with FreeSWITCH `socket` application. You must set IP:PORT.
 
 Used in the `ACR` XML Dialplan extension:
 
