@@ -5,40 +5,63 @@ export PRIVATE_IPV4="${PRIVATE_IPV4:-$(ip addr show eth1 | grep 'inet ' | awk '{
 
 echo 'Webitel '$VERSION
 
+if [ "$SBC" ]; then
+    sed -i '/GRPC_IPV4/d' /conf/configuration.xml
+    sed -i '/module=\"mod_amd/d' /conf/configuration.xml
+    sed -i '/module=\"mod_spandsp/d' /conf/configuration.xml
+    sed -i '/module=\"mod_imagick/d' /conf/configuration.xml
+    sed -i '/module=\"mod_png/d' /conf/configuration.xml
+    sed -i '/module=\"mod_av/d' /conf/configuration.xml
+    sed -i '/module=\"mod_sndfile/d' /conf/configuration.xml
+    sed -i '/module=\"mod_native_file/d' /conf/configuration.xml
+    sed -i '/module=\"mod_shout/d' /conf/configuration.xml
+    sed -i '/module=\"mod_local_stream/d' /conf/configuration.xml
+    sed -i '/module=\"mod_tone_stream/d' /conf/configuration.xml
+    sed -i '/module=\"mod_lua/d' /conf/configuration.xml
+    sed -i '/module=\"mod_say_ru/d' /conf/configuration.xml
+    sed -i '/module=\"mod_say_en/d' /conf/configuration.xml
+    sed -i '/module=\"mod_conference/d' /conf/configuration.xml
+    sed -i '/module=\"mod_valet_parking/d' /conf/configuration.xml
+    sed -i '/module=\"mod_http_cache/d' /conf/configuration.xml
+    sed -i '/module=\"mod_spy/d' /conf/configuration.xml
+    sed -i '/module=\"mod_grpc/d' /conf/configuration.xml
+    sed -i '/module=\"mod_amqp/d' /conf/configuration.xml
+fi
+
 if [ "$PRIVATE_IPV4" ]; then
-    sed -i 's/GRPC_IPV4/'$PRIVATE_IPV4'/g' /conf/configur*.xml
+    sed -i 's/GRPC_IPV4/'$PRIVATE_IPV4'/g' /conf/configuration.xml
 else
-    sed -i '/GRPC_IPV4/d' /conf/configur*.xml
+    sed -i '/GRPC_IPV4/d' /conf/configuration.xml
 fi
 
 if [ "$CONSUL" ]; then
-    sed -i 's/CONSUL_HOST/'$CONSUL'/g' /conf/configur*.xml
+    sed -i 's/CONSUL_HOST/'$CONSUL'/g' /conf/configuration.xml
 else
-    sed -i '/CONSUL_HOST/d' /conf/configur*.xml
+    sed -i '/CONSUL_HOST/d' /conf/configuration.xml
 fi
 
 if [ "$RTP_START_PORT" ]; then
-    sed -i 's/RTP_START_PORT/'$RTP_START_PORT'/g' /conf/configur*.xml
+    sed -i 's/RTP_START_PORT/'$RTP_START_PORT'/g' /conf/configuration.xml
 else
-    sed -i 's/RTP_START_PORT/20000/g' /conf/configur*.xml
+    sed -i 's/RTP_START_PORT/20000/g' /conf/configuration.xml
 fi
 
 if [ "$RTP_END_PORT" ]; then
-    sed -i 's/RTP_END_PORT/'$RTP_END_PORT'/g' /conf/configur*.xml
+    sed -i 's/RTP_END_PORT/'$RTP_END_PORT'/g' /conf/configuration.xml
 else
-    sed -i 's/RTP_END_PORT/29999/g' /conf/configur*.xml
+    sed -i 's/RTP_END_PORT/29999/g' /conf/configuration.xml
 fi
 
 if [ "$MAX_SESSIONS" ]; then
-    sed -i 's/MAX_SESSIONS/'$MAX_SESSIONS'/g' /conf/configur*.xml
+    sed -i 's/MAX_SESSIONS/'$MAX_SESSIONS'/g' /conf/configuration.xml
 else
-    sed -i 's/MAX_SESSIONS/1000/g' /conf/configur*.xml
+    sed -i 's/MAX_SESSIONS/1000/g' /conf/configuration.xml
 fi
 
 if [ "$SESSIONS_PER_SECOND" ]; then
-    sed -i 's/SESSIONS_PER_SECOND/'$SESSIONS_PER_SECOND'/g' /conf/configur*.xml
+    sed -i 's/SESSIONS_PER_SECOND/'$SESSIONS_PER_SECOND'/g' /conf/configuration.xml
 else
-    sed -i 's/SESSIONS_PER_SECOND/30/g' /conf/configur*.xml
+    sed -i 's/SESSIONS_PER_SECOND/30/g' /conf/configuration.xml
 fi
 
 if [ "$LOGLEVEL" ]; then
@@ -59,7 +82,7 @@ if [ "$1" = 'freeswitch' ]; then
     if [ -d /docker-entrypoint.d ]; then
         for f in /docker-entrypoint.d/*.sh; do
 	    echo "$f"
-            [ -f "$f" ] && /bin/bash "$f" 
+            [ -f "$f" ] && /bin/bash "$f"
         done
     fi
 
