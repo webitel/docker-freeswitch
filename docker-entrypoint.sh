@@ -1,8 +1,21 @@
 #!/bin/bash
 set -e
-export PATH=$PATH:/usr/local/freeswitch/bin
+export PATH=/usr/local/freeswitch/bin:$PATH
+export PRIVATE_IPV4="${PRIVATE_IPV4:-$(ip addr show eth1 | grep 'inet ' | awk '{print $2}' | cut -d/ -f1)}"
 
 echo 'Webitel '$VERSION
+
+if [ "$PRIVATE_IPV4" ]; then
+    sed -i 's/GRPC_IPV4/'$PRIVATE_IPV4'/g' /conf/configur*.xml
+else
+    sed -i '/GRPC_IPV4/d' /conf/configur*.xml
+fi
+
+if [ "$CONSUL" ]; then
+    sed -i 's/CONSUL_HOST/'$CONSUL'/g' /conf/configur*.xml
+else
+    sed -i '/CONSUL_HOST/d' /conf/configur*.xml
+fi
 
 if [ "$RTP_START_PORT" ]; then
     sed -i 's/RTP_START_PORT/'$RTP_START_PORT'/g' /conf/configur*.xml
@@ -28,88 +41,6 @@ else
     sed -i 's/SESSIONS_PER_SECOND/30/g' /conf/configur*.xml
 fi
 
-if [ "$AMQP_HOST" ]; then
-    sed -i 's/AMQP_HOST/'$AMQP_HOST'/g' /conf/vars.xml
-else
-    sed -i 's/AMQP_HOST/172.17.0.1/g' /conf/vars.xml
-fi
-
-if [ "$GRPC_BIND" ]; then
-    sed -i 's/GRPC_BIND/'$GRPC_BIND'/g' /conf/vars.xml
-else
-    sed -i 's/GRPC_BIND/172.17.0.1:50051/g' /conf/vars.xml
-fi
-
-if [ "$PGSQL_HOST" ]; then
-    sed -i 's/PGSQL_HOST/'$PGSQL_HOST'/g' /conf/vars.xml
-else
-    sed -i 's/PGSQL_HOST/172.17.0.1/g' /conf/vars.xml
-fi
-
-if [ "$CDR_SERVER" ]; then
-    sed -i 's/CDR_SERVER/'$CDR_SERVER'/g' /conf/vars.xml
-else
-    sed -i 's/CDR_SERVER/172.17.0.1:10021/g' /conf/vars.xml
-fi
-
-if [ "$CONF_SERVER" ]; then
-    sed -i 's/CONF_SERVER/'$CONF_SERVER'/g' /conf/vars.xml
-else
-    sed -i 's/CONF_SERVER/172.17.0.1:10024/g' /conf/vars.xml
-fi
-
-if [ "$ACR_SERVER" ]; then
-    sed -i 's/ACR_SERVER/'$ACR_SERVER'/g' /conf/vars.xml
-else
-    sed -i 's/ACR_SERVER/172.17.0.1:10030/g' /conf/vars.xml
-fi
-
-if [ "$SIP_PORT" ]; then
-    sed -i 's/sofia_sip_port/'$SIP_PORT'/g' /conf/configuration.xml
-else
-    sed -i 's/sofia_sip_port/5062/g' /conf/configuration.xml
-fi
-
-if [ "$SIP_IP" ]; then
-    sed -i 's/sofia_sip_ip/'$SIP_IP'/g' /conf/configuration.xml
-else
-    sed -i 's/sofia_sip_ip/$${local_ip_v4}/g' /conf/configuration.xml
-fi
-
-if [ "$SIP_EXT_IP" ]; then
-    sed -i 's/sofia_ext_sip_ip/'$SIP_EXT_IP'/g' /conf/configuration.xml
-else
-    sed -i 's/sofia_ext_sip_ip/auto-nat/g' /conf/configuration.xml
-fi
-
-if [ "$RTP_EXT_IP" ]; then
-    sed -i 's/sofia_ext_rtp_ip/'$RTP_EXT_IP'/g' /conf/configuration.xml
-else
-    sed -i 's/sofia_ext_rtp_ip/auto-nat/g' /conf/configuration.xml
-fi
-
-if [ "$RTP_IP" ]; then
-    sed -i 's/sofia_rtp_ip/'$RTP_IP'/g' /conf/configuration.xml
-else
-    sed -i 's/sofia_rtp_ip/$${local_ip_v4}/g' /conf/configuration.xml
-fi
-
-if [ "$ES_IP" ]; then
-    sed -i 's/event_socket_ip/'$ES_IP'/g' /conf/configuration.xml
-else
-    sed -i 's/event_socket_ip/172.17.0.1/g' /conf/configuration.xml
-fi
-
-if [ "$ES_PORT" ]; then
-    sed -i 's/event_socket_port/'$ES_PORT'/g' /conf/configuration.xml
-else
-    sed -i 's/event_socket_port/8021/g' /conf/configuration.xml
-fi
-
-if [ "$SIP_PROXY" ]; then
-    sed -i 's/SIP_PROXY/'$SIP_PROXY'/g' /conf/vars.xml
-fi
-
 if [ "$LOGLEVEL" ]; then
     sed -i 's/LOGLEVEL/'$LOGLEVEL'/g' /conf/vars.xml
 else
@@ -123,14 +54,12 @@ chown -R freeswitch:freeswitch /{logs,tmp,db,sounds,conf,certs,scripts,recording
 
 ln -s /dev/null /dev/raw1394
 
-#/iptables-reload.sh &
-/sounds/get_sounds.sh &
-
 if [ "$1" = 'freeswitch' ]; then
 
     if [ -d /docker-entrypoint.d ]; then
         for f in /docker-entrypoint.d/*.sh; do
-            [ -f "$f" ] && . "$f"
+	    echo "$f"
+            [ -f "$f" ] && /bin/bash "$f" 
         done
     fi
 

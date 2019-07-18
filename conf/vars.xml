@@ -1,27 +1,25 @@
 <include>
 
-  <X-PRE-PROCESS cmd="set" data="loglevel=LOGLEVEL"/>
-  <X-PRE-PROCESS cmd="set" data="console_loglevel=LOGLEVEL"/>
-  <X-PRE-PROCESS cmd="set" data="amqp_ip=AMQP_HOST"/>
-  <X-PRE-PROCESS cmd="set" data="bind_grpc=GRPC_BIND"/>
-  <X-PRE-PROCESS cmd="set" data="pgsql_ip=PGSQL_HOST"/>
-  <X-PRE-PROCESS cmd="set" data="acr_srv=ACR_SERVER async full"/>
-  <X-PRE-PROCESS cmd="set" data="cdr_url=http://CDR_SERVER"/>
-  <X-PRE-PROCESS cmd="set" data="config_url=http://CONF_SERVER/"/>
-  <X-PRE-PROCESS cmd="set" data="hold_music=local_stream://default"/>
-  <X-PRE-PROCESS cmd="set" data="sound_prefix=$${sounds_dir}/en/us/callie"/>
+  <X-PRE-PROCESS cmd="set" data="loglevel=err"/>
+  <X-PRE-PROCESS cmd="set" data="console_loglevel=err"/>
 
   <X-PRE-PROCESS cmd="set" data="bind_server_ip=auto"/>
+  <X-PRE-PROCESS cmd="set" data="amqp_ip=rabbit"/>
+  <X-PRE-PROCESS cmd="set" data="pgsql_ip=postgres"/>
+  <X-PRE-PROCESS cmd="set" data="cdr_url=http://cdr:10021"/>
+  <X-PRE-PROCESS cmd="set" data="acr_srv=acr:10030 async full"/>
+  <X-PRE-PROCESS cmd="set" data="outbound_sip_proxy=opensips"/>
+  <X-PRE-PROCESS cmd="set" data="outbound_caller_name=Webitel"/>
+  <X-PRE-PROCESS cmd="set" data="outbound_caller_id=0000000000"/>
+
+  <X-PRE-PROCESS cmd="set" data="hold_music=local_stream://default"/>
+  <X-PRE-PROCESS cmd="set" data="sound_prefix=$${sounds_dir}/en/us/callie"/>
 
   <X-PRE-PROCESS cmd="set" data="unroll_loops=true"/>
   <X-PRE-PROCESS cmd="set" data="zrtp_secure_media=false"/>
   <X-PRE-PROCESS cmd="set" data="rtp_sdes_suites=AEAD_AES_256_GCM_8|AEAD_AES_128_GCM_8|AES_CM_256_HMAC_SHA1_80|AES_CM_192_HMAC_SHA1_80|AES_CM_128_HMAC_SHA1_80|AES_CM_256_HMAC_SHA1_32|AES_CM_192_HMAC_SHA1_32|AES_CM_128_HMAC_SHA1_32|AES_CM_128_NULL_AUTH"/>
   <X-PRE-PROCESS cmd="set" data="sip_tls_version=tlsv1,tlsv1.1,tlsv1.2"/>
   <X-PRE-PROCESS cmd="set" data="sip_tls_ciphers=ALL:!ADH:!LOW:!EXP:!MD5:@STRENGTH"/>
-
-  <X-PRE-PROCESS cmd="set" data="outbound_caller_name=Webitel"/>
-  <X-PRE-PROCESS cmd="set" data="outbound_caller_id=0000000000"/>
-  <X-PRE-PROCESS cmd="set" data="outbound_sip_proxy=SIP_PROXY"/>
 
   <X-PRE-PROCESS cmd="set" data="be-ring=%(1000,3000,425)"/>
   <X-PRE-PROCESS cmd="set" data="ca-ring=%(2000,4000,440,480)"/>

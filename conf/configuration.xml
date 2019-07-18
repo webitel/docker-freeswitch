@@ -44,7 +44,7 @@
         <param name="loglevel" value="err"/>
         <param name="sql-buffer-len" value="10m"/>
         <param name="max-sql-buffer-len" value="20m"/>
-        <param name="core-db-dsn" value="pgsql://host=$${pgsql_ip} dbname=webitel user=webitel password=webitel options='-c client_min_messages=NOTICE' application_name='freeswitch'" />
+        <param name="core-db-dsn" value="pgsql://host=$${pgsql_ip} dbname=webitel user=opensips password=webitel options='-c client_min_messages=NOTICE' application_name='freeswitch'" />
       </settings>
     </configuration>
 
@@ -90,12 +90,36 @@
 
 <configuration name="grpc.conf" description="mod_grpc">
     <settings>
-        <param name="server_address" value="$${bind_grpc}"/>
+        <param name="grpc_host" value="GRPC_IPV4"/>
+        <param name="grpc_port" value="50051"/>
+        <param name="consul_address" value="http://CONSUL_HOST:8500"/>
     </settings>
 </configuration>
 
 <configuration name="amqp.conf" description="mod_amqp">
   <producers>
+<profile name="calls">
+            <connections>
+                <connection name="primary">
+                    <param name="hostname" value="$${amqp_ip}"/>
+                    <param name="virtualhost" value="/"/>
+                    <param name="username" value="webitel"/>
+                    <param name="password" value="webitel"/>
+                    <param name="port" value="5672"/>
+                    <param name="heartbeat" value="0"/>
+                </connection>
+            </connections>
+            <params>
+                <param name="exchange-name" value="TAP.CALLS"/>
+                <param name="exchange-type" value="topic"/>
+                <param name="circuit_breaker_ms" value="10000"/>
+                <param name="reconnect_interval_ms" value="1000"/>
+                <param name="send_queue_size" value="5000"/>
+                <param name="enable_fallback_format_fields" value="1"/>
+                <param name="format_fields" value="#call,variable_sip_h_X-Webitel-Domain-Id,variable_sip_h_X-Webitel-User-Id"/>
+                <param name="event_filter" value="SWITCH_EVENT_ALL"/>
+            </params>
+        </profile>
 <profile name="callcenter">
             <connections>
                 <connection name="primary">
@@ -843,7 +867,6 @@
 
 <configuration name="db.conf" description="LIMIT DB Configuration">
   <settings>
-    <param name="odbc-dsn" value="pgsql://hostaddr=$${pgsql_ip} dbname=webitel user=webitel password=webitel options='-c client_min_messages=NOTICE' application_name='webitel'"/>
     <!--<param name="odbc-dsn" value="dsn:user:pass"/>-->
   </settings>
 </configuration>
@@ -851,12 +874,9 @@
 <configuration name="event_socket.conf" description="Socket Client">
   <settings>
     <param name="nat-map" value="false"/>
-    <param name="listen-ip" value="event_socket_ip"/>
-    <param name="listen-port" value="event_socket_port"/>
-    <param name="password" value="webitel"/>
-    <param name="apply-inbound-acl" value="all"/>
-    <!-- <param name="apply-inbound-acl" value="rfc1918.auto"/> -->
-    <!--<param name="stop-on-bind-error" value="true"/>-->
+    <param name="listen-ip" value="::"/>
+    <param name="listen-port" value="8021"/>
+    <param name="password" value="ClueCon"/>
   </settings>
 </configuration>
 
@@ -1094,7 +1114,6 @@
     <!-- <param name="auto-restart" value="false"/> -->
     <param name="debug-presence" value="0"/>
         <!-- webitel -->
-    <param name="odbc-dsn" value="pgsql://hostaddr=$${pgsql_ip} dbname=webitel user=webitel password=webitel options='-c client_min_messages=NOTICE' application_name='sip-sofia'"/>
     <!-- <param name="capture-server" value="udp:homer.domain.com:5060"/> -->
     <!-- Allow to force-expire SIP contact (using: mod_desking) -->
     <param name="reg-deny-binding-fetch-and-no-lookup" value="true"/>
@@ -1112,13 +1131,13 @@
     <param name="sip-trace" value="no"/>
     <param name="sip-capture" value="no"/>
     <param name="rfc2833-pt" value="101"/>
-    <param name="sip-port" value="sofia_sip_port"/>
+    <param name="sip-port" value="5080"/>
     <param name="dialplan" value="XML"/>
     <param name="context" value="public"/>
     <param name="dtmf-type" value="rfc2833"/>
     <param name="dtmf-duration" value="2000"/>
-    <param name="inbound-codec-prefs" value="OPUS,PCMA,PCMU"/>
-    <param name="outbound-codec-prefs" value="OPUS,PCMA,PCMU"/>
+    <param name="inbound-codec-prefs" value="PCMA,PCMU"/>
+    <param name="outbound-codec-prefs" value="PCMA,PCMU"/>
     <param name="hold-music" value="$${hold_music}"/>
     <param name="rtp-timer-name" value="soft"/>
     <param name="local-network-acl" value="passive"/>
@@ -1126,12 +1145,12 @@
     <param name="inbound-codec-negotiation" value="generous"/>
     <param name="nonce-ttl" value="60"/>
     <param name="auth-calls" value="false"/>
-    <param name="inbound-late-negotiation" value="false"/>
-    <param name="inbound-zrtp-passthru" value="false"/> <!-- (also enables late negotiation) -->
-    <param name="sip-ip" value="sofia_sip_ip"/>
-    <param name="rtp-ip" value="sofia_rtp_ip"/>
-    <param name="ext-sip-ip" value="sofia_ext_sip_ip"/>
-    <param name="ext-rtp-ip" value="sofia_ext_rtp_ip"/>
+    <param name="inbound-late-negotiation" value="true"/>
+    <param name="inbound-zrtp-passthru" value="true"/> <!-- (also enables late negotiation) -->
+    <param name="sip-ip" value="$${local_ip_v4}"/>
+    <param name="rtp-ip" value="$${local_ip_v4}"/>
+    <param name="ext-sip-ip" value="auto-nat"/>
+    <param name="ext-rtp-ip" value="auto-nat"/>
     <param name="rtp-timeout-sec" value="300"/>
     <param name="rtp-hold-timeout-sec" value="1800"/>
     <param name="allow-update" value="true"/>
@@ -1139,7 +1158,7 @@
     <param name="tls" value="false"/>
     <param name="tls-only" value="false"/>
     <param name="tls-bind-params" value="transport=tls"/>
-    <param name="tls-sip-port" value="5061"/>
+    <param name="tls-sip-port" value="5081"/>
     <!-- Location of the agent.pem and cafile.pem ssl certificates (needed for TLS server) -->
     <!--<param name="tls-cert-dir" value=""/>-->
     <!-- Optionally set the passphrase password used by openSSL to encrypt/decrypt TLS private key files -->
@@ -1152,7 +1171,7 @@
     <param name="tls-verify-in-subjects" value=""/>
     <param name="tls-version" value="$${sip_tls_version}"/>
     <!-- webitel -->
-    <param name="odbc-dsn" value="pgsql://hostaddr=$${pgsql_ip} dbname=webitel user=webitel password=webitel options='-c client_min_messages=NOTICE' application_name='sip-sofia'"/>
+    <param name="odbc-dsn" value="pgsql://host=$${pgsql_ip} dbname=webitel user=opensips password=webitel options='-c client_min_messages=NOTICE' application_name='freeswitch'" />
     <param name="user-agent-string" value="Webitel"/>
     <param name="username" value="Webitel"/>
   </settings>

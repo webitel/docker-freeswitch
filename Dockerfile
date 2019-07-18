@@ -30,7 +30,7 @@ FROM webitel/freeswitch-base
 LABEL maintainer="Vitaly Kovalyshyn"
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends librabbitmq4 imagemagick \
+    && apt-get install -qqy --no-install-recommends imagemagick wget curl librabbitmq4 \
     && apt-get install -s freeswitch \
       | sed -n \
         -e "/^Inst freeswitch /d" \
@@ -46,6 +46,16 @@ RUN apt-get update \
         -e "/^Inst freeswitch-mod-sndfile /d" \
         -e 's/^Inst \([^ ]\+\) .*$/\1/p' \
       | xargs apt-get install -y --no-install-recommends \
+    && apt-get install -s freeswitch-mod-opus \
+      | sed -n \
+        -e "/^Inst freeswitch-mod-opus /d" \
+        -e 's/^Inst \([^ ]\+\) .*$/\1/p' \
+      | xargs apt-get install -y --no-install-recommends \
+    && apt-get install -s freeswitch-mod-av \
+      | sed -n \
+        -e "/^Inst freeswitch-mod-av /d" \
+        -e 's/^Inst \([^ ]\+\) .*$/\1/p' \
+      | xargs apt-get install -y --no-install-recommends \
     && apt-get install -s freeswitch-mod-lua \
       | sed -n \
         -e "/^Inst freeswitch-mod-lua /d" \
@@ -53,16 +63,16 @@ RUN apt-get update \
       | xargs apt-get install -y --no-install-recommends \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-ENV WEBITEL_MAJOR 19.08
-ENV VERSION 1.8.5
+ENV WEBITEL_MAJOR 19.09
+ENV VERSION 1.8.7
 
 WORKDIR /
 COPY --from=0 /usr/local/freeswitch /usr/local/freeswitch
 
 COPY conf /conf
 COPY images /images
-COPY sounds /sounds
 COPY scripts /scripts
+COPY docker-entrypoint.d /docker-entrypoint.d
 COPY docker-entrypoint.sh /
 
 RUN ldconfig

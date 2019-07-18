@@ -5,6 +5,36 @@
   <!-- DIALPLAN -->
   <section name="dialplan" description="Regex/XML Dialplan">
 
+<context name="default">
+
+    <extension name="unloop">
+      <condition field="${unroll_loops}" expression="^true$"/>
+      <condition field="${sip_looped_call}" expression="^true$">
+           <action application="deflect" data="${destination_number}"/>
+      </condition>
+    </extension>
+
+   <extension name="global" continue="true">
+
+      <condition field="${rtp_has_crypto}" expression="^($${rtp_sdes_suites})$" break="never">
+        <action application="set" data="rtp_secure_media=true"/>
+      </condition>
+
+      <condition field="${endpoint_disposition}" expression="^(DELAYED NEGOTIATION)"/>
+      <condition field="${switch_r_sdp}" expression="(AES_CM_128_HMAC_SHA1_32|AES_CM_128_HMAC_SHA1_80)" break="never">
+        <action application="set" data="rtp_secure_media=true"/>
+      </condition>
+
+    </extension>
+
+    <extension name="ACR">
+      <condition>
+         <action application="socket" data="$${acr_srv}"/>
+      </condition>
+    </extension>
+
+  </context>
+
 <context name="public">
 
     <extension name="unloop">
