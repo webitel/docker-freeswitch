@@ -11,6 +11,7 @@ else
 fi
 
 if [ "$SBC" ]; then
+    mv -f /conf/freeswitch.xml.sbc /conf/freeswitch.xml
     sed -i '/GRPC_IPV4/d' /conf/configuration.xml
     sed -i '/module=\"mod_amd/d' /conf/configuration.xml
     sed -i '/module=\"mod_spandsp/d' /conf/configuration.xml

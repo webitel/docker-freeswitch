@@ -5,36 +5,6 @@
   <!-- DIALPLAN -->
   <section name="dialplan" description="Regex/XML Dialplan">
 
-<context name="default">
-
-    <extension name="unloop">
-      <condition field="${unroll_loops}" expression="^true$"/>
-      <condition field="${sip_looped_call}" expression="^true$">
-           <action application="deflect" data="${destination_number}"/>
-      </condition>
-    </extension>
-
-   <extension name="global" continue="true">
-
-      <condition field="${rtp_has_crypto}" expression="^($${rtp_sdes_suites})$" break="never">
-        <action application="set" data="rtp_secure_media=true"/>
-      </condition>
-
-      <condition field="${endpoint_disposition}" expression="^(DELAYED NEGOTIATION)"/>
-      <condition field="${switch_r_sdp}" expression="(AES_CM_128_HMAC_SHA1_32|AES_CM_128_HMAC_SHA1_80)" break="never">
-        <action application="set" data="rtp_secure_media=true"/>
-      </condition>
-
-    </extension>
-
-    <extension name="ACR">
-      <condition>
-         <action application="socket" data="$${acr_srv}"/>
-      </condition>
-    </extension>
-
-  </context>
-
 <context name="public">
 
     <extension name="unloop">
@@ -57,9 +27,28 @@
 
     </extension>
 
-    <extension name="ACR">
+   <extension name="Gateway Inbound">
+      <condition field="${webitel_direction}" expression="^(inbound)$">
+        <action application="set" data="webitel_cdr=false"/>
+        <action application="set" data="bypass_media=true"/>
+        <action application="export" data="sip_h_X-Webitel-Direction=inbound"/>
+        <action application="export" data="sip_h_X-Webitel-Domain=${webitel_domain}"/>
+        <action application="bridge" data="sofia/sip/sip:${destination_number}@$${outbound_sip_proxy}" />
+      </condition>
+    </extension>
+
+    <extension name="Gateway Outbound">
+        <condition field="${sip_h_P-hint}" expression="^(outbound)$">
+          <action application="set" data="webitel_cdr=false"/>
+          <action application="set" data="bypass_media=true"/>
+          <action application="bridge" data="sofia/gateway/${sip_h_X-Webitel-Gateway}/${destination_number}" />
+      </condition>
+    </extension>
+
+    <extension name="default">
       <condition>
-         <action application="socket" data="$${acr_srv}"/>
+         <action application="set" data="webitel_cdr=false"/>
+         <action application="hangup" data="CALL_REJECTED"/>
       </condition>
     </extension>
 
