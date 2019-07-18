@@ -7,18 +7,6 @@
 
 Works only with [Webitel](http://webitel.ua/) [Advanced Call Router](https://github.com/webitel/acr)
 
-## Environment Variables
-
-The FreeSWITCH `latest` image for [Webitel](http://webitel.ua/) uses several environment variables
-
-Used in the `ACR` XML Dialplan extension:
-
-    <extension name="ACR">
-        <condition>
-            <action application="socket" data="ACR_SERVER:10030 async full"/>
-        </condition>
-    </extension>
-
 ## User Feedback
 
 ### Issues
