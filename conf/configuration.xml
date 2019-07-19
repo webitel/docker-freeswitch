@@ -94,6 +94,8 @@
         <param name="grpc_host" value="PRIVATE_IPV4"/>
         <param name="grpc_port" value="50051"/>
         <param name="consul_address" value="http://CONSUL_HOST:8500"/>
+        <param name="consul_deregister_critical_ttl_sec" value="120"/>
+        <param name="consul_ttl_sec" value="60"/>
     </settings>
 </configuration>
 
