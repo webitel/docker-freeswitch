@@ -4,8 +4,6 @@
   <X-PRE-PROCESS cmd="set" data="console_loglevel=err"/>
 
   <X-PRE-PROCESS cmd="set" data="bind_server_ip=auto"/>
-  <X-PRE-PROCESS cmd="set" data="amqp_ip=rabbit"/>
-  <X-PRE-PROCESS cmd="set" data="pgsql_ip=postgres"/>
   <X-PRE-PROCESS cmd="set" data="cdr_url=http://cdr:10021"/>
   <X-PRE-PROCESS cmd="set" data="acr_srv=acr:10030 async full"/>
   <X-PRE-PROCESS cmd="set" data="outbound_sip_proxy=opensips"/>

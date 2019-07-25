@@ -41,12 +41,6 @@ else
     sed -i '/PRIVATE_IPV4/d' /conf/configuration.xml
 fi
 
-if [ "$CONSUL" ]; then
-    sed -i 's/CONSUL_HOST/'$CONSUL'/g' /conf/configuration.xml
-else
-    sed -i '/CONSUL_HOST/d' /conf/configuration.xml
-fi
-
 if [ "$RTP_START_PORT" ]; then
     sed -i 's/RTP_START_PORT/'$RTP_START_PORT'/g' /conf/configuration.xml
 else
@@ -83,6 +77,7 @@ chown -R freeswitch:freeswitch /usr/local/freeswitch
 chown -R freeswitch:freeswitch /{logs,tmp,db,sounds,conf,certs,scripts,recordings,images}
 
 ln -s /dev/null /dev/raw1394
+ln -s /usr/local/freeswitch/bin/fs_cli /usr/local/bin/fs_cli
 
 if [ "$1" = 'freeswitch' ]; then
 

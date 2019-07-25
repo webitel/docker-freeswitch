@@ -45,7 +45,7 @@
         <param name="loglevel" value="err"/>
         <param name="sql-buffer-len" value="10m"/>
         <param name="max-sql-buffer-len" value="20m"/>
-        <param name="core-db-dsn" value="pgsql://host=$${pgsql_ip} dbname=webitel user=opensips password=webitel options='-c client_min_messages=NOTICE' application_name='freeswitch'" />
+        <param name="core-db-dsn" value="pgsql://host=postgres dbname=webitel user=opensips password=webitel options='-c client_min_messages=NOTICE' application_name='freeswitch'" />
       </settings>
     </configuration>
 
@@ -93,7 +93,7 @@
     <settings>
         <param name="grpc_host" value="PRIVATE_IPV4"/>
         <param name="grpc_port" value="50051"/>
-        <param name="consul_address" value="http://CONSUL_HOST:8500"/>
+        <param name="consul_address" value="http://consul:8500"/>
         <param name="consul_deregister_critical_ttl_sec" value="120"/>
         <param name="consul_ttl_sec" value="60"/>
     </settings>
@@ -101,32 +101,10 @@
 
 <configuration name="amqp.conf" description="mod_amqp">
   <producers>
-<profile name="calls">
-            <connections>
-                <connection name="primary">
-                    <param name="hostname" value="$${amqp_ip}"/>
-                    <param name="virtualhost" value="/"/>
-                    <param name="username" value="webitel"/>
-                    <param name="password" value="webitel"/>
-                    <param name="port" value="5672"/>
-                    <param name="heartbeat" value="0"/>
-                </connection>
-            </connections>
-            <params>
-                <param name="exchange-name" value="TAP.CALLS"/>
-                <param name="exchange-type" value="topic"/>
-                <param name="circuit_breaker_ms" value="10000"/>
-                <param name="reconnect_interval_ms" value="1000"/>
-                <param name="send_queue_size" value="5000"/>
-                <param name="enable_fallback_format_fields" value="1"/>
-                <param name="format_fields" value="#call,variable_sip_h_X-Webitel-Domain-Id,variable_sip_h_X-Webitel-User-Id"/>
-                <param name="event_filter" value="SWITCH_EVENT_ALL"/>
-            </params>
-        </profile>
 <profile name="callcenter">
             <connections>
                 <connection name="primary">
-                    <param name="hostname" value="$${amqp_ip}"/>
+                    <param name="hostname" value="rabbit"/>
                     <param name="virtualhost" value="/"/>
                     <param name="username" value="webitel"/>
                     <param name="password" value="webitel"/>
@@ -150,7 +128,7 @@
     <profile name="default">
       <connections>
         <connection name="primary">
-            <param name="hostname" value="$${amqp_ip}"/>
+            <param name="hostname" value="rabbit"/>
             <param name="virtualhost" value="/"/>
             <param name="username" value="webitel"/>
             <param name="password" value="webitel"/>
@@ -170,7 +148,7 @@
         <profile name="default-cdr">
             <connections>
                 <connection name="primary">
-                    <param name="hostname" value="$${amqp_ip}"/>
+                    <param name="hostname" value="rabbit"/>
                     <param name="virtualhost" value="/"/>
                     <param name="username" value="webitel"/>
                     <param name="password" value="webitel"/>
@@ -1175,7 +1153,7 @@
     <param name="tls-verify-in-subjects" value=""/>
     <param name="tls-version" value="$${sip_tls_version}"/>
     <!-- webitel -->
-    <param name="odbc-dsn" value="pgsql://host=$${pgsql_ip} dbname=webitel user=opensips password=webitel options='-c client_min_messages=NOTICE' application_name='freeswitch'" />
+    <param name="odbc-dsn" value="pgsql://host=postgres dbname=webitel user=opensips password=webitel options='-c client_min_messages=NOTICE' application_name='freeswitch'" />
     <param name="user-agent-string" value="Webitel"/>
     <param name="username" value="Webitel"/>
   </settings>
