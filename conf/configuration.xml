@@ -113,14 +113,14 @@
                 </connection>
             </connections>
             <params>
-                <param name="exchange-name" value="TAP.CC"/>
+                <param name="exchange-name" value="callcenter"/>
                 <param name="exchange-type" value="direct"/>
                 <param name="circuit_breaker_ms" value="10000"/>
                 <param name="reconnect_interval_ms" value="1000"/>
                 <param name="send_queue_size" value="5000"/>
                 <param name="enable_fallback_format_fields" value="1"/>
                 <param name="format_fields" value="#callcenter,variable_cc_node_id"/>
-                <param name="event_filter" value="SWITCH_EVENT_CHANNEL_CREATE,SWITCH_EVENT_CHANNEL_ANSWER,SWITCH_EVENT_CHANNEL_PARK,SWITCH_EVENT_CHANNEL_HANGUP_COMPLETE,SWITCH_EVENT_CHANNEL_BRIDGE,SWITCH_EVENT_CHANNEL_UNBRIDGE"/>
+                <param name="event_filter" value="SWITCH_EVENT_CUSTOM::valet_parking::info,SWITCH_EVENT_CHANNEL_CREATE,SWITCH_EVENT_CHANNEL_ANSWER,SWITCH_EVENT_CHANNEL_PARK,SWITCH_EVENT_CHANNEL_HANGUP_COMPLETE,SWITCH_EVENT_CHANNEL_BRIDGE"/>
             </params>
         </profile>
 </producers>
