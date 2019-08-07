@@ -12,7 +12,7 @@ RUN cd /freeswitch.git && git config pull.rebase true \
 
 COPY modules.conf /freeswitch.git/modules.conf
 
-RUN cd /freeswitch.git && ./configure -C --disable-zrtp --enable-core-pgsql-support --with-soundsdir=/sounds --with-recordingsdir=/recordings --with-certsdir=/certs --with-dbdir=/db --with-scriptdir=/scripts --with-logfiledir=/logs --with-storagedir=/recordings --with-cachedir=/tmp --with-imagesdir=/images && make && make install
+RUN cd /freeswitch.git && ./configure -C --disable-zrtp --with-soundsdir=/sounds --with-recordingsdir=/recordings --with-certsdir=/certs --with-dbdir=/db --with-scriptdir=/scripts --with-logfiledir=/logs --with-storagedir=/recordings --with-cachedir=/tmp --with-imagesdir=/images && make && make install
 
 RUN mkdir p /build
 RUN apt-get install -y curl cmake golang
@@ -34,6 +34,11 @@ RUN apt-get update \
     && apt-get install -s freeswitch \
       | sed -n \
         -e "/^Inst freeswitch /d" \
+        -e 's/^Inst \([^ ]\+\) .*$/\1/p' \
+      | xargs apt-get install -y --no-install-recommends \
+    && apt-get install -s freeswitch-mod-pgsql \
+      | sed -n \
+        -e "/^Inst freeswitch-mod-pgsql /d" \
         -e 's/^Inst \([^ ]\+\) .*$/\1/p' \
       | xargs apt-get install -y --no-install-recommends \
     && apt-get install -s freeswitch-mod-shout \
