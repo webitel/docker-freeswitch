@@ -9,6 +9,6 @@ before_install:
 install:
 - docker build --no-cache -t $DOCKER_IMAGE_NAME .
 script:
-- docker tag $DOCKER_IMAGE_NAME:latest $DOCKER_IMAGE_NAME:1.8.7
+    - docker tag $DOCKER_IMAGE_NAME:latest $DOCKER_IMAGE_NAME:1.10.0
 - docker push $DOCKER_IMAGE_NAME
-- docker push $DOCKER_IMAGE_NAME:1.8.7
+- docker push $DOCKER_IMAGE_NAME:1.10.0
