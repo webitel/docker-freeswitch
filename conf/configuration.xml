@@ -35,6 +35,14 @@
       </modules>
     </configuration>
 
+    <configuration name="pre_load_modules.conf" description="Modules">
+      <modules>
+        <!-- Databases -->
+        <!-- <load module="mod_mariadb"/> -->
+        <load module="mod_pgsql"/>
+      </modules>
+    </configuration>
+
     <configuration name="switch.conf" description="Core Configuration">
       <settings>
         <param name="rtp-start-port" value="RTP_START_PORT"/>
