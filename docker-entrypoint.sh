@@ -10,31 +10,6 @@ else
     export PRIVATE_IPV4="${PRIVATE_IPV4:-$(ip addr show eth1 | grep 'inet ' | awk '{print $2}' | cut -d/ -f1)}"
 fi
 
-if [ "$SBC" ]; then
-    mv -f /conf/freeswitch.xml.sbc /conf/freeswitch.xml
-    sed -i '/dsn/d' /conf/configuration.xml
-    sed -i '/module=\"mod_amd/d' /conf/configuration.xml
-    sed -i '/module=\"mod_spandsp/d' /conf/configuration.xml
-    sed -i '/module=\"mod_loopback/d' /conf/configuration.xml
-    sed -i '/module=\"mod_imagick/d' /conf/configuration.xml
-    sed -i '/module=\"mod_png/d' /conf/configuration.xml
-    sed -i '/module=\"mod_av/d' /conf/configuration.xml
-    sed -i '/module=\"mod_sndfile/d' /conf/configuration.xml
-    sed -i '/module=\"mod_native_file/d' /conf/configuration.xml
-    sed -i '/module=\"mod_shout/d' /conf/configuration.xml
-    sed -i '/module=\"mod_local_stream/d' /conf/configuration.xml
-    sed -i '/module=\"mod_tone_stream/d' /conf/configuration.xml
-    sed -i '/module=\"mod_lua/d' /conf/configuration.xml
-    sed -i '/module=\"mod_say_ru/d' /conf/configuration.xml
-    sed -i '/module=\"mod_say_en/d' /conf/configuration.xml
-    sed -i '/module=\"mod_conference/d' /conf/configuration.xml
-    sed -i '/module=\"mod_valet_parking/d' /conf/configuration.xml
-    sed -i '/module=\"mod_http_cache/d' /conf/configuration.xml
-    sed -i '/module=\"mod_spy/d' /conf/configuration.xml
-    sed -i '/module=\"mod_grpc/d' /conf/configuration.xml
-    sed -i '/module=\"mod_amqp/d' /conf/configuration.xml
-fi
-
 if [ "$PRIVATE_IPV4" ]; then
     sed -i 's/PRIVATE_IPV4/'$PRIVATE_IPV4'/g' /conf/configuration.xml
 else

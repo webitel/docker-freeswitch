@@ -69,7 +69,7 @@ RUN apt-get update \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 ENV WEBITEL_MAJOR 19.09
-ENV VERSION 1.10.0
+ENV VERSION 1.10.1
 
 WORKDIR /
 COPY --from=0 /usr/local/freeswitch /usr/local/freeswitch
