@@ -39,7 +39,7 @@
       <modules>
         <!-- Databases -->
         <!-- <load module="mod_mariadb"/> -->
-        <load module="mod_pgsql"/>
+        <!-- load module="mod_pgsql"/ -->
       </modules>
     </configuration>
 
@@ -53,7 +53,7 @@
         <param name="loglevel" value="err"/>
         <param name="sql-buffer-len" value="10m"/>
         <param name="max-sql-buffer-len" value="20m"/>
-        <param name="core-db-dsn" value="pgsql://host=postgres dbname=webitel user=opensips password=webitel options='-c client_min_messages=NOTICE' application_name='freeswitch'" />
+        <!-- param name="core-db-dsn" value="pgsql://host=postgres dbname=webitel user=opensips password=webitel options='-c client_min_messages=NOTICE' application_name='freeswitch'" /-->
       </settings>
     </configuration>
 
@@ -1161,7 +1161,7 @@
     <param name="tls-verify-in-subjects" value=""/>
     <param name="tls-version" value="$${sip_tls_version}"/>
     <!-- webitel -->
-    <param name="odbc-dsn" value="pgsql://host=postgres dbname=webitel user=opensips password=webitel options='-c client_min_messages=NOTICE' application_name='freeswitch'" />
+    <!-- param name="odbc-dsn" value="pgsql://host=postgres dbname=webitel user=opensips password=webitel options='-c client_min_messages=NOTICE' application_name='freeswitch'" /-->
     <param name="user-agent-string" value="Webitel"/>
     <param name="username" value="Webitel"/>
   </settings>
