@@ -2,7 +2,7 @@ FROM webitel/freeswitch-base:latest
 
 RUN apt-get update && apt-get -y build-dep freeswitch
 
-RUN git clone https://freeswitch.org/stash/scm/fs/freeswitch.git -bv1.10 /freeswitch.git
+RUN git clone https://github.com/signalwire/freeswitch.git -bv1.10 /freeswitch.git
 
 RUN cd /freeswitch.git && git config pull.rebase true \
     && rm -rf /freeswitch.git/src/mod/event_handlers/mod_amqp \
