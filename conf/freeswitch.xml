@@ -29,6 +29,7 @@
 
     <extension name="ACR">
       <condition>
+         <action application="set" data="sip_h_X-Webitel-Uuid=${uuid}"/>
          <action application="socket" data="$${acr_srv}"/>
       </condition>
     </extension>
@@ -59,6 +60,7 @@
 
     <extension name="ACR">
       <condition>
+         <action application="set" data="sip_h_X-Webitel-Uuid=${uuid}"/>
          <action application="socket" data="$${acr_srv}"/>
       </condition>
     </extension>
