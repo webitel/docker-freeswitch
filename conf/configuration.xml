@@ -175,7 +175,7 @@
       <param name="delivery-mode" value="1"/> <!-- "transient":1, "persistent":2 -->
       <param name="delivery-timestamp" value="no"/>
       <param name="event_filter" value="ALL"/>
-      <param name="enable_fallback_format_fields" value="0"/><!-- bool(int) -->
+      <param name="enable_fallback_format_fields" value="1"/><!-- bool(int) -->
       <param name="format_fields" value="FreeSWITCH-Hostname,Core-UUID,Event-Name,Unique-ID|Event-Subclass"/>
 
     </params>
