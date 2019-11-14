@@ -153,6 +153,33 @@
                 <param name="event_filter" value="SWITCH_EVENT_CHANNEL_CREATE,CHANNEL_HOLD,CHANNEL_UNHOLD,SWITCH_EVENT_CHANNEL_ANSWER,SWITCH_EVENT_CHANNEL_HANGUP_COMPLETE,SWITCH_EVENT_CHANNEL_BRIDGE"/>
             </params>
         </profile>
+  <profile name="debug">
+    <connections>
+      <connection name="primary">
+        <param name="hostname" value="rabbit"/>
+        <param name="virtualhost" value="/"/>
+        <param name="username" value="webitel"/>
+        <param name="password" value="webitel"/>
+        <param name="port" value="5672"/>
+        <param name="heartbeat" value="0"/>
+      </connection>
+    </connections>
+    <params>
+      <param name="reconnect_interval_ms" value="1000"/>
+      <param name="circuit_breaker_ms" value="10000"/>
+      <param name="send_queue_size" value="5000"/>
+      <param name="exchange-name" value="freeswitch"/>
+      <param name="exchange-type" value="topic"/>
+      <param name="exchange-durable" value="yes"/>
+      <param name="content-type" value="text/event-json"/>
+      <param name="delivery-mode" value="1"/> <!-- "transient":1, "persistent":2 -->
+      <param name="delivery-timestamp" value="no"/>
+      <param name="event_filter" value="ALL"/>
+      <param name="enable_fallback_format_fields" value="0"/><!-- bool(int) -->
+      <param name="format_fields" value="FreeSWITCH-Hostname,Core-UUID,Event-Name,Unique-ID|Event-Subclass"/>
+
+    </params>
+  </profile>
 </producers>
 <commands>
     <profile name="default">
