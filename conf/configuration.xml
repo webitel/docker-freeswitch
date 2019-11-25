@@ -143,7 +143,7 @@
                 </connection>
             </connections>
             <params>
-                <param name="exchange-name" value="calL"/>
+                <param name="exchange-name" value="call"/>
                 <param name="exchange-type" value="topic"/>
                 <param name="circuit_breaker_ms" value="10000"/>
                 <param name="reconnect_interval_ms" value="1000"/>
