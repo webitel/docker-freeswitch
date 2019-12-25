@@ -1175,8 +1175,8 @@
     <param name="context" value="public"/>
     <param name="dtmf-type" value="rfc2833"/>
     <param name="dtmf-duration" value="2000"/>
-    <param name="inbound-codec-prefs" value="opus,G722,PCMA,PCMU"/>
-    <param name="outbound-codec-prefs" value="opus,G722,PCMA,PCMU"/>
+    <param name="inbound-codec-prefs" value="opus,G722,PCMA,PCMU,VP8,H264"/>
+    <param name="outbound-codec-prefs" value="opus,G722,PCMA,PCMU,VP8,H264"/>
     <param name="hold-music" value="$${hold_music}"/>
     <param name="rtp-timer-name" value="soft"/>
     <param name="local-network-acl" value="passive"/>
