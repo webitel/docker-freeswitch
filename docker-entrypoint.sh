@@ -26,7 +26,8 @@ if [ "$1" = 'freeswitch' ]; then
     exec freeswitch -u freeswitch -g freeswitch -c \
         -sounds /sounds -recordings /recordings \
         -certs /certs -conf /conf -db /db \
-        -scripts /scripts -log /logs
+        -scripts /scripts -log /logs \
+        -nonat
 fi
 
 exec "$@"

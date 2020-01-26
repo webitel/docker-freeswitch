@@ -99,7 +99,7 @@
 
 <configuration name="grpc.conf" description="mod_grpc">
     <settings>
-        <param name="grpc_host" value="0.0.0.0"/>
+        <!--param name="grpc_host" value="0.0.0.0"/-->
         <param name="grpc_port" value="50051"/>
         <param name="consul_address" value="$${consul_url}"/>
         <param name="consul_deregister_critical_ttl_sec" value="120"/>
