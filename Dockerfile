@@ -68,8 +68,7 @@ RUN apt-get update \
       | xargs apt-get install -y --no-install-recommends \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-ENV WEBITEL_MAJOR 19.12
-ENV VERSION 1.10.1
+ENV WEBITEL_MAJOR 20.02
 
 WORKDIR /
 COPY --from=0 /usr/local/freeswitch /usr/local/freeswitch

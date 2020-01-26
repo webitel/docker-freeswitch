@@ -29,6 +29,7 @@
 
     <extension name="ACR">
       <condition>
+         <action application="set" data="sip_copy_custom_headers=false"/>
          <action application="set" data="sip_h_X-Webitel-Uuid=${uuid}"/>
          <action application="socket" data="$${acr_srv}"/>
       </condition>
@@ -60,6 +61,7 @@
 
     <extension name="ACR">
       <condition>
+         <action application="set" data="sip_copy_custom_headers=false"/>
          <action application="set" data="sip_h_X-Webitel-Uuid=${uuid}"/>
          <action application="socket" data="$${acr_srv}"/>
       </condition>
@@ -73,10 +75,5 @@
 <section name="configuration" description="Webitel FreeSWITCH Configurations">
   <X-PRE-PROCESS cmd="include" data="configuration.xml" />
 </section>
-
-  <section name="languages" description="Language Management">
-    <X-PRE-PROCESS cmd="include" data="lang/en/*.xml"/>
-    <X-PRE-PROCESS cmd="include" data="lang/ru/*.xml"/>
-  </section>
 
 </document>

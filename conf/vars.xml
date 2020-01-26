@@ -3,9 +3,13 @@
   <X-PRE-PROCESS cmd="set" data="loglevel=err"/>
   <X-PRE-PROCESS cmd="set" data="console_loglevel=err"/>
 
-  <X-PRE-PROCESS cmd="set" data="bind_server_ip=auto"/>
+  <X-PRE-PROCESS cmd="set" data="consul_url=http://consul:8500"/>
   <X-PRE-PROCESS cmd="set" data="cdr_url=http://cdr:10021"/>
   <X-PRE-PROCESS cmd="set" data="acr_srv=acr:10030 async full"/>
+  <X-PRE-PROCESS cmd="set" data="amqp_host=rabbit"/>
+
+  <X-PRE-PROCESS cmd="set" data="bind_server_ip=auto"/>
+  <X-PRE-PROCESS cmd="set" data="sofia_server_ip=$${local_ip_v4}"/>
   <X-PRE-PROCESS cmd="set" data="outbound_sip_proxy=opensips"/>
   <X-PRE-PROCESS cmd="set" data="outbound_caller_name=Webitel"/>
   <X-PRE-PROCESS cmd="set" data="outbound_caller_id=0000000000"/>

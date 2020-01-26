@@ -45,11 +45,11 @@
 
     <configuration name="switch.conf" description="Core Configuration">
       <settings>
-        <param name="rtp-start-port" value="RTP_START_PORT"/>
-        <param name="rtp-end-port" value="RTP_END_PORT"/>
+        <param name="rtp-start-port" value="20000"/>
+        <param name="rtp-end-port" value="30000"/>
         <param name="rtp-port-usage-robustness" value="true"/>
-        <param name="max-sessions" value="MAX_SESSIONS"/>
-        <param name="sessions-per-second" value="SESSIONS_PER_SECOND"/>
+        <param name="max-sessions" value="1000"/>
+        <param name="sessions-per-second" value="50"/>
         <param name="loglevel" value="err"/>
         <param name="sql-buffer-len" value="10m"/>
         <param name="max-sql-buffer-len" value="20m"/>
@@ -99,9 +99,9 @@
 
 <configuration name="grpc.conf" description="mod_grpc">
     <settings>
-        <param name="grpc_host" value="PRIVATE_IPV4"/>
+        <param name="grpc_host" value="0.0.0.0"/>
         <param name="grpc_port" value="50051"/>
-        <param name="consul_address" value="http://consul:8500"/>
+        <param name="consul_address" value="$${consul_url}"/>
         <param name="consul_deregister_critical_ttl_sec" value="120"/>
         <param name="consul_ttl_sec" value="60"/>
     </settings>
@@ -112,7 +112,7 @@
 <profile name="callcenter">
             <connections>
                 <connection name="primary">
-                    <param name="hostname" value="rabbit"/>
+                    <param name="hostname" value="$${amqp_host}"/>
                     <param name="virtualhost" value="/"/>
                     <param name="username" value="webitel"/>
                     <param name="password" value="webitel"/>
@@ -134,7 +134,7 @@
         <profile name="web_socket">
             <connections>
                 <connection name="primary">
-                    <param name="hostname" value="rabbit"/>
+                    <param name="hostname" value="$${amqp_host}"/>
                     <param name="virtualhost" value="/"/>
                     <param name="username" value="webitel"/>
                     <param name="password" value="webitel"/>
@@ -156,7 +156,7 @@
   <profile name="debug">
     <connections>
       <connection name="primary">
-        <param name="hostname" value="rabbit"/>
+        <param name="hostname" value="$${amqp_host}"/>
         <param name="virtualhost" value="/"/>
         <param name="username" value="webitel"/>
         <param name="password" value="webitel"/>
@@ -185,7 +185,7 @@
     <profile name="default">
       <connections>
         <connection name="primary">
-            <param name="hostname" value="rabbit"/>
+            <param name="hostname" value="$${amqp_host}"/>
             <param name="virtualhost" value="/"/>
             <param name="username" value="webitel"/>
             <param name="password" value="webitel"/>
@@ -205,7 +205,7 @@
         <profile name="default-cdr">
             <connections>
                 <connection name="primary">
-                    <param name="hostname" value="rabbit"/>
+                    <param name="hostname" value="$${amqp_host}"/>
                     <param name="virtualhost" value="/"/>
                     <param name="username" value="webitel"/>
                     <param name="password" value="webitel"/>
@@ -1185,14 +1185,15 @@
     <param name="disable-transcoding" value="true"/>
     <param name="renegotiate-codec-on-reinvite" value="false"/>
     <param name="send-display-update" value="true"/>
+    <param name="outbound-use-uuid-as-callid" value="true"/>
     <param name="nonce-ttl" value="60"/>
     <param name="auth-calls" value="false"/>
     <param name="inbound-late-negotiation" value="false"/>
     <param name="inbound-zrtp-passthru" value="false"/> <!-- (also enables late negotiation) -->
-    <param name="sip-ip" value="$${local_ip_v4}"/>
-    <param name="rtp-ip" value="$${local_ip_v4}"/>
-    <param name="ext-sip-ip" value="auto-nat"/>
-    <param name="ext-rtp-ip" value="auto-nat"/>
+    <param name="sip-ip" value="$${sofia_server_ip}"/>
+    <param name="rtp-ip" value="$${sofia_server_ip}"/>
+    <param name="ext-sip-ip" value="$${sofia_server_ip}"/>
+    <param name="ext-rtp-ip" value="$${sofia_server_ip}"/>
     <param name="rtp-timeout-sec" value="300"/>
     <param name="rtp-hold-timeout-sec" value="1800"/>
     <param name="tls" value="false"/>
