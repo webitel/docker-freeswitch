@@ -4,6 +4,12 @@ export PATH=/usr/local/freeswitch/bin:$PATH
 
 echo 'Webitel '$VERSION
 
+if [ "$PRIVATE_IPV4" ]; then
+    sed -i 's/PRIVATE_IPV4/'$PRIVATE_IPV4'/g' /conf/configuration.xml
+else
+    sed -i '/PRIVATE_IPV4/d' /conf/configuration.xml
+fi
+
 test -d /logs || mkdir -p /logs /certs /sounds /db /recordings /scripts/lua
 
 chown -R freeswitch:freeswitch /usr/local/freeswitch
