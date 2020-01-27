@@ -4,7 +4,14 @@ export PATH=/usr/local/freeswitch/bin:$PATH
 
 echo 'Webitel '$VERSION
 
+if [ "$DEV" ]; then
+    export PRIVATE_IPV4="${PRIVATE_IPV4:-$(ip addr show eth0 | grep 'inet ' | awk '{print $2}' | cut -d/ -f1)}"
+else
+    export PRIVATE_IPV4="${PRIVATE_IPV4:-$(ip addr show eth1 | grep 'inet ' | awk '{print $2}' | cut -d/ -f1)}"
+fi
+
 echo 'PRIVATE_IPV4 '$PRIVATE_IPV4
+
 if [ "$PRIVATE_IPV4" ]; then
     sed -i 's/PRIVATE_IPV4/'$PRIVATE_IPV4'/g' /conf/configuration.xml
 else
