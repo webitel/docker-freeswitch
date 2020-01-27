@@ -4,7 +4,7 @@
   <X-PRE-PROCESS cmd="set" data="console_loglevel=err"/>
 
   <X-PRE-PROCESS cmd="set" data="consul_url=http://consul:8500"/>
-  <X-PRE-PROCESS cmd="set" data="cdr_url=http://cdr:10021"/>
+  <X-PRE-PROCESS cmd="set" data="cdr_url=http://storage:10021"/>
   <X-PRE-PROCESS cmd="set" data="acr_srv=acr:10030 async full"/>
   <X-PRE-PROCESS cmd="set" data="amqp_host=rabbit"/>
 
