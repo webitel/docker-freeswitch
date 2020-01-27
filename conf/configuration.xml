@@ -153,6 +153,7 @@
                 <param name="event_filter" value="SWITCH_EVENT_CUSTOM::WEBITEL_CALL"/>
             </params>
         </profile>
+    </producers>
 <cdr>
         <profile name="default-cdr">
             <connections>
