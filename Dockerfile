@@ -11,7 +11,7 @@ RUN cd /freeswitch.git && git config pull.rebase true \
     && git clone https://github.com/webitel/mod_amd.git /freeswitch.git/src/mod/applications/mod_amd \
     && sh bootstrap.sh -j && rm modules.conf
 
-COPY modules.conf /freeswitch.git/modules.conf
+COPY src/modules.conf /freeswitch.git/modules.conf
 
 RUN cd /freeswitch.git && ./configure -C --disable-zrtp --with-soundsdir=/sounds --with-recordingsdir=/recordings --with-certsdir=/certs --with-dbdir=/db --with-scriptdir=/scripts --with-logfiledir=/logs --with-storagedir=/recordings --with-cachedir=/tmp --with-imagesdir=/images && make && make install
 
