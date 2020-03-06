@@ -1,28 +1,45 @@
 <include>
 
-  <X-PRE-PROCESS cmd="set" data="loglevel=err"/>
-  <X-PRE-PROCESS cmd="set" data="console_loglevel=err"/>
+  <X-PRE-PROCESS cmd="set" data="webitel_version=WEBITEL_MAJOR"/>
 
-  <X-PRE-PROCESS cmd="set" data="consul_url=http://consul:8500"/>
-  <X-PRE-PROCESS cmd="set" data="cdr_url=http://storage:10021"/>
-  <X-PRE-PROCESS cmd="set" data="acr_srv=acr:10030 async full"/>
-  <X-PRE-PROCESS cmd="set" data="amqp_host=rabbit"/>
-
-  <X-PRE-PROCESS cmd="set" data="bind_server_ip=auto"/>
-  <X-PRE-PROCESS cmd="set" data="sofia_server_ip=$${local_ip_v4}"/>
-  <X-PRE-PROCESS cmd="set" data="outbound_sip_proxy=opensips"/>
-  <X-PRE-PROCESS cmd="set" data="outbound_caller_name=Webitel"/>
-  <X-PRE-PROCESS cmd="set" data="outbound_caller_id=0000000000"/>
-
+  <X-PRE-PROCESS cmd="set" data="loglevel=LOGLEVEL"/>
+  <X-PRE-PROCESS cmd="set" data="console_loglevel=LOGLEVEL"/>
+  <X-PRE-PROCESS cmd="set" data="amqp_ip=AMQP_HOST"/>
+  <X-PRE-PROCESS cmd="set" data="pgsql_ip=PGSQL_HOST"/>
+  <X-PRE-PROCESS cmd="set" data="acr_srv=ACR_SERVER async full"/>
+  <X-PRE-PROCESS cmd="set" data="cdr_url=http://CDR_SERVER"/>
+  <X-PRE-PROCESS cmd="set" data="config_url=http://CONF_SERVER/"/>
   <X-PRE-PROCESS cmd="set" data="hold_music=local_stream://default"/>
   <X-PRE-PROCESS cmd="set" data="sound_prefix=$${sounds_dir}/en/us/callie"/>
 
-  <X-PRE-PROCESS cmd="set" data="unroll_loops=true"/>
-  <X-PRE-PROCESS cmd="set" data="zrtp_secure_media=false"/>
+  <X-PRE-PROCESS cmd="set" data="global_codec_prefs=CODECS_GLOBAL_PREF"/>
+  <X-PRE-PROCESS cmd="set" data="outbound_codec_prefs=CODECS_OUTBOUND_PREF"/>
+  <X-PRE-PROCESS cmd="set" data="media_mix_inbound_outbound_codecs=true"/>
+ 
+  <X-PRE-PROCESS cmd="set" data="bind_server_ip=auto"/>
+  <X-PRE-PROCESS cmd="set" data="nonreg_ip=nonreg_ip_value"/>
+  <X-PRE-PROCESS cmd="set" data="nonreg_ext_ip=nonreg_ext_ip_value"/>
+  <X-PRE-PROCESS cmd="set" data="internal_ip=internal_ip_value"/>
+  <X-PRE-PROCESS cmd="set" data="internal_ext_ip=internal_ext_ip_value"/>
+  <X-PRE-PROCESS cmd="set" data="external_ip=external_ip_value"/>
+  <X-PRE-PROCESS cmd="set" data="external_ext_ip=external_ext_ip_value"/>
+  <X-PRE-PROCESS cmd="set" data="verto_ip=verto_ip_value"/>
+  <X-PRE-PROCESS cmd="set" data="verto_ext_ip=verto_ext_ip_value"/>
+  <X-PRE-PROCESS cmd="set" data="event_socket_ip=event_socket_ip_value"/>
+
   <X-PRE-PROCESS cmd="set" data="rtp_sdes_suites=AEAD_AES_256_GCM_8|AEAD_AES_128_GCM_8|AES_CM_256_HMAC_SHA1_80|AES_CM_192_HMAC_SHA1_80|AES_CM_128_HMAC_SHA1_80|AES_CM_256_HMAC_SHA1_32|AES_CM_192_HMAC_SHA1_32|AES_CM_128_HMAC_SHA1_32|AES_CM_128_NULL_AUTH"/>
+  <X-PRE-PROCESS cmd="set" data="zrtp_secure_media=true"/>
+
   <X-PRE-PROCESS cmd="set" data="sip_tls_version=tlsv1,tlsv1.1,tlsv1.2"/>
   <X-PRE-PROCESS cmd="set" data="sip_tls_ciphers=ALL:!ADH:!LOW:!EXP:!MD5:@STRENGTH"/>
-
+  <X-PRE-PROCESS cmd="set" data="internal_auth_calls=true"/>
+  <X-PRE-PROCESS cmd="set" data="internal_sip_port=5060"/>
+  <X-PRE-PROCESS cmd="set" data="internal_tls_port=5061"/>
+  <X-PRE-PROCESS cmd="set" data="internal_ssl_enable=false"/>
+ 
+  <X-PRE-PROCESS cmd="set" data="unroll_loops=true"/>
+  <X-PRE-PROCESS cmd="set" data="outbound_caller_name=Webitel"/>
+  <X-PRE-PROCESS cmd="set" data="outbound_caller_id=0000000000"/>
   <X-PRE-PROCESS cmd="set" data="be-ring=%(1000,3000,425)"/>
   <X-PRE-PROCESS cmd="set" data="ca-ring=%(2000,4000,440,480)"/>
   <X-PRE-PROCESS cmd="set" data="cn-ring=%(1000,4000,450)"/>
@@ -55,11 +72,11 @@
 
   <!--
        Digits Dialed filter: (FS-6940)
-
+       
        The digits stream may contain valid credit card numbers or social security numbers, These digit
-       filters will allow you to make a valant effort to stamp out sensitive information for
+       filters will allow you to make a valant effort to stamp out sensitive information for 
        PCI/HIPPA compliance. (see xml_cdr dialed_digits)
-
+       
        df_us_ssn   = US Social Security Number pattern
        df_us_luhn  = Visa, MasterCard, American Express, Diners Club, Discover and JCB
   -->
@@ -79,5 +96,5 @@
   <!-- Stock Video Avatars -->
   <X-PRE-PROCESS cmd="set" data="video_mute_png=/images/default-mute.png"/>
   <X-PRE-PROCESS cmd="set" data="video_no_avatar_png=/images/default-avatar.png"/>
-
+ 
 </include>
